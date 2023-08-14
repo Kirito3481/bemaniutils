@@ -646,7 +646,8 @@ class ImportPopn(ImportBase):
                 songinfo["title"] = songinfo["title"].replace(orig, rep)
                 songinfo["artist"] = songinfo["artist"].replace(orig, rep)
                 songinfo["title_en"] = songinfo["title_en"].replace(orig, rep)
-                songinfo["artist_en"] = songinfo["artist_en"].replace(orig, rep)
+                songinfo["artist_en"] = songinfo["artist_en"].replace(
+                    orig, rep)
                 songinfo["genre"] = songinfo["genre"].replace(orig, rep)
             songs.append(songinfo)
 
@@ -1522,7 +1523,7 @@ class ImportPopn(ImportBase):
 
         def file_chunk(config: PopnScrapeConfiguration, offset: int) -> Tuple[Any, ...]:
             fileoffset = config.file_offset + (config.file_step * offset)
-            filedata = data[fileoffset : (fileoffset + config.file_step)]
+            filedata = data[fileoffset: (fileoffset + config.file_step)]
             return struct.unpack(config.filefmt, filedata)
 
         def file_handle(config: PopnScrapeConfiguration, offset: int) -> str:
@@ -1535,12 +1536,13 @@ class ImportPopn(ImportBase):
 
         for config in configurations:
             try:
-                print(f"Trying configuration for game version {config.version}...")
+                print(
+                    f"Trying configuration for game version {config.version}...")
 
                 songs = []
                 for songid in range(config.length):
                     chunkoffset = config.offset + (config.step * songid)
-                    chunkdata = data[chunkoffset : (chunkoffset + config.step)]
+                    chunkdata = data[chunkoffset: (chunkoffset + config.step)]
                     unpacked = struct.unpack(config.packedfmt, chunkdata)
                     valid_charts = config.available_charts(
                         unpacked[config.charts_offset]
@@ -1670,11 +1672,16 @@ class ImportPopn(ImportBase):
                     }
 
                     for orig, rep in accent_lut.items():
-                        songinfo["title"] = songinfo["title"].replace(orig, rep)
-                        songinfo["artist"] = songinfo["artist"].replace(orig, rep)
-                        songinfo["title_en"] = songinfo["title_en"].replace(orig, rep)
-                        songinfo["artist_en"] = songinfo["artist_en"].replace(orig, rep)
-                        songinfo["genre"] = songinfo["genre"].replace(orig, rep)
+                        songinfo["title"] = songinfo["title"].replace(
+                            orig, rep)
+                        songinfo["artist"] = songinfo["artist"].replace(
+                            orig, rep)
+                        songinfo["title_en"] = songinfo["title_en"].replace(
+                            orig, rep)
+                        songinfo["artist_en"] = songinfo["artist_en"].replace(
+                            orig, rep)
+                        songinfo["genre"] = songinfo["genre"].replace(
+                            orig, rep)
                     songs.append(songinfo)
 
                 # If we got here, that means we ran into no issues and didn't have to attempt another offset.
@@ -1766,9 +1773,11 @@ class ImportPopn(ImportBase):
                 old_id = self.get_music_id_for_song(song["id"], chart)
 
                 # Now, look up metadata
-                title = song["title_en"] if len(song["title_en"]) > 0 else song["title"]
+                title = song["title_en"] if len(
+                    song["title_en"]) > 0 else song["title"]
                 artist = (
-                    song["artist_en"] if len(song["artist_en"]) > 0 else song["artist"]
+                    song["artist_en"] if len(
+                        song["artist_en"]) > 0 else song["artist"]
                 )
                 genre = song["genre"]
 
@@ -1812,7 +1821,7 @@ class ImportJubeat(ImportBase):
         no_combine: bool,
         update: bool,
     ) -> None:
-        if version in ["saucer", "saucer-fulfill", "prop", "qubell", "clan", "festo"]:
+        if version in ["saucer", "saucer-fulfill", "prop", "qubell", "clan", "festo", "avenue"]:
             actual_version = {
                 "saucer": VersionConstants.JUBEAT_SAUCER,
                 "saucer-fulfill": VersionConstants.JUBEAT_SAUCER_FULFILL,
@@ -1820,6 +1829,7 @@ class ImportJubeat(ImportBase):
                 "qubell": VersionConstants.JUBEAT_QUBELL,
                 "clan": VersionConstants.JUBEAT_CLAN,
                 "festo": VersionConstants.JUBEAT_FESTO,
+                "avenue": VersionConstants.JUBEAT_AVENUE,
             }.get(version, -1)
         elif version in ["omni-prop", "omni-qubell", "omni-clan", "omni-festo"]:
             actual_version = {
@@ -1836,6 +1846,7 @@ class ImportJubeat(ImportBase):
             None,
             VersionConstants.JUBEAT_FESTO,
             VersionConstants.JUBEAT_FESTO + DBConstants.OMNIMIX_VERSION_BUMP,
+            VersionConstants.JUBEAT_AVENUE
         ]:
             # jubeat festo adds in separation of normal and hard mode scores.
             # This adds a duplicate of each chart so that we show separated scores.
@@ -1863,7 +1874,8 @@ class ImportJubeat(ImportBase):
 
     def scrape(self, xmlfile: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         if self.version is None:
-            raise CLIException("Can't scrape Jubeat database for 'all' version!")
+            raise CLIException(
+                "Can't scrape Jubeat database for 'all' version!")
 
         try:
             # Probably UTF-8 music DB
@@ -1900,6 +1912,7 @@ class ImportJubeat(ImportBase):
                 11: VersionConstants.JUBEAT_QUBELL,
                 12: VersionConstants.JUBEAT_CLAN,
                 13: VersionConstants.JUBEAT_FESTO,
+                14: VersionConstants.JUBEAT_AVENUE
             }
             if bpm_max > 0 and bpm_min < 0:
                 bpm_min = bpm_max
@@ -1948,6 +1961,7 @@ class ImportJubeat(ImportBase):
             VersionConstants.JUBEAT_QUBELL,
             VersionConstants.JUBEAT_CLAN,
             VersionConstants.JUBEAT_FESTO,
+            VersionConstants.JUBEAT_AVENUE,
         }:
             for emblem_entry in root.find("emblem_list") or []:
                 index = int(emblem_entry.find("index").text)
@@ -1974,7 +1988,8 @@ class ImportJubeat(ImportBase):
         self, server: str, token: str
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         if self.version is None:
-            raise CLIException("Can't look up Jubeat database for 'all' version!")
+            raise CLIException(
+                "Can't look up Jubeat database for 'all' version!")
 
         # Grab music info from remote server
         music = self.remote_music(server, token)
@@ -2020,6 +2035,7 @@ class ImportJubeat(ImportBase):
             VersionConstants.JUBEAT_QUBELL,
             VersionConstants.JUBEAT_CLAN,
             VersionConstants.JUBEAT_FESTO,
+            VersionConstants.JUBEAT_AVENUE,
         }:
             game = self.remote_game(server, token)
             for item in game.get_items(self.game, self.version):
@@ -2049,7 +2065,8 @@ class ImportJubeat(ImportBase):
             71000001: 70000124,  # PPAP
             71000002: 70000154,  # Bonjour the world
             50000020: 80000037,  # 千本桜 was removed and then revived in clan
-            60000063: 70000100,  # Khamen break sdvx had the first id for prop(never released officially)
+            # Khamen break sdvx had the first id for prop(never released officially)
+            60000063: 70000100,
         }
         modern_to_legacy_map = {v: k for k, v in legacy_to_modern_map.items()}
 
@@ -2069,7 +2086,8 @@ class ImportJubeat(ImportBase):
 
     def import_music_db(self, songs: List[Dict[str, Any]]) -> None:
         if self.version is None:
-            raise CLIException("Can't import Jubeat database for 'all' version!")
+            raise CLIException(
+                "Can't import Jubeat database for 'all' version!")
 
         chart_map: Dict[int, str] = {
             0: "basic",
@@ -2133,7 +2151,8 @@ class ImportJubeat(ImportBase):
 
     def import_emblems(self, emblems: List[Dict[str, Any]]) -> None:
         if self.version is None:
-            raise CLIException("Can't import Jubeat database for 'all' version!")
+            raise CLIException(
+                "Can't import Jubeat database for 'all' version!")
 
         self.start_batch()
         for i, emblem in enumerate(emblems):
@@ -2416,7 +2435,8 @@ class ImportIIDX(ImportBase):
             raise CLIException("Can't import IIDX database for 'all' version!")
 
         if assets_dir is not None:
-            sound_files = self.__gather_sound_files(os.path.abspath(assets_dir))
+            sound_files = self.__gather_sound_files(
+                os.path.abspath(assets_dir))
         else:
             sound_files = None
 
@@ -2516,8 +2536,10 @@ class ImportIIDX(ImportBase):
                     IIDXScrapeConfiguration(
                         version="LDJ:J:A:A:2013090900",
                         stride=4,
-                        qp_head_offset=0x1CCB18,  # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
-                        qp_head_length=79,  # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
+                        qp_head_offset=0x1CCB18,
+                        # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        qp_head_length=79,
                         qp_hair_offset=0x1CCC58,
                         qp_hair_length=103,
                         qp_face_offset=0x1CCDF8,
@@ -2537,8 +2559,10 @@ class ImportIIDX(ImportBase):
                     IIDXScrapeConfiguration(
                         version="LDJ:J:A:A:2014071600",
                         stride=4,
-                        qp_head_offset=0x213B50,  # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
-                        qp_head_length=125,  # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
+                        qp_head_offset=0x213B50,
+                        # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        qp_head_length=125,
                         qp_hair_offset=0x213D48,
                         qp_hair_length=126,
                         qp_face_offset=0x213F40,
@@ -2558,8 +2582,10 @@ class ImportIIDX(ImportBase):
                     IIDXScrapeConfiguration(
                         version="LDJ:J:A:A:2015080500",
                         stride=4,
-                        qp_head_offset=0x1D5228,  # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
-                        qp_head_length=163,  # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
+                        qp_head_offset=0x1D5228,
+                        # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        qp_head_length=163,
                         qp_hair_offset=0x1D54B8,
                         qp_hair_length=182,
                         qp_face_offset=0x1D5790,
@@ -2579,8 +2605,10 @@ class ImportIIDX(ImportBase):
                     IIDXScrapeConfiguration(
                         version="LDJ:J:A:A:2016083100",
                         stride=8,
-                        qp_head_offset=0x12F9D8,  # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
-                        qp_head_length=186,  # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
+                        qp_head_offset=0x12F9D8,
+                        # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        qp_head_length=186,
                         qp_hair_offset=0x12FFA8,
                         qp_hair_length=202,
                         qp_face_offset=0x1305F8,
@@ -2601,8 +2629,10 @@ class ImportIIDX(ImportBase):
                     IIDXScrapeConfiguration(
                         version="LDJ:J:A:A:2017082800",
                         stride=8,
-                        qp_head_offset=0x149F88,  # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
-                        qp_head_length=211,  # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
+                        qp_head_offset=0x149F88,
+                        # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        qp_head_length=211,
                         qp_hair_offset=0x14A620,
                         qp_hair_length=245,
                         qp_face_offset=0x14ADC8,
@@ -2623,8 +2653,10 @@ class ImportIIDX(ImportBase):
                     IIDXScrapeConfiguration(
                         version="LDJ:J:A:A:2018091900",
                         stride=16,
-                        qp_head_offset=0x2339E0,  # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
-                        qp_head_length=231,  # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
+                        qp_head_offset=0x2339E0,
+                        # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        qp_head_length=231,
                         qp_hair_offset=0x234850,
                         qp_hair_length=267,
                         qp_face_offset=0x235900,
@@ -2645,8 +2677,10 @@ class ImportIIDX(ImportBase):
                     IIDXScrapeConfiguration(
                         version="LDJ:J:A:A:2019090200",
                         stride=16,
-                        qp_head_offset=0x5065F0,  # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
-                        qp_head_length=259,  # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        # qpro body parts are stored in 5 separate arrays in the game data, since there can be collision in
+                        qp_head_offset=0x5065F0,
+                        # the qpro id numbers, it's best to store them as separate types in the catalog as well.
+                        qp_head_length=259,
                         qp_hair_offset=0x507620,
                         qp_hair_length=288,
                         qp_face_offset=0x508820,
@@ -2684,7 +2718,8 @@ class ImportIIDX(ImportBase):
             ) -> None:
                 for qpro_id in range(length):
                     chunkoffset = offset + (config.stride * qpro_id)
-                    chunkdata = binarydata[chunkoffset : (chunkoffset + config.stride)]
+                    chunkdata = binarydata[chunkoffset: (
+                        chunkoffset + config.stride)]
                     unpacked = struct.unpack(config.packedfmt, chunkdata)
                     filename = read_string(unpacked[config.filename_offset]).replace(
                         "qp_", ""
@@ -2711,7 +2746,8 @@ class ImportIIDX(ImportBase):
 
             for config in configurations:
                 try:
-                    print(f"Trying configuration for game version {config.version}...")
+                    print(
+                        f"Trying configuration for game version {config.version}...")
 
                     qpros: List[Dict[str, Any]] = []
 
@@ -2772,7 +2808,8 @@ class ImportIIDX(ImportBase):
         self, server: str, token: str
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         if self.version is None:
-            raise CLIException("Can't look up IIDX database for 'all' version!")
+            raise CLIException(
+                "Can't look up IIDX database for 'all' version!")
 
         # Grab music info from remote server
         music = self.remote_music(server, token)
@@ -2871,7 +2908,8 @@ class ImportIIDX(ImportBase):
                         "notecount": song["notecount"][chart_map[chart]],
                     }
                 # First, try to find in the DB from another version
-                old_id = self.__revivals(song["id"], self.__charts(song["id"], chart))
+                old_id = self.__revivals(
+                    song["id"], self.__charts(song["id"], chart))
                 if self.no_combine or old_id is None:
                     # Insert original
                     print(f"New entry for {song['id']} chart {chart}")
@@ -2938,7 +2976,8 @@ class ImportIIDX(ImportBase):
                 print(f"Setting name/artist/genre for {songid} all charts")
                 self.start_batch()
                 for chart in self.charts:
-                    self.update_metadata_for_song(songid, chart, name, artist, genre)
+                    self.update_metadata_for_song(
+                        songid, chart, name, artist, genre)
                 self.finish_batch()
 
 
@@ -3231,7 +3270,8 @@ class ImportDDR(ImportBase):
 
         for config in configurations:
             try:
-                print(f"Trying configuration for game version {config.version}...")
+                print(
+                    f"Trying configuration for game version {config.version}...")
 
                 songs = []
 
@@ -3241,7 +3281,8 @@ class ImportDDR(ImportBase):
                     chunk = data[start:end]
 
                     # First, figure out if it is actually a song
-                    ssqcode = chunk[0:6].decode("ascii").replace("\0", "").strip()
+                    ssqcode = chunk[0:6].decode(
+                        "ascii").replace("\0", "").strip()
                     if len(ssqcode) == 0:
                         continue
                     unpacked = struct.unpack(config.unpackfmt, chunk)
@@ -3513,7 +3554,8 @@ class ImportDDR(ImportBase):
             ssqcode = music_entry.find("basename").text
             bpm = int(music_entry.find("bpmmax").text)
             folder = int(music_entry.find("series").text)
-            difficulties = [int(x) for x in music_entry.find("diffLv").text.split(" ")]
+            difficulties = [int(x) for x in music_entry.find(
+                "diffLv").text.split(" ")]
 
             # For some reason Ace thinks of itself as 17, and DDR 2013/2014 as 14, 15 and 16
             # somewhat spread out. Fix that here.
@@ -3718,7 +3760,8 @@ class ImportDDR(ImportBase):
                     "folder": song.data.get_int("category"),
                 }
             style, chart = chart_map[song.chart]
-            lut[song.id]["difficulty"][style][chart] = song.data.get_int("difficulty")
+            lut[song.id]["difficulty"][style][chart] = song.data.get_int(
+                "difficulty")
             lut[song.id]["groove_gauge"][style][chart]["air"] = song.data.get_dict(
                 "groove"
             ).get_int("air")
@@ -3765,7 +3808,8 @@ class ImportDDR(ImportBase):
                 # DDR is stupid and changes in-game IDs around willy-nilly, but the edit ID is stable.
                 # So, create a virtual edit ID entry and link everything to that. We can't just store
                 # the edit ID as the real ID because in-game the protocol uses the changing ID.
-                old_id = self.get_music_id_for_song(song["edit_id"], chart, version=0)
+                old_id = self.get_music_id_for_song(
+                    song["edit_id"], chart, version=0)
                 if self.no_combine or old_id is None:
                     # Insert original
                     print(
@@ -3861,7 +3905,8 @@ class ImportSDVX(ImportBase):
             size = 163
             stride = 40
         else:
-            raise CLIException("Unsupported version {self.version} for catalog scrape!")
+            raise CLIException(
+                "Unsupported version {self.version} for catalog scrape!")
 
         def read_string(spot: int) -> str:
             # First, translate load offset in memory to disk offset
@@ -3901,7 +3946,8 @@ class ImportSDVX(ImportBase):
 
         for entry in entries:
             self.start_batch()
-            print(f"New catalog entry for {entry['musicid']} chart {entry['chart']}")
+            print(
+                f"New catalog entry for {entry['musicid']} chart {entry['chart']}")
             self.insert_catalog_entry(
                 "song_unlock",
                 entry["catalogid"],
@@ -4504,7 +4550,8 @@ class ImportReflecBeat(ImportBase):
                 )
             )
         else:
-            raise CLIException(f"Unsupported ReflecBeat version {self.version}")
+            raise CLIException(
+                f"Unsupported ReflecBeat version {self.version}")
 
         def convert_string(inb: bytes) -> str:
             end = None
@@ -4534,7 +4581,8 @@ class ImportReflecBeat(ImportBase):
 
         for config in configurations:
             try:
-                print(f"Trying configuration for game version {config.version}...")
+                print(
+                    f"Trying configuration for game version {config.version}...")
 
                 songs = []
                 for i in range(config.max_songs):
@@ -4544,7 +4592,7 @@ class ImportReflecBeat(ImportBase):
 
                     title = convert_string(
                         songdata[
-                            config.song_offset : (
+                            config.song_offset: (
                                 config.song_offset + config.song_length
                             )
                         ]
@@ -4554,7 +4602,7 @@ class ImportReflecBeat(ImportBase):
                     else:
                         artist = convert_string(
                             songdata[
-                                config.artist_offset : (
+                                config.artist_offset: (
                                     config.artist_offset + config.artist_length
                                 )
                             ]
@@ -4564,7 +4612,7 @@ class ImportReflecBeat(ImportBase):
                     songid = struct.unpack("<I", songdata[0:4])[0]
                     chart = convert_string(
                         songdata[
-                            config.chart_offset : (
+                            config.chart_offset: (
                                 config.chart_offset + config.chart_length
                             )
                         ]
@@ -4572,7 +4620,7 @@ class ImportReflecBeat(ImportBase):
                     difficulties = [
                         d
                         for d in songdata[
-                            config.difficulties_offset : (
+                            config.difficulties_offset: (
                                 config.difficulties_offset + config.max_difficulties
                             )
                         ]
@@ -4622,7 +4670,8 @@ class ImportReflecBeat(ImportBase):
                     "difficulties": [0] * len(self.charts),
                     "folder": song.data.get_int("folder"),
                 }
-            lut[song.id]["difficulties"][song.chart] = song.data.get_int("difficulty")
+            lut[song.id]["difficulties"][song.chart] = song.data.get_int(
+                "difficulty")
 
         # Return the reassembled data
         return [val for _, val in lut.items()]
@@ -4733,7 +4782,7 @@ class ImportDanceEvolution(ImportBase):
             raise Exception("Invalid song params file!")
 
         def get_string(offset: int, default: Optional[str] = None) -> str:
-            lut_offset = struct.unpack(">I", data[(offset) : (offset + 4)])[0]
+            lut_offset = struct.unpack(">I", data[(offset): (offset + 4)])[0]
             if lut_offset == 0:
                 if default is None:
                     raise Exception("Expecting a string, got empty!")
@@ -4742,13 +4791,13 @@ class ImportDanceEvolution(ImportBase):
             while data[lut_offset + length] != 0:
                 length += 1
             return (
-                data[lut_offset : (lut_offset + length)]
+                data[lut_offset: (lut_offset + length)]
                 .decode("utf-8")
                 .replace("\n", " ")
             )
 
         def get_int(offset: int) -> int:
-            return struct.unpack(">I", data[(offset) : (offset + 4)])[0]
+            return struct.unpack(">I", data[(offset): (offset + 4)])[0]
 
         # Now, make sure we know how long the file is
         numsongs = struct.unpack(">I", data[8:12])[0]
@@ -4964,7 +5013,8 @@ def main() -> None:
         popn.close()
 
     elif series == GameConstants.JUBEAT:
-        jubeat = ImportJubeat(config, args.version, args.no_combine, args.update)
+        jubeat = ImportJubeat(config, args.version,
+                              args.no_combine, args.update)
         if args.tsv is not None:
             # Special case for Jubeat, grab the title/artist metadata that was
             # hand-populated since its not in the music DB.
@@ -5048,7 +5098,8 @@ def main() -> None:
         sdvx.close()
 
     elif series == GameConstants.MUSECA:
-        museca = ImportMuseca(config, args.version, args.no_combine, args.update)
+        museca = ImportMuseca(config, args.version,
+                              args.no_combine, args.update)
         if args.server and args.token:
             museca.import_from_server(args.server, args.token)
         elif args.xml is not None:
@@ -5061,7 +5112,8 @@ def main() -> None:
         museca.close()
 
     elif series == GameConstants.REFLEC_BEAT:
-        reflec = ImportReflecBeat(config, args.version, args.no_combine, args.update)
+        reflec = ImportReflecBeat(
+            config, args.version, args.no_combine, args.update)
         if args.bin is not None:
             songs = reflec.scrape(args.bin)
         elif args.server and args.token:

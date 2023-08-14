@@ -10,6 +10,9 @@ class JubeatLoggerReportHandler(JubeatBase):
         root = Node.void("logger")
         return root
 
+    def handle_logger_ave_report_request(self, request: Node) -> Node:
+        return self.handle_logger_report_request(request)
+
 
 class JubeatDemodataGetNewsHandler(JubeatBase):
     def handle_demodata_get_news_request(self, request: Node) -> Node:
@@ -22,6 +25,9 @@ class JubeatDemodataGetNewsHandler(JubeatBase):
         officialnews.set_attribute("count", "0")
 
         return demodata
+
+    def handle_demodata_ave_get_news_request(self, request: Node) -> Node:
+        return self.handle_demodata_get_news_request(request)
 
 
 class JubeatDemodataGetHitchartHandler(JubeatBase):
@@ -39,7 +45,8 @@ class JubeatDemodataGetHitchartHandler(JubeatBase):
         data.add_child(hitchart_lic)
         hitchart_lic.set_attribute("count", "0")
 
-        songs = self.data.local.music.get_hit_chart(self.game, self.music_version, 10)
+        songs = self.data.local.music.get_hit_chart(
+            self.game, self.music_version, 10)
         hitchart_org = Node.void("hitchart_org")
         data.add_child(hitchart_org)
         hitchart_org.set_attribute("count", str(len(songs)))
@@ -53,6 +60,9 @@ class JubeatDemodataGetHitchartHandler(JubeatBase):
             rank = rank + 1
 
         return demodata
+
+    def handle_demodata_ave_get_hitchart_request(self, request: Node) -> Node:
+        return self.handle_demodata_get_hitchart_request(request)
 
 
 class JubeatLobbyCheckHandler(JubeatBase):
@@ -69,6 +79,9 @@ class JubeatLobbyCheckHandler(JubeatBase):
 
         return root
 
+    def handle_lobby_ave_check_request(self, request: Node) -> Node:
+        return self.handle_lobby_check_request(request)
+
 
 class JubeatGamendRegisterHandler(JubeatBase):
     def handle_gameend_regist_request(self, request: Node) -> Node:
@@ -81,7 +94,8 @@ class JubeatGamendRegisterHandler(JubeatBase):
             refid = None
 
         if refid is not None:
-            userid = self.data.remote.user.from_refid(self.game, self.version, refid)
+            userid = self.data.remote.user.from_refid(
+                self.game, self.version, refid)
         else:
             userid = None
 
@@ -103,6 +117,9 @@ class JubeatGamendRegisterHandler(JubeatBase):
         player.add_child(Node.s32("end_final_session_id", 1))
         return gameend
 
+    def handle_gameend_ave_regist_request(self, request: Node) -> Node:
+        return self.handle_gameend_regist_request(request)
+
 
 class JubeatGametopGetMeetingHandler(JubeatBase):
     def handle_gametop_get_meeting_request(self, request: Node) -> Node:
@@ -119,6 +136,9 @@ class JubeatGametopGetMeetingHandler(JubeatBase):
         tag.set_attribute("count", "0")
         reward = Node.void("reward")
         data.add_child(reward)
-        reward.add_child(Node.s32("total", -1))
-        reward.add_child(Node.s32("point", -1))
+        reward.add_child(Node.s32("total", 0))
+        reward.add_child(Node.s32("point", 0))
         return gametop
+
+    def handle_gametop_ave_get_meeting_request(self, request: Node) -> Node:
+        return self.handle_gametop_get_meeting_request(request)
