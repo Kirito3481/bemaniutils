@@ -70,14 +70,22 @@ class JubeatAvenue(
             Parts: Final[int] = 10
             BonusTuneGauge: Final[int] = 11
 
+        class ConditionType:
+            ClearEvent: Final[int] = 1
+            DifficultyScore: Final[int] = 2
+            Jubility: Final[int] = 6
+            TunePlays: Final[int] = 7
+
         class MissionType:
             CategorySongPlay: Final[int] = 1
             PlaySongWithCondition: Final[int] = 2
             PlaySong: Final[int] = 3
+            PlaySongWithFullCombo: Final[int] = 4
             LevelScore: Final[int] = 6
             LevelCombo: Final[int] = 7
             MatchingSelect: Final[int] = 8
             RandomSelect: Final[int] = 9
+            PlayHardMode: Final[int] = 10
             DailyFirstPlay: Final[int] = 12
 
         class BonusType:
@@ -1164,8 +1172,8 @@ class JubeatAvenue(
                         "start_time": 1659488400000,
                         "end_time": 4102412399000,
                         "is_open": True,
-                        "hint": "I think there's something good about connecting zigzags",
-                        "unlock_text": "Achieve jubility 3,000 and play ZIGZAG COWBOY full combo or 100 TUNES",
+                        "hint": "ジグザグをつなげると良いことがあるみたい",
+                        "unlock_text": "jubility3,000かつZIGZAG COWBOYをフルコンボか100TUNESプレー",
                         "conditions": [
                             {
                                 "id": 1,
@@ -1222,7 +1230,7 @@ class JubeatAvenue(
                                 "required_jwatt": 1500,
                                 "reward_type": RewardType.Parts,
                                 "reward_param": 13579,
-                                "dialogue": "hey hey",
+                                "dialogue": "ねぇねぇ",
                                 # 부스트 미션
                                 "missions": [
                                     {
@@ -1325,7 +1333,7 @@ class JubeatAvenue(
                                 "required_jwatt": 1500,
                                 "reward_type": RewardType.BonusTuneGauge,
                                 "reward_param": 100,
-                                "dialogue": "Actually, I have no sense of direction",
+                                "dialogue": "えいニャ！",
                                 "missions": [
                                     {
                                         "id": 1,
@@ -1376,6 +1384,1269 @@ class JubeatAvenue(
                                         "mission_type": MissionType.CategorySongPlay,
                                         "bonus_type": BonusType.JWATT,
                                         "bonus_param": 400
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                        ]
+                    },
+
+                    # PETA
+                    {
+                        "id": 10,
+                        "event_type": 1,
+                        "start_time": 1659488400000,
+                        "end_time": 4102412399000,
+                        "is_open": True,
+                        "hint": "CAPELIの帽子はSSS級オシャレ!",
+                        "unlock_text": "jubility3,000かつReincarnation Of Dead PetalをSSSか100TUNESプレー",
+                        "conditions": [
+                            {
+                                "id": 1,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [5, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 6,
+                                        "params": [30000, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 3,
+                                        "condition_type": 2,
+                                        "params": [11000005, 5, 980000],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [5, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 6,
+                                        "params": [30000, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 3,
+                                        "condition_type": 7,
+                                        "params": [100, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                        ],
+                        # 해금 순서
+                        "sections": [
+                            {
+                                "id": 1,
+                                "tube_text": "0e7980",
+                                "required_jwatt": 1500,
+                                "reward_type": RewardType.Parts,
+                                "reward_param": 13580,
+                                "dialogue": "こんにちは",
+                                # 부스트 미션
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [15, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "tube_text": "3b7b70",
+                                "required_jwatt": 2000,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 70000075,
+                                "dialogue": "ゆっくりしていってね~",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.RandomSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [2, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "tube_text": "6e7edc",
+                                "required_jwatt": 7250,
+                                "reward_type": RewardType.Title,
+                                "reward_param": 8002,
+                                "dialogue": "ここはどこ？って？",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [70000075, 5, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.L,
+                                        "bonus_param": 6
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "tube_text": "0de9c0",
+                                "required_jwatt": 1500,
+                                "reward_type": RewardType.BonusTuneGauge,
+                                "reward_param": 100,
+                                "dialogue": "僕にも分からない",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 200
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [24, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.RandomSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "tube_text": "edddbc",
+                                "required_jwatt": 2500,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 11000004,
+                                "dialogue": "え？もう帰っちゃうの？",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 400
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [15, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 400
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                        ]
+                    },
+
+                    # TULI
+                    {
+                        "id": 11,
+                        "event_type": 1,
+                        "start_time": 1659488400000,
+                        "end_time": 4102412399000,
+                        "is_open": True,
+                        "hint": "スゴイビルだなぁ。飛行機も飛んでる！",
+                        "unlock_text": "jubility3,000かつMetricクリアか300TUNESプレー",
+                        "conditions": [
+                            {
+                                "id": 1,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [8, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 6,
+                                        "params": [30000, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 3,
+                                        "condition_type": 3,
+                                        "params": [50000338, 5, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [8, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 6,
+                                        "params": [30000, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 3,
+                                        "condition_type": 7,
+                                        "params": [300, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                        ],
+                        # 해금 순서
+                        "sections": [
+                            {
+                                "id": 1,
+                                "tube_text": "0edf40",
+                                "required_jwatt": 2000,
+                                "reward_type": RewardType.Parts,
+                                "reward_param": 13581,
+                                "dialogue": "何食べようかな",
+                                # 부스트 미션
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlayHardMode,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [18, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "tube_text": "37d970",
+                                "required_jwatt": 17600,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 60000072,
+                                "dialogue": "あ、さっきご飯食べたんだった",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 2000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [20, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.L,
+                                        "bonus_param": 5
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [6, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "tube_text": "7aabb4",
+                                "required_jwatt": 3000,
+                                "reward_type": RewardType.Title,
+                                "reward_param": 8003,
+                                "dialogue": "写真撮って欲しいの？",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 400
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [60000072, 5, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 400
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "tube_text": "3fe6c0",
+                                "required_jwatt": 15000,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 80000022,
+                                "dialogue": "こっちに来て!",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 2000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [19, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.L,
+                                        "bonus_param": 5
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.RandomSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "tube_text": "ee6dbc",
+                                "required_jwatt": 3500,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 11000009,
+                                "dialogue": "はい、チーズ!",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [80000022, 5, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                        ]
+                    },
+
+                    # TOPEE
+                    {
+                        "id": 12,
+                        "event_type": 1,
+                        "start_time": 1659488400000,
+                        "end_time": 4102412399000,
+                        "is_open": True,
+                        "hint": "おや？キツネがこちらを見ているようです",
+                        "unlock_text": "jubility3,000かつconconクリアか300TUNESプレー",
+                        "conditions": [
+                            {
+                                "id": 1,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [8, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 6,
+                                        "params": [30000, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 3,
+                                        "condition_type": 3,
+                                        "params": [30000127, 5, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [8, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 6,
+                                        "params": [30000, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 3,
+                                        "condition_type": 7,
+                                        "params": [300, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                        ],
+                        # 해금 순서
+                        "sections": [
+                            {
+                                "id": 1,
+                                "tube_text": "0edf40",
+                                "required_jwatt": 2000,
+                                "reward_type": RewardType.Parts,
+                                "reward_param": 13582,
+                                "dialogue": "こっちこっち！",
+                                # 부스트 미션
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlayHardMode,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [23, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "tube_text": "37d970",
+                                "required_jwatt": 17600,
+                                "reward_type": RewardType.BonusTuneGauge,
+                                "reward_param": 100,
+                                "dialogue": "探検って楽しいね",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 3000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [30000127, 5, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.L,
+                                        "bonus_param": 5
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [3, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "tube_text": "7aabb4",
+                                "required_jwatt": 3200,
+                                "reward_type": RewardType.Title,
+                                "reward_param": 8004,
+                                "dialogue": "あれ？あとちょっとなんだけどな",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 400
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [21, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 400
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "tube_text": "3fe6c0",
+                                "required_jwatt": 15000,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 50000102,
+                                "dialogue": "ほら、見えてきたよ",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 2000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [22, 0, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.CategorySongPlay,
+                                        "bonus_type": BonusType.L,
+                                        "bonus_param": 5
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.RandomSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "tube_text": "ee6dbc",
+                                "required_jwatt": 3500,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 11000022,
+                                "dialogue": "また探検しようね!",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [50000102, 5, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                        ]
+                    },
+
+                    # NIGNIG
+                    {
+                        "id": 13,
+                        "event_type": 1,
+                        "start_time": 1659488400000,
+                        "end_time": 4102412399000,
+                        "is_open": True,
+                        "hint": "お礼の楽曲でスゴイ点数を取ると…",
+                        "unlock_text": "お題の4曲全てのEXTのスコア95万点を取るか600TUNESプレー",
+                        "conditions": [
+                            {
+                                "id": 1,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [9, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 1,
+                                        "params": [10, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 3,
+                                        "condition_type": 1,
+                                        "params": [11, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 4,
+                                        "condition_type": 1,
+                                        "params": [12, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 5,
+                                        "condition_type": 2,
+                                        "params": [11000004, 2, 950000],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 6,
+                                        "condition_type": 2,
+                                        "params": [11000004, 2, 950000],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 7,
+                                        "condition_type": 2,
+                                        "params": [11000009, 2, 950000],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 8,
+                                        "condition_type": 2,
+                                        "params": [11000022, 2, 950000],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [9, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 1,
+                                        "params": [10, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 3,
+                                        "condition_type": 1,
+                                        "params": [11, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 4,
+                                        "condition_type": 1,
+                                        "params": [12, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 5,
+                                        "condition_type": 7,
+                                        "params": [600, 0, 0],
+                                        "precondition_ids": [0]
+                                    }
+                                ]
+                            },
+                        ],
+                        # 해금 순서
+                        "sections": [
+                            {
+                                "id": 1,
+                                "tube_text": "b967a4",
+                                "required_jwatt": 3000,
+                                "reward_type": RewardType.Parts,
+                                "reward_param": 13583,
+                                "dialogue": "モグモグ",
+                                # 부스트 미션
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [60000065, 2, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "tube_text": "dedbdc",
+                                "required_jwatt": 3000,
+                                "reward_type": RewardType.BonusTuneGauge,
+                                "reward_param": 100,
+                                "dialogue": "もっと夢を見せて",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 3000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [80000082, 2, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "tube_text": "e7e67c",
+                                "required_jwatt": 3500,
+                                "reward_type": RewardType.BonusTuneGauge,
+                                "reward_param": 100,
+                                "dialogue": "こんなに大きい夢は初めて",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [80000090, 2, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "tube_text": "3fe6c0",
+                                "required_jwatt": 4400,
+                                "reward_type": RewardType.Title,
+                                "reward_param": 8005,
+                                "dialogue": "まだ夢の中なんだ",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [90000013, 2, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.RandomSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "tube_text": "db6dbc",
+                                "required_jwatt": 5800,
+                                "reward_type": RewardType.BonusTuneGauge,
+                                "reward_param": 100,
+                                "dialogue": "誰か呼んでるよ",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [90000123, 2, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 300
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 6,
+                                "tube_text": "e7b7bc",
+                                "required_jwatt": 6500,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 11000016,
+                                "dialogue": "ほら、起きて",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [90000124, 2, 950000],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithCondition,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 450
+                                    },
+                                ]
+                            },
+                        ]
+                    },
+
+                    # HALO
+                    {
+                        "id": 14,
+                        "event_type": 1,
+                        "start_time": 1659488400000,
+                        "end_time": 4102412399000,
+                        "is_open": True,
+                        "hint": "？？？？？",
+                        "unlock_text": "jubility7,500達成か2,000TUNESプレー",
+                        "conditions": [
+                            {
+                                "id": 1,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [13, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 6,
+                                        "params": [7500, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "conditions": [
+                                    {
+                                        "id": 1,
+                                        "condition_type": 1,
+                                        "params": [13, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                    {
+                                        "id": 2,
+                                        "condition_type": 7,
+                                        "params": [2000, 0, 0],
+                                        "precondition_ids": [0]
+                                    },
+                                ]
+                            },
+                        ],
+                        # 해금 순서
+                        "sections": [
+                            {
+                                "id": 1,
+                                "tube_text": "df76bc",
+                                "required_jwatt": 3500,
+                                "reward_type": RewardType.Parts,
+                                "reward_param": 13584,
+                                "dialogue": "ここは終わりの地",
+                                # 부스트 미션
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [50000102, 2, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithFullCombo,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "tube_text": "de7b9c",
+                                "required_jwatt": 4500,
+                                "reward_type": RewardType.BonusTuneGauge,
+                                "reward_param": 100,
+                                "dialogue": "何も無い世界",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [20000120, 2, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithFullCombo,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 500
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "tube_text": "7b6e6c",
+                                "required_jwatt": 5500,
+                                "reward_type": RewardType.BonusTuneGauge,
+                                "reward_param": 100,
+                                "dialogue": "まだ光を持ってるね",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [70000011, 2, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithFullCombo,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 650
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "tube_text": "3fe6c0",
+                                "required_jwatt": 6500,
+                                "reward_type": RewardType.Title,
+                                "reward_param": 8006,
+                                "dialogue": "キミはまだここに居るべきじゃない",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1200
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [80000088, 2, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithFullCombo,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 750
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "tube_text": "7b7eec",
+                                "required_jwatt": 7500,
+                                "reward_type": RewardType.BonusTuneGauge,
+                                "reward_param": 100,
+                                "dialogue": "みんな待ってるよ",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1200
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [90000166, 2, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithFullCombo,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 750
+                                    },
+                                    {
+                                        "id": 3,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.MatchingSelect,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 150
+                                    },
+                                ]
+                            },
+                            {
+                                "id": 6,
+                                "tube_text": "fffffc",
+                                "required_jwatt": 12000,
+                                "reward_type": RewardType.Music,
+                                "reward_param": 11000014,
+                                "dialogue": "また来てね",
+                                "missions": [
+                                    {
+                                        "id": 1,
+                                        "mission_params": [1, 0, 0],
+                                        "repeatable": True,
+                                        "mission_type": MissionType.DailyFirstPlay,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 2000
+                                    },
+                                    {
+                                        "id": 2,
+                                        "mission_params": [50000208, 2, 0],
+                                        "repeatable": False,
+                                        "mission_type": MissionType.PlaySongWithFullCombo,
+                                        "bonus_type": BonusType.JWATT,
+                                        "bonus_param": 1000
                                     },
                                     {
                                         "id": 3,
@@ -2749,5 +4020,9 @@ class JubeatAvenue(
                     stats,
                     music_rate,
                 )
+
+        newprofile.replace_dict("last", last)
+
+        self.update_play_statistics(userid)
 
         return newprofile
