@@ -122,3 +122,6 @@ class JubeatGametopGetMeetingHandler(JubeatBase):
         reward.add_child(Node.s32("total", -1))
         reward.add_child(Node.s32("point", -1))
         return gametop
+
+    def handle_gametop_ave2_get_meeting_request(self, request: Node) -> Node:
+        return self.handle_gametop_get_meeting_request(request)

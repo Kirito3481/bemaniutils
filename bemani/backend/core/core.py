@@ -52,7 +52,7 @@ class CoreHandler(Base):
         root.add_child(
             item(
                 "keepalive",
-                f"http://{keepalive}/core/keepalive?pa={keepalive}&ia={keepalive}&ga={keepalive}&ma={keepalive}&t1=2&t2=10",
+                f"ping://{keepalive}/core/keepalive?pa={keepalive}&ia={keepalive}&ga={keepalive}&ma={keepalive}&t1=2&t2=15&rt=2",
             )
         )
         return root
