@@ -24,7 +24,7 @@ class JubeatBeyondTheAvenue(
 
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatAvenue(self.data, self.config, self.model)
-    
+
     def __get_lightchat_list(self) -> List[Dict[str, Any]]:
         class RewardType:
             Music: Final[int] = 1
@@ -3534,7 +3534,7 @@ class JubeatBeyondTheAvenue(
             root.set_attribute("status", str(Status.NO_PROFILE))
 
         return root
-    
+
     def format_scores(
             self, userid: UserID, profile: Profile, scores: List[Score]
     ) -> Node:
