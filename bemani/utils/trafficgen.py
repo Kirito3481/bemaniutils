@@ -5,6 +5,7 @@ import yaml
 
 from bemani.client import ClientProtocol, BaseClient
 from bemani.client.iidx import (
+    IIDXLincleClient,
     IIDXTricoroClient,
     IIDXSpadaClient,
     IIDXPendualClient,
@@ -186,6 +187,12 @@ def get_client(
         )
     if game == "iidx-tricoro":
         return IIDXTricoroClient(
+            proto,
+            pcbid,
+            config,
+        )
+    if game == "iidx-lincle":
+        return IIDXLincleClient(
             proto,
             pcbid,
             config,
@@ -437,6 +444,11 @@ def mainloop(
             "model": "LDJ:J:A:A:2013090900",
             "avs": "2.15.8 r6631",
         },
+        "iidx-lincle": {
+            "name": "Beatmania IIDX Lincle",
+            "model": "KDZ:J:A:A:2012090300",
+            "avs": "2.13.4 r4706",
+        },
         "bishi": {
             "name": "The★BishiBashi",
             "model": "IBB:A:A:A:2009092900",
@@ -632,6 +644,7 @@ def main() -> None:
         "pnm-24": "pnm-usaneko",
         "pnm-25": "pnm-peace",
         "pnm-26": "pnm-kaimei",
+        "iidx-19": "iidx-lincle",
         "iidx-20": "iidx-tricoro",
         "iidx-21": "iidx-spada",
         "iidx-22": "iidx-pendual",

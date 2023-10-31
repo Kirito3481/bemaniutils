@@ -11,6 +11,7 @@ class IIDXCourse(IIDXBase):
     COURSE_TYPE_SECRET: Final[str] = "secret_course"
     COURSE_TYPE_INTERNET_RANKING: Final[str] = "ir_course"
     COURSE_TYPE_CLASSIC: Final[str] = "classic_course"
+    COURSE_TYPE_EXPERT: Final[str] = "expert_course"
 
     def id_and_chart_from_courseid(self, courseid: int) -> Tuple[int, int]:
         return (int(courseid / 6), courseid % 6)

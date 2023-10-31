@@ -1,3 +1,4 @@
+from bemani.client.iidx.lincle import IIDXLincleClient
 from bemani.client.iidx.tricoro import IIDXTricoroClient
 from bemani.client.iidx.spada import IIDXSpadaClient
 from bemani.client.iidx.pendual import IIDXPendualClient
@@ -7,6 +8,7 @@ from bemani.client.iidx.cannonballers import IIDXCannonBallersClient
 from bemani.client.iidx.rootage import IIDXRootageClient
 
 __all__ = [
+    "IIDXLincleClient",
     "IIDXTricoroClient",
     "IIDXSpadaClient",
     "IIDXPendualClient",
