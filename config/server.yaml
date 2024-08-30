@@ -104,6 +104,6 @@ memcached_server: 1.2.3.4:5678
 # Set to zero or delete to disable deleting logs.
 event_log_duration: 2592000
 # Whether we log verbosely (full packet request and response) to web server logs or not.
-verbose: true
+verbose: True
 # Frontend theme directory where sitewide CSS and favicon should be found.
 theme: "default"
