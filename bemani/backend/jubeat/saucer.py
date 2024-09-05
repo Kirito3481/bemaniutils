@@ -12,7 +12,7 @@ from bemani.backend.jubeat.common import (
     JubeatLobbyCheckHandler,
     JubeatLoggerReportHandler,
 )
-from bemani.backend.jubeat.stubs import JubeatCopiousAppend
+from bemani.backend.jubeat.copiousappend import JubeatCopiousAppend
 from bemani.common import Profile, ValidatedDict, VersionConstants, Time
 from bemani.data import Data, Score, UserID
 from bemani.protocol import Node

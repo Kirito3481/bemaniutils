@@ -2178,8 +2178,9 @@ class ImportJubeat(ImportBase):
         no_combine: bool,
         update: bool,
     ) -> None:
-        if version in ["saucer", "saucer-fulfill", "prop", "qubell", "clan", "festo"]:
+        if version in ["copious-append", "saucer", "saucer-fulfill", "prop", "qubell", "clan", "festo"]:
             actual_version = {
+                "copious-append": VersionConstants.JUBEAT_COPIOUS_APPEND,
                 "saucer": VersionConstants.JUBEAT_SAUCER,
                 "saucer-fulfill": VersionConstants.JUBEAT_SAUCER_FULFILL,
                 "prop": VersionConstants.JUBEAT_PROP,
@@ -2207,6 +2208,7 @@ class ImportJubeat(ImportBase):
             # This adds a duplicate of each chart so that we show separated scores.
             self.charts = [0, 1, 2, 3, 4, 5]
         elif actual_version in [
+            VersionConstants.JUBEAT_COPIOUS_APPEND,
             VersionConstants.JUBEAT_SAUCER,
             VersionConstants.JUBEAT_SAUCER_FULFILL,
             VersionConstants.JUBEAT_PROP,
@@ -2284,6 +2286,11 @@ class ImportJubeat(ImportBase):
                 for possible_genre in music_entry.find("genre"):
                     if int(possible_genre.text) != 0:
                         genre = str(possible_genre.tag)
+            pos_index = -1
+            if music_entry.find("pos_index") is not None:
+                pos_index = int(music_entry.find("pos_index").text)
+            if music_entry.find("secret_index") is not None:
+                pos_index = int(music_entry.find("secret_index").text)
 
             songs.append(
                 {
@@ -2301,6 +2308,7 @@ class ImportJubeat(ImportBase):
                         "advanced": difficulties[1],
                         "extreme": difficulties[2],
                     },
+                    "pos_index": pos_index,
                 }
             )
 
@@ -2366,6 +2374,7 @@ class ImportJubeat(ImportBase):
                         "advanced": 0.0,
                         "extreme": 0.0,
                     },
+                    "pos_index": song.data.get_int("pos_index"),
                 }
             lut[song.id]["difficulty"][chart_map[song.chart]] = song.data.get_float("difficulty")
 
@@ -2456,6 +2465,7 @@ class ImportJubeat(ImportBase):
                         print(f"Reused entry for {songid} chart {chart}")
                         next_id = old_id
                     data = {
+                        "pos_index": song["pos_index"],
                         "difficulty": song["difficulty"][chart_map[chart]],
                         "bpm_min": song["bpm_min"],
                         "bpm_max": song["bpm_max"],
@@ -2473,6 +2483,7 @@ class ImportJubeat(ImportBase):
                         print(f"Reused entry for {songid} chart {chart}")
                         next_id = old_id
                     data = {
+                        "pos_index": song["pos_index"],
                         "difficulty": song["difficulty"][chart_map[chart - 3]],
                         "bpm_min": song["bpm_min"],
                         "bpm_max": song["bpm_max"],
