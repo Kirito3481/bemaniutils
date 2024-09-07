@@ -3,26 +3,26 @@ from typing import Dict, List, Optional, Set
 from bemani.backend.base import Status
 from bemani.backend.jubeat.base import JubeatBase
 from bemani.backend.jubeat.common import JubeatGametopGetMeetingHandler, JubeatGamendRegisterHandler
-from bemani.backend.jubeat.knit import JubeatKnit
+from bemani.backend.jubeat.stubs import JubeatRipplesAppend
 from bemani.common import Profile, ValidatedDict, VersionConstants, Time
 from bemani.data import Score, UserID
 from bemani.protocol import Node
 
 
-class JubeatKnitAppend(
+class JubeatKnit(
     JubeatGametopGetMeetingHandler,
     JubeatGamendRegisterHandler,
     JubeatBase
 ):
-    name: str = "Jubeat Knit Append"
-    version: int = VersionConstants.JUBEAT_KNIT_APPEND
+    name: str = "Jubeat Knit"
+    version: int = VersionConstants.JUBEAT_KNIT
 
     extra_services: List[str] = [
         "netlog",
     ]
 
     def previous_version(self) -> Optional[JubeatBase]:
-        return JubeatKnit(self.data, self.config, self.model)
+        return JubeatRipplesAppend(self.data, self.config, self.model)
     
     def handle_shopinfo_regist_request(self, request: Node) -> Node:
         testmode = request.child("testmode")
@@ -150,38 +150,6 @@ class JubeatKnitAppend(
             root = Node.void("gametop")
             root.set_attribute("status", str(Status.NO_PROFILE))
         return root
-    
-    def handle_gametop_get_collabo_request(self, request: Node) -> Node:
-        # APPEND FESTIVAL Event
-        refid = request.child_value("data/player/refid")
-
-        root = Node.void("gametop")
-        data = Node.void("data")
-        root.add_child(data)
-        
-        collabo = Node.void("collabo")
-        data.add_child(collabo)
-        played = Node.void("played")
-        collabo.add_child(played)
-        played.add_child(Node.s8("iidx", 0))
-        played.add_child(Node.s8("popn", 0))
-        played.add_child(Node.s8("ddr", 0))
-        played.add_child(Node.s8("reflec", 0))
-        played.add_child(Node.s8("gfdm", 0))
-
-        return root
-    
-    def handle_gameend_set_collabo_request(self, request: Node) -> Node:
-        refid = request.child_value("data/player/refid")
-        collabo = request.child("data/collabo")
-        played = collabo.child("played")
-        iidx = played.child_value("j_iidx")
-        popn = played.child_value("j_popn")
-        ddr = played.child_value("j_ddr")
-        reflec = played.child_value("j_reflec")
-        gfdm = played.child_value("j_gfdm")
-
-        return Node.void("gameend")
     
     def handle_gameend_log_request(self, request: Node) -> Node:
         # Record guest play later

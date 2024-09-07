@@ -5,8 +5,8 @@ from bemani.backend.jubeat.stubs import (
     Jubeat,
     JubeatRipples,
     JubeatRipplesAppend,
-    JubeatKnit,
 )
+from bemani.backend.jubeat.knit import JubeatKnit
 from bemani.backend.jubeat.knitappend import JubeatKnitAppend
 from bemani.backend.jubeat.copious import JubeatCopious
 from bemani.backend.jubeat.copiousappend import JubeatCopiousAppend

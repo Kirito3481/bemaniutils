@@ -25,10 +25,3 @@ class JubeatRipplesAppend(JubeatBase):
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatRipples(self.data, self.config, self.model)
 
-
-class JubeatKnit(JubeatBase):
-    name: str = "Jubeat Knit"
-    version: int = VersionConstants.JUBEAT_KNIT
-
-    def previous_version(self) -> Optional[JubeatBase]:
-        return JubeatRipplesAppend(self.data, self.config, self.model)
