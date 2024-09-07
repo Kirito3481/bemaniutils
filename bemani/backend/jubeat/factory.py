@@ -8,8 +8,8 @@ from bemani.backend.jubeat.stubs import (
     JubeatKnit,
     JubeatKnitAppend,
     JubeatCopious,
-    JubeatCopiousAppend,
 )
+from bemani.backend.jubeat.copiousappend import JubeatCopiousAppend
 from bemani.backend.jubeat.saucer import JubeatSaucer
 from bemani.backend.jubeat.saucerfulfill import JubeatSaucerFulfill
 from bemani.backend.jubeat.prop import JubeatProp

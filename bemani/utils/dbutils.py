@@ -96,9 +96,9 @@ def main() -> None:
     parser.add_argument(
         "-c",
         "--config",
-        help="Core configuration. Defaults to server.yaml",
+        help="Core configuration. Defaults to config/server.yaml",
         type=str,
-        default="server.yaml",
+        default="config/server.yaml",
     )
     args = parser.parse_args()
 

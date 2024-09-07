@@ -48,11 +48,3 @@ class JubeatCopious(JubeatBase):
 
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatKnitAppend(self.data, self.config, self.model)
-
-
-class JubeatCopiousAppend(JubeatBase):
-    name: str = "Jubeat Copious Append"
-    version: int = VersionConstants.JUBEAT_COPIOUS_APPEND
-
-    def previous_version(self) -> Optional[JubeatBase]:
-        return JubeatCopious(self.data, self.config, self.model)

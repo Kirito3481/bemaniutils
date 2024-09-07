@@ -26,10 +26,10 @@ server:
     # Whether games should connect over HTTPS.
     https: False
     # Advertised frontend URI. Delete this to mask the frontend address.
-    uri: "https://eagate.573.jp"
+    uri: "https://p.eagate.573.jp"
     # URI that users hitting the GET interface will be redirected to.
     # Delete this to return an HTTP error instead of redirecting.
-    redirect: "https://eagate.573.jp"
+    redirect: "https://p.eagate.573.jp"
     # Whether PCBIDs must be added to the network before games will work.
     enforce_pcbid: False
     # How many PCBIDs an arcade owner can grant to themselves on the arcade
@@ -104,6 +104,6 @@ memcached_server: 1.2.3.4:5678
 # Set to zero or delete to disable deleting logs.
 event_log_duration: 2592000
 # Whether we log verbosely (full packet request and response) to web server logs or not.
-verbose: true
+verbose: True
 # Frontend theme directory where sitewide CSS and favicon should be found.
 theme: "default"
