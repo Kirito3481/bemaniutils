@@ -59,11 +59,6 @@ class JubeatCopiousAppend(JubeatGametopGetMeetingHandler, JubeatLoggerReportHand
         return root
     
     def handle_lobby_check_request(self, request: Node) -> Node:
-        enter = request.child_value("data/enter")
-        time = request.child_value("data/time")
-
-        print(f"Lobby check time: {time}")
-
         root = Node.void("lobby")
         data = Node.void("data")
         root.add_child(data)
@@ -72,67 +67,35 @@ class JubeatCopiousAppend(JubeatGametopGetMeetingHandler, JubeatLoggerReportHand
         entrant_nr.set_attribute("time", "0")
         data.add_child(entrant_nr)
         data.add_child(Node.s16("interval", 0))
-        data.add_child(Node.s16("entry_timeout", 10))
+        data.add_child(Node.s16("entry_timeout", 30))
         
         waitlist = Node.void("waitlist")
         data.add_child(waitlist)
-        waitlist.set_attribute("count", "1")
-
-        music = Node.void("music")
-        waitlist.add_child(music)
-        music.set_attribute("id", "10000003")
-        music.set_attribute("seq", "0")
+        waitlist.set_attribute("count", "0")
 
         return root
     
     def handle_lobby_entry_request(self, request: Node) -> Node:
-        locationid = request.child_value("data/locationid")
-        cabid = request.child_value("data/cabid")
-        local_match_key = request.child_value("data/local_matching/key")
-        local_match_count = request.child_value("data/local_matching/count")
         music_id = request.child_value("data/music/id")
         music_seq = request.child_value("data/music/seq")
-        music_level = request.child_value("data/music/level")
-        connect_key = request.child_value("data/connect/key")
-        connect_global = request.child_value("data/connect/global")
-        connect_private = request.child_value("data/connect/private")
-        exception = request.child_value("data/exception")
-
-        is_master = True
 
         root = Node.void("lobby")
         data = Node.void("data")
         root.add_child(data)
 
         roomid = Node.s64("roomid", 1)
-        roomid.set_attribute("master", "1" if is_master else "0")
+        roomid.set_attribute("master", "1")
         data.add_child(roomid)
-
-        if is_master:
-            data.add_child(Node.s16("refresh_intr", 5))
-        else:
-            connect = Node.void("connect")
-            data.add_child(connect)
-            connect.add_child(Node.u8_array("key", [0] * 12))
-            connect.add_child(Node.string("global", "127.0.0.1:10000"))
-            connect.add_child(Node.string("private", "192.168.0.1:5700"))
+        data.add_child(Node.s16("refresh_intr", 5))
 
         music = Node.void("music")
         data.add_child(music)
-        music.add_child(Node.u32("id", 0))
-        music.add_child(Node.u8("seq", 0))
+        music.add_child(Node.u32("id", music_id))
+        music.add_child(Node.u8("seq", music_seq))
 
         return root
     
     def handle_lobby_refresh_request(self, request: Node) -> Node:
-        roomid = request.child_value("data/roomid")
-
-        joined = request.child("data/joined")
-        if joined is not None:
-            for pcbinfo in joined.children:
-                cabid = pcbinfo.child_value("cabid")
-                addr = pcbinfo.child_value("addr")
-
         root = Node.void("lobby")
         data = Node.void("data")
         root.add_child(data)
@@ -140,14 +103,6 @@ class JubeatCopiousAppend(JubeatGametopGetMeetingHandler, JubeatLoggerReportHand
         return root
     
     def handle_lobby_report_request(self, request: Node) -> Node:
-        roomid = request.child_value("data/roomid")
-
-        joined = request.child("data/joined")
-        if joined is not None:
-            for pcbinfo in joined.children:
-                cabid = pcbinfo.child_value("cabid")
-                addr = pcbinfo.child_value("addr")
-
         root = Node.void("lobby")
         data = Node.void("data")
         root.add_child(data)
@@ -180,6 +135,7 @@ class JubeatCopiousAppend(JubeatGametopGetMeetingHandler, JubeatLoggerReportHand
     def handle_gametop_get_collabo_request(self, request: Node) -> Node:
         # Lincle LINK collabo event
         refid = request.child_value("data/player/refid")
+
         root = Node.void("gametop")
         data = Node.void("data")
         root.add_child(data)
@@ -323,14 +279,14 @@ class JubeatCopiousAppend(JubeatGametopGetMeetingHandler, JubeatLoggerReportHand
         challenge.add_child(onlynow)
         onlynow.add_child(Node.s32("magic_no", -1))
         onlynow.add_child(Node.s16("cycle", 0))
-        # group = Node.void("group")
-        # challenge.add_child(group)
-        # group.add_child(Node.s32("music_id", -1))
-        # group.add_child(Node.float("rate", 0))
-        # reward = Node.void("reward")
-        # group.add_child(reward)
-        # reward.add_child(Node.s32("total", 0))
-        # reward.add_child(Node.s32("point", 0))
+        group = Node.void("group")
+        challenge.add_child(group)
+        group.add_child(Node.s32("music_id", -1))
+        group.add_child(Node.float("rate", 0))
+        reward = Node.void("reward")
+        group.add_child(reward)
+        reward.add_child(Node.s32("total", 0))
+        reward.add_child(Node.s32("point", 0))
 
         news = Node.void("news")
         player.add_child(news)
