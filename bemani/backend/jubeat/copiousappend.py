@@ -265,10 +265,10 @@ class JubeatCopiousAppend(JubeatGametopGetMeetingHandler, JubeatLoggerReportHand
         item.add_child(Node.s32_array("parts_list", self.create_owned_items(owned_parts, 96)))
         new = Node.void("new")
         item.add_child(new)
-        new.add_child(Node.s32_array("secret_list", profile.get_int_array("secret_list_new", 12)))
-        new.add_child(Node.s16("theme_list", profile.get_int("theme_list_new")))
-        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list_new", 2)))
-        new.add_child(Node.s32_array("title_list", profile.get_int_array("title_list_new", 32)))
+        new.add_child(Node.s32_array("secret_list", profile.get_int_array("secret_new", 12, [0] * 12)))
+        new.add_child(Node.s16("theme_list", profile.get_int("theme_new")))
+        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_new", 2, [0, 0])))
+        new.add_child(Node.s32_array("title_list", profile.get_int_array("title_new", 32, [0] * 32)))
 
         challenge = Node.void("challenge")
         player.add_child(challenge)
@@ -348,11 +348,11 @@ class JubeatCopiousAppend(JubeatGametopGetMeetingHandler, JubeatLoggerReportHand
 
         item = player.child("item")
         if item is not None:
-            newprofile.replace_int("secret_list_new", item.child_value("secret_new"))
-            newprofile.replace_int("marker_list_new", item.child_value("marker_new"))
             newprofile.replace_int("theme_list", item.child_value("theme_list"))
-            newprofile.replace_int("theme_list_new", item.child_value("theme_new"))
-            newprofile.replace_int("title_list_new", item.child_value("title_new"))
+            newprofile.replace_int_array("secret_new", 12, item.child_value("secret_new"))
+            newprofile.replace_int_array("marker_new", 2, item.child_value("marker_new"))
+            newprofile.replace_int("theme_new", item.child_value("theme_new"))
+            newprofile.replace_int_array("title_new", 32, item.child_value("title_new"))
 
             owned_secrets = self.calculate_owned_items(item.child_value("secret_list"))
             owned_markers = self.calculate_owned_items(item.child_value("marker_list"))
