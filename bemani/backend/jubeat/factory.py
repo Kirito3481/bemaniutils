@@ -6,8 +6,8 @@ from bemani.backend.jubeat.stubs import (
     JubeatRipples,
     JubeatRipplesAppend,
     JubeatKnit,
-    JubeatKnitAppend,
 )
+from bemani.backend.jubeat.knitappend import JubeatKnitAppend
 from bemani.backend.jubeat.copious import JubeatCopious
 from bemani.backend.jubeat.copiousappend import JubeatCopiousAppend
 from bemani.backend.jubeat.saucer import JubeatSaucer
@@ -60,7 +60,7 @@ class JubeatFactory(Factory):
             else:
                 return JubeatRipples(data, config, model)
         if model.gamecode == "J44":
-            if model.version >= 2011032300:
+            if model.spec == "C":
                 return JubeatKnitAppend(data, config, model)
             else:
                 return JubeatKnit(data, config, model)

@@ -32,11 +32,3 @@ class JubeatKnit(JubeatBase):
 
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatRipplesAppend(self.data, self.config, self.model)
-
-
-class JubeatKnitAppend(JubeatBase):
-    name: str = "Jubeat Knit Append"
-    version: int = VersionConstants.JUBEAT_KNIT_APPEND
-
-    def previous_version(self) -> Optional[JubeatBase]:
-        return JubeatKnit(self.data, self.config, self.model)

@@ -2,46 +2,48 @@ from typing import Dict, List, Optional, Set
 
 from bemani.backend.base import Status
 from bemani.backend.jubeat.base import JubeatBase
-from bemani.backend.jubeat.common import (
-    JubeatGametopGetMeetingHandler,
-    JubeatLoggerReportHandler
-)
-from bemani.backend.jubeat.knitappend import JubeatKnitAppend
+from bemani.backend.jubeat.common import JubeatGametopGetMeetingHandler
+from bemani.backend.jubeat.stubs import JubeatKnit
 from bemani.common import Profile, ValidatedDict, VersionConstants, Time
 from bemani.data import Score, UserID
 from bemani.protocol import Node
 
 
-class JubeatCopious(
-    JubeatGametopGetMeetingHandler,
-    JubeatLoggerReportHandler,
-    JubeatBase
-):
-    name: str = "Jubeat Copious"
-    version: int = VersionConstants.JUBEAT_COPIOUS
+class JubeatKnitAppend(JubeatGametopGetMeetingHandler, JubeatBase):
+    name: str = "Jubeat Knit Append"
+    version: int = VersionConstants.JUBEAT_KNIT_APPEND
+
+    extra_services: List[str] = [
+        "netlog",
+    ]
 
     def previous_version(self) -> Optional[JubeatBase]:
-        return JubeatKnitAppend(self.data, self.config, self.model)
+        return JubeatKnit(self.data, self.config, self.model)
     
     def handle_shopinfo_regist_request(self, request: Node) -> Node:
+        testmode = request.child("testmode")
+        is_send = None
+        if testmode is not None and testmode.attribute("is_send") is not None:
+            is_send = testmode.attribute("is_send")
+
         # Update the name of this cab for admin purposes
-        self.update_machine_name(request.child_value('shop_name'))
+        self.update_machine_name(request.child_value("shop_name"))
 
         shopinfo = Node.void("shopinfo")
 
         data = Node.void("data")
         shopinfo.add_child(data)
         data.add_child(Node.u32("cabid", 1))
-        data.add_child(Node.string("locationid", "nowhere"))
-        data.add_child(Node.u8("is_send", 1))
+        data.add_child(Node.string("locationid", request.child_value("shop/locationid") or "nowhere"))
+        data.add_child(Node.u8("is_send", int(is_send) if is_send is not None else 0))
 
         return shopinfo
-    
+
     def handle_demodata_get_news_request(self, request: Node) -> Node:
         root = Node.void("demodata")
         data = Node.void("data")
         root.add_child(data)
-
+        
         officialnews = Node.void("officialnews")
         data.add_child(officialnews)
         officialnews.set_attribute("count", "0")
@@ -52,16 +54,19 @@ class JubeatCopious(
         root = Node.void("demodata")
         data = Node.void("data")
         root.add_child(data)
+        
+        hitchart = Node.void("hitchart")
+        data.add_child(hitchart)
+        hitchart.set_attribute("count", "0")
+        hitchart.add_child(Node.string("update", ""))
 
-        data.add_child(Node.string("update", ""))
+        hitchart = Node.void("hitchart_lic")
+        data.add_child(hitchart)
+        hitchart.set_attribute("count", "0")
 
-        hitchart_lic = Node.void("hitchart_lic")
-        data.add_child(hitchart_lic)
-        hitchart_lic.set_attribute("count", "0")
-
-        hitchart_org = Node.void("hitchart_org")
-        data.add_child(hitchart_org)
-        hitchart_org.set_attribute("count", "0")
+        hitchart = Node.void("hitchart_org")
+        data.add_child(hitchart)
+        hitchart.set_attribute("count", "0")
         
         return root
     
@@ -116,6 +121,9 @@ class JubeatCopious(
         data.add_child(Node.s16("refresh_intr", 5))
         return root
     
+    def handle_netlog_send_request(self, request: Node) -> Node:
+        return Node.void("netlog")
+    
     def handle_gametop_regist_request(self, request: Node) -> Node:
         refid = request.child_value("data/player/pass/refid")
         name = request.child_value("data/player/name")
@@ -140,57 +148,40 @@ class JubeatCopious(
         return root
     
     def handle_gametop_get_collabo_request(self, request: Node) -> Node:
-        # Lincle LINK collabo event
+        # APPEND FESTIVAL Event
         refid = request.child_value("data/player/refid")
 
         root = Node.void("gametop")
         data = Node.void("data")
         root.add_child(data)
-        player = Node.void("player")
-        data.add_child(player)
+        
         collabo = Node.void("collabo")
-        player.add_child(collabo)
-        collabo.add_child(Node.s32("reward", 0))
-        collabo.add_child(Node.s32("dellar", 0))
-        collabo.add_child(Node.s32("music_id", 0))
-        collabo.add_child(Node.u32("wonder_state", 0))
-        collabo.add_child(Node.u32("yellow_state", 0))
+        data.add_child(collabo)
+        played = Node.void("played")
+        collabo.add_child(played)
+        played.add_child(Node.s8("iidx", 0))
+        played.add_child(Node.s8("popn", 0))
+        played.add_child(Node.s8("ddr", 0))
+        played.add_child(Node.s8("reflec", 0))
+        played.add_child(Node.s8("gfdm", 0))
 
         return root
     
-    def handle_gameend_regist_request(self, request: Node) -> Node:
-        player = request.child("data/player")
+    def handle_gameend_set_collabo_request(self, request: Node) -> Node:
+        refid = request.child_value("data/player/refid")
+        collabo = request.child("data/collabo")
+        played = collabo.child("played")
+        iidx = played.child_value("j_iidx")
+        popn = played.child_value("j_popn")
+        ddr = played.child_value("j_ddr")
+        reflec = played.child_value("j_reflec")
+        gfdm = played.child_value("j_gfdm")
 
-        if player is not None:
-            refid = player.child_value("refid")
-        else:
-            refid = None
-
-        if refid is not None:
-            userid = self.data.remote.user.from_refid(self.game, self.version, refid)
-        else:
-            userid = None
-
-        if userid is not None:
-            oldprofile = self.get_profile(userid)
-            newprofile = self.unformat_profile(userid, request, oldprofile)
-        else:
-            newprofile = None
-
-        if userid is not None and newprofile is not None:
-            self.put_profile(userid, newprofile)
-
-        root = Node.void("gameend")
-        data = Node.void("data")
-        root.add_child(data)
-        player = Node.void("player")
-        data.add_child(player)
-        player.add_child(Node.s32("session_id", 1))
-        collabo = Node.void("collabo")
-        data.add_child(collabo)
-        collabo.add_child(Node.s32("dellar", 0)) # for collabo event?
-        return root
-
+        return Node.void("gameend")
+    
+    def handle_gameend_log_request(self, request: Node) -> Node:
+        # Record guest play later
+        return Node.void("gameend")
     
     def format_profile(self, userid: UserID, profile: Profile) -> Node:
         root = Node.void("gametop")
@@ -201,7 +192,6 @@ class JubeatCopious(
         owned_secrets: Set[int] = set()
         owned_markers: Set[int] = set()
         owned_titles: Set[int] = set()
-        owned_parts: Set[int] = set()
         for achievement in achievements:
             if achievement.type == "secret":
                 owned_secrets.add(achievement.id)
@@ -209,8 +199,6 @@ class JubeatCopious(
                 owned_markers.add(achievement.id)
             elif achievement.type == "title":
                 owned_titles.add(achievement.id)
-            elif achievement.type == "part":
-                owned_parts.add(achievement.id)
 
         player = Node.void("player")
         data.add_child(player)
@@ -218,6 +206,8 @@ class JubeatCopious(
         player.add_child(Node.s32("session_id", 1))
         player.add_child(Node.s32("jid", profile.extid))
         player.add_child(Node.string("name", profile.get_str("name", "PLAYER")))
+        player.add_child(Node.string("refid", profile.refid))
+
 
         info = Node.void("info")
         player.add_child(info)
@@ -229,10 +219,10 @@ class JubeatCopious(
         )
         info.add_child(Node.s16("jubility", profile.get_int("jubility")))
         info.add_child(Node.s16("jubility_yday", profile.get_int("jubility_yday")))
+        info.add_child(Node.s8("acv_prog", profile.get_int("acv_prog")))
+        info.add_child(Node.s8("acv_wool", profile.get_int("acv_wool")))
+        info.add_child(Node.s8_array("acv_route_prog", profile.get_int_array("acv_route_prog", 4, [0, 0, 0, 0])))
         info.add_child(Node.s32("acv_point", profile.get_int("acv_point")))
-        info.add_child(Node.s8("acv_state", profile.get_int("acv_state")))
-        info.add_child(Node.s32_array("acv_throw", profile.get_int_array("acv_throw", 3, [0, 0, 0])))
-        info.add_child(Node.s32("acv_own", profile.get_int("acv_own")))
         info.add_child(Node.s32("tune_cnt", profile.get_int("tune_cnt")))
         info.add_child(Node.s32("save_cnt", profile.get_int("save_cnt")))
         info.add_child(Node.s32("saved_cnt", profile.get_int("saved_cnt")))
@@ -241,8 +231,12 @@ class JubeatCopious(
         info.add_child(Node.s32("match_cnt", profile.get_int("match_cnt")))
         info.add_child(Node.s32("beat_cnt", profile.get_int("beat_cnt")))
         info.add_child(Node.s32("mynews_cnt", profile.get_int("mynews_cnt")))
+        info.add_child(Node.s32("con_sel_cnt", profile.get_int("con_sel_cnt")))
+        info.add_child(Node.s32("tag_cnt", profile.get_int("tag_cnt")))
         info.add_child(Node.s32("mtg_entry_cnt", profile.get_int("mtg_entry_cnt")))
+        info.add_child(Node.s32("tag_entry_cnt", profile.get_int("tag_entry_cnt")))
         info.add_child(Node.s32("mtg_hold_cnt", profile.get_int("mtg_hold_cnt")))
+        info.add_child(Node.s32("tag_hold_cnt", profile.get_int("tag_hold_cnt")))
         info.add_child(Node.u8("mtg_result", profile.get_int("mtg_result")))
 
         lastdict = profile.get_dict("last")
@@ -252,7 +246,6 @@ class JubeatCopious(
         last.add_child(Node.string("shopname", lastdict.get_str("shopname")))
         last.add_child(Node.string("areaname", lastdict.get_str("areaname")))
         last.add_child(Node.s16("title", lastdict.get_int("title")))
-        last.add_child(Node.s16("parts", lastdict.get_int("parts")))
         last.add_child(Node.s8("theme", lastdict.get_int("theme")))
         last.add_child(Node.s8("marker", lastdict.get_int("marker")))
         last.add_child(Node.s8("rank_sort", lastdict.get_int("rank_sort")))
@@ -260,48 +253,42 @@ class JubeatCopious(
         last.add_child(Node.s32("music_id", lastdict.get_int("music_id")))
         last.add_child(Node.s8("seq_id", lastdict.get_int("seq_id")))
         last.add_child(Node.s8("sort", lastdict.get_int("sort")))
-        last.add_child(Node.s8("category", lastdict.get_int("category")))
+        last.add_child(Node.s32("filter", lastdict.get_int("filter")))
         last.add_child(Node.s8("msel_stat", lastdict.get_int("msel_stat")))
+        last.add_child(Node.s8("con_suggest_id", lastdict.get_int("con_suggest_id")))
 
         item = Node.void("item")
         player.add_child(item)
-        item.add_child(Node.s32_array("secret_list", self.create_owned_items(owned_secrets, 12)))
+        item.add_child(Node.s32_array("secret_list", self.create_owned_items(owned_secrets, 2)))
         item.add_child(Node.s16("theme_list", profile.get_int("theme_list")))
         item.add_child(Node.s32_array("marker_list", self.create_owned_items(owned_markers, 2)))
-        item.add_child(Node.s32_array("title_list", self.create_owned_items(owned_titles, 32)))
-        item.add_child(Node.s32_array("parts_list", self.create_owned_items(owned_parts, 96)))
+        item.add_child(Node.s32_array("title_list", self.create_owned_items(owned_titles, 24)))
         new = Node.void("new")
         item.add_child(new)
-        new.add_child(Node.s32_array("secret_list", profile.get_int_array("secret_list_new", 12)))
-        new.add_child(Node.s16("theme_list", profile.get_int("theme_list_new")))
-        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list_new", 2)))
-        new.add_child(Node.s32_array("title_list", profile.get_int_array("title_list_new", 32)))
+        new.add_child(Node.s32_array("secret_list", profile.get_int_array("secret_new", 2, [0, 0])))
+        new.add_child(Node.s16("theme_list", profile.get_int("theme_new")))
+        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_new", 2, [0, 0])))
+        new.add_child(Node.s32_array("title_list", profile.get_int_array("title_new", 24, [0] * 24)))
 
-        challenge = Node.void("challenge")
-        player.add_child(challenge)
-        today = Node.void("today")
-        challenge.add_child(today)
-        today.add_child(Node.s32("music_id", -1))
-        onlynow = Node.void("onlynow")
-        challenge.add_child(onlynow)
-        onlynow.add_child(Node.s32("magic_no", -1))
-        onlynow.add_child(Node.s16("cycle", 0))
-        group = Node.void("group")
-        challenge.add_child(group)
-        group.add_child(Node.s32("music_id", -1))
-        group.add_child(Node.float("rate", 0))
-        reward = Node.void("reward")
-        group.add_child(reward)
-        reward.add_child(Node.s32("total", 0))
-        reward.add_child(Node.s32("point", 0))
+        today_music = Node.void("today_music")
+        player.add_child(today_music)
+        today_music.add_child(Node.s32("music_id", -1))
+
+        lucky_music = Node.void("lucky_music")
+        player.add_child(lucky_music)
+        lucky_music.add_child(Node.s32("music_id", -1))
 
         news = Node.void("news")
         player.add_child(news)
-        news.add_child(Node.s16("checked", 0))
+        news.add_child(Node.s16("checked", profile.get_int("news_checked")))
 
-        rivallist = Node.void("rivallist")
-        player.add_child(rivallist)
-        rivallist.set_attribute("count", "0")
+        friendlist = Node.void("friendlist")
+        player.add_child(friendlist)
+        friendlist.set_attribute("count", "0")
+
+        mylist = Node.void("mylist")
+        player.add_child(mylist)
+        mylist.set_attribute("count", "0")
 
         group = Node.void("group")
         player.add_child(group)
@@ -309,16 +296,26 @@ class JubeatCopious(
 
         bingo = Node.void("bingo")
         player.add_child(bingo)
-        bingo.add_child(Node.s32("music_id", -1))
-        bingo_reward = Node.void("reward")
-        bingo.add_child(bingo_reward)
-        bingo_reward.add_child(Node.s32("total", 0))
-        bingo_reward.add_child(Node.s32("point", 0))
+        reward = Node.void("reward")
+        bingo.add_child(reward)
+        reward.add_child(Node.s32("total", profile.get_int("jubingo_total")))
+        reward.add_child(Node.s32("point",  profile.get_int("jubingo_point")))
 
-        # Play historys
+        collabo = Node.void("collabo")
+        player.add_child(collabo)
+        collabo.add_child(Node.bool("success", profile.get_bool("collabo_success")))
+        collabo.add_child(Node.bool("completed", profile.get_bool("collabo_completed")))
+
         history = Node.void("history")
         data.add_child(history)
-        history.set_attribute("count", "0")
+
+        play_hist = Node.void("play_hist")
+        history.add_child(play_hist)
+        play_hist.set_attribute("count", "0")
+
+        match_hist = Node.void("match_hist")
+        history.add_child(match_hist)
+        match_hist.set_attribute("count", "0")
 
         return root
     
@@ -330,7 +327,7 @@ class JubeatCopious(
         player = data.child("player")
 
         last = newprofile.get_dict("last")
-        last.replace_int("play_time", player.child_value("time_gameend"))
+        last.replace_int("play_time", Time.now())
         last.replace_str("shopname", player.child_value("shopname"))
         last.replace_str("areaname", player.child_value("areaname"))
 
@@ -338,33 +335,35 @@ class JubeatCopious(
         if info is not None:
             newprofile.replace_int("jubility", info.child_value("jubility"))
             newprofile.replace_int("jubility_yday", info.child_value("jubility_yday"))
-            newprofile.replace_int("acv_state", info.child_value("acv_state"))
+            newprofile.replace_int("acv_prog", info.child_value("acv_prog"))
             newprofile.replace_int("acv_point", info.child_value("acv_point"))
-            newprofile.replace_int("acv_own", info.child_value("acv_own"))
-            newprofile.replace_int_array("acv_throw", 3, info.child_value("acv_throw"))
+            newprofile.replace_int("acv_wool", info.child_value("acv_wool"))
+            newprofile.replace_int_array("acv_route_prog", 4, info.child_value("acv_route_prog"))
             newprofile.replace_int("tune_cnt", info.child_value("tune_cnt"))
             newprofile.replace_int("save_cnt", info.child_value("save_cnt"))
             newprofile.replace_int("saved_cnt", info.child_value("saved_cnt"))
             newprofile.replace_int("fc_cnt", info.child_value("fc_cnt"))
             newprofile.replace_int("fc_seq_cnt", info.child_value("fc_seq_cnt"))
             newprofile.replace_int("ex_cnt", info.child_value("exc_cnt"))
+            newprofile.replace_int("ex_seq_cnt", info.child_value("exc_seq_cnt"))
             newprofile.replace_int("match_cnt", info.child_value("match_cnt"))
             newprofile.replace_int("beat_cnt", info.child_value("beat_cnt"))
-            newprofile.replace_int("total_best_score", info.child_value("total_best_score"))
+            newprofile.replace_int("con_sel_cnt", info.child_value("con_sel_cnt"))
+            newprofile.replace_int("tag_cnt", info.child_value("tag_cnt"))
+            last.replace_int("con_suggest_id", info.child_value("con_suggest_id"))
             newprofile.replace_int("mynews_cnt", info.child_value("mynews_cnt"))
 
         item = player.child("item")
         if item is not None:
-            newprofile.replace_int("secret_list_new", item.child_value("secret_new"))
-            newprofile.replace_int("marker_list_new", item.child_value("marker_new"))
             newprofile.replace_int("theme_list", item.child_value("theme_list"))
-            newprofile.replace_int("theme_list_new", item.child_value("theme_new"))
-            newprofile.replace_int("title_list_new", item.child_value("title_new"))
+            newprofile.replace_int_array("secret_new", 2, item.child_value("secret_new"))
+            newprofile.replace_int("theme_new", item.child_value("theme_new"))
+            newprofile.replace_int_array("marker_new", 2, item.child_value("marker_new"))
+            newprofile.replace_int_array("title_new", 24, item.child_value("title_new"))
 
             owned_secrets = self.calculate_owned_items(item.child_value("secret_list"))
             owned_markers = self.calculate_owned_items(item.child_value("marker_list"))
             owned_titles = self.calculate_owned_items(item.child_value("title_list"))
-            owned_parts = self.calculate_owned_items(item.child_value("parts_list"))
 
             for index in owned_secrets:
                 self.data.local.user.put_achievement(
@@ -396,19 +395,23 @@ class JubeatCopious(
                     {}
                 )
 
-            for index in owned_parts:
-                self.data.local.user.put_achievement(
-                    self.game,
-                    self.version,
-                    userid,
-                    index,
-                    "part",
-                    {}
-                )
-
         news = player.child("news")
         if news is not None:
             newprofile.replace_int("news_checked", news.child_value("checked"))
+
+        group = player.child("group")
+        if group is not None:
+            newprofile.replace_int("group_id", group.child_value("group_id"))
+
+        collabo = player.child("collabo")
+        if collabo is not None:
+            newprofile.replace_bool("collabo_success", collabo.child_value("success"))
+            newprofile.replace_bool("collabo_completed", collabo.child_value("completed"))
+
+        jubingo = player.child("jubingo")
+        if jubingo is not None:
+            newprofile.replace_int("jubingo_total", jubingo.child_value("total"))
+            newprofile.replace_int("jubingo_point", jubingo.child_value("point"))
 
         timestamps: Dict[int, int] = {}
         history = player.child("history")
@@ -416,7 +419,7 @@ class JubeatCopious(
             for tune in history.children:
                 if tune.name != "tune":
                     continue
-                entry = int(tune.attribute("log_id"))
+                entry = tune.child_value("log_id")
                 ts = int(tune.child_value("timestamp") / 1000)
                 timestamps[entry] = ts
 
@@ -429,10 +432,9 @@ class JubeatCopious(
 
                 last.replace_int("marker", tune.child_value("marker"))
                 last.replace_int("title", tune.child_value("title"))
-                last.replace_int("parts", tune.child_value("parts"))
                 last.replace_int("theme", tune.child_value("theme"))
                 last.replace_int("sort", tune.child_value("sort"))
-                last.replace_int("category", tune.child_value("category"))
+                last.replace_int("filter", tune.child_value("filter"))
                 last.replace_int("rank_sort", tune.child_value("rank_sort"))
                 last.replace_int("combo_disp", tune.child_value("combo_disp"))
                 last.replace_int("msel_stat", tune.child_value("msel_stat"))
@@ -474,7 +476,6 @@ class JubeatCopious(
         root = Node.void("gametop")
         data = Node.void("data")
         root.add_child(data)
-
         player = Node.void("player")
         data.add_child(player)
 
@@ -547,5 +548,5 @@ class JubeatCopious(
                 bar = Node.u8_array("bar", ghost)
                 musicdata.add_child(bar)
                 bar.set_attribute("seq", str(i))
-        
+
         return root
