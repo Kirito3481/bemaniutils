@@ -2,19 +2,26 @@ from typing import Dict, List, Optional, Set
 
 from bemani.backend.base import Status
 from bemani.backend.jubeat.base import JubeatBase
-from bemani.backend.jubeat.common import JubeatGametopGetMeetingHandler, JubeatLoggerReportHandler
-from bemani.backend.jubeat.copious import JubeatCopious
+from bemani.backend.jubeat.common import (
+    JubeatGametopGetMeetingHandler,
+    JubeatLoggerReportHandler
+)
+from bemani.backend.jubeat.stubs import JubeatKnitAppend
 from bemani.common import Profile, ValidatedDict, VersionConstants, Time
 from bemani.data import Score, UserID
 from bemani.protocol import Node
 
 
-class JubeatCopiousAppend(JubeatGametopGetMeetingHandler, JubeatLoggerReportHandler, JubeatBase):
-    name: str = "Jubeat Copious Append"
-    version: int = VersionConstants.JUBEAT_COPIOUS_APPEND
+class JubeatCopious(
+    JubeatGametopGetMeetingHandler,
+    JubeatLoggerReportHandler,
+    JubeatBase
+):
+    name: str = "Jubeat Copious"
+    version: int = VersionConstants.JUBEAT_COPIOUS
 
     def previous_version(self) -> Optional[JubeatBase]:
-        return JubeatCopious(self.data, self.config, self.model)
+        return JubeatKnitAppend(self.data, self.config, self.model)
     
     def handle_shopinfo_regist_request(self, request: Node) -> Node:
         # Update the name of this cab for admin purposes
