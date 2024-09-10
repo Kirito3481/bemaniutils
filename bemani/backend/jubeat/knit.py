@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Set
 from bemani.backend.base import Status
 from bemani.backend.jubeat.base import JubeatBase
 from bemani.backend.jubeat.common import JubeatGametopGetMeetingHandler, JubeatGamendRegisterHandler
-from bemani.backend.jubeat.stubs import JubeatRipplesAppend
+from bemani.backend.jubeat.ripplesappend import JubeatRipplesAppend
 from bemani.common import Profile, ValidatedDict, VersionConstants, Time
 from bemani.data import Score, UserID
 from bemani.protocol import Node

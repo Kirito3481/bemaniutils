@@ -2178,8 +2178,9 @@ class ImportJubeat(ImportBase):
         no_combine: bool,
         update: bool,
     ) -> None:
-        if version in ["copious-append", "saucer", "saucer-fulfill", "prop", "qubell", "clan", "festo"]:
+        if version in ["ripples-append", "copious-append", "saucer", "saucer-fulfill", "prop", "qubell", "clan", "festo"]:
             actual_version = {
+                "ripples-append": VersionConstants.JUBEAT_RIPPLES_APPEND,
                 "copious-append": VersionConstants.JUBEAT_COPIOUS_APPEND,
                 "saucer": VersionConstants.JUBEAT_SAUCER,
                 "saucer-fulfill": VersionConstants.JUBEAT_SAUCER_FULFILL,
@@ -2208,6 +2209,7 @@ class ImportJubeat(ImportBase):
             # This adds a duplicate of each chart so that we show separated scores.
             self.charts = [0, 1, 2, 3, 4, 5]
         elif actual_version in [
+            VersionConstants.JUBEAT_RIPPLES_APPEND,
             VersionConstants.JUBEAT_COPIOUS_APPEND,
             VersionConstants.JUBEAT_SAUCER,
             VersionConstants.JUBEAT_SAUCER_FULFILL,

@@ -3,9 +3,9 @@ from typing import List, Optional, Type
 from bemani.backend.base import Base, Factory
 from bemani.backend.jubeat.stubs import (
     Jubeat,
-    JubeatRipples,
-    JubeatRipplesAppend,
 )
+from bemani.backend.jubeat.ripples import JubeatRipples
+from bemani.backend.jubeat.ripplesappend import JubeatRipplesAppend
 from bemani.backend.jubeat.knit import JubeatKnit
 from bemani.backend.jubeat.knitappend import JubeatKnitAppend
 from bemani.backend.jubeat.copious import JubeatCopious
@@ -55,7 +55,8 @@ class JubeatFactory(Factory):
         if model.gamecode == "H44":
             return Jubeat(data, config, model)
         if model.gamecode == "I44":
-            if model.version >= 2010031800:
+            # ==
+            if model.spec != "B":
                 return JubeatRipplesAppend(data, config, model)
             else:
                 return JubeatRipples(data, config, model)
@@ -65,7 +66,7 @@ class JubeatFactory(Factory):
             else:
                 return JubeatKnit(data, config, model)
         if model.gamecode == "K44":
-            if model.version >= 2012031400:
+            if model.spec == "D":
                 return JubeatCopiousAppend(data, config, model)
             else:
                 return JubeatCopious(data, config, model)
