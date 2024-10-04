@@ -1,4 +1,5 @@
 # vim: set fileencoding=utf-8
+from enum import Enum, IntEnum
 import random
 from typing import Any, Dict, List, Optional, Set, Tuple
 from typing_extensions import Final
@@ -108,6 +109,18 @@ class JubeatFesto(
     GAME_CHART_TYPE_BASIC: Final[int] = 0
     GAME_CHART_TYPE_ADVANCED: Final[int] = 1
     GAME_CHART_TYPE_EXTREME: Final[int] = 2
+
+    REWARD_MUSIC: Final[int] = 1
+    REWARD_TITLE: Final[int] = 2
+    REWARD_MARKER: Final[int] = 3
+    REWARD_BACKGROUND: Final[int] = 4
+    REWARD_JUBIBELL: Final[int] = 5
+    REWARD_EMO: Final[int] = 6
+    REWARD_BONUS_TUNE_TICKET: Final[int] = 7
+    REWARD_FAV_FEVER_TICKET: Final[int] = 8
+    REWARD_JBOX_PIECE: Final[int] = 9
+    REWARD_BONUS_TUNE_GAUGE: Final[int] = 11
+    REWARD_TITLE_PARTS: Final[int] = 12
 
     # Return the netlog service so that Festo doesn't crash on coin-in.
     extra_services: List[str] = [
@@ -293,8 +306,126 @@ class JubeatFesto(
                     "category": "game_config",
                     "setting": "force_song_unlock",
                 },
+                {
+                    "name": "Enable All Music Matching",
+                    "tip": "Not only the music I play is matched, but people who play other music are also matched.",
+                    "category": "game_config",
+                    "setting": "all_music_matching",
+                },
             ],
         }
+
+    def __get_team_battle_list(self) -> List[Dict[str, Any]]:
+        return [
+            {
+                "id": 1,
+                "name": "第1回 PJ MATCH ネコ VS イヌ",
+                "state": 1,
+                "end_time": Time.end_of_this_month(),
+                "teams": ["ネコ", "イヌ"],
+                "player_rewards": [
+                    # Need point, Reward Type, Value, IsSpecial
+                    [10, self.REWARD_TITLE, 7927, False],
+                    [100, self.REWARD_JBOX_PIECE, 100, False],
+                    [200, self.REWARD_BACKGROUND, 12, False],
+                    [300, self.REWARD_BONUS_TUNE_GAUGE, 200, False],
+                    [400, self.REWARD_MUSIC, 90000058, False],
+                    [500, self.REWARD_JUBIBELL, 31, False],
+                    [9999, self.REWARD_TITLE, 7928, False],
+                ],
+                "win_rewards": [
+                    # Reward Type, Value, IsSpecial
+                    # TODO: T-EMO 50
+                    # [6, 501, False]
+                ],
+                "basic_rewards": [
+                    # Reward Type, Value, IsSpecial
+                    # TODO: T-EMO 100
+                    # [6, 1001, False]
+                ],
+            },
+            {
+                "id": 2,
+                "name": "第2回 PJ MATCH 日向美ビタースイーツ♪ VS ここなつ",
+                "state": 1,
+                "end_time": Time.end_of_this_month(),
+                "teams": ["日向美ビター", "ここなつ"],
+                "player_rewards": [
+                    # Need point, Reward Type, Value, IsSpecial
+                    [10, self.REWARD_TITLE, 7947, False],
+                    [100, self.REWARD_JBOX_PIECE, 100, False],
+                    [200, self.REWARD_BACKGROUND, 13, False],
+                    [400, self.REWARD_MUSIC, 90000071, False],
+                    [700, self.REWARD_MARKER, 47, False],
+                    [1000, self.REWARD_MUSIC, 90000070, False],
+                    [9999, self.REWARD_TITLE, 7948, False],
+                ],
+                "win_rewards": [
+                    # Reward Type, Value, IsSpecial
+                    # TODO: T-EMO 50
+                    # [6, 501, False]
+                ],
+                "basic_rewards": [
+                    # Reward Type, Value, IsSpecial
+                    # TODO: T-EMO 50
+                    # [6, 1001, False]
+                ],
+            },
+            {
+                "id": 3,
+                "name": "第1回・復刻開催 PJ MATCH ネコ VS イヌ",
+                "state": 2,
+                "end_time": Time.end_of_this_month(),
+                "teams": ["ネコ", "イヌ"],
+                "player_rewards": [
+                    # Need point, Reward Type, Value, IsSpecial
+                    [10, self.REWARD_TITLE, 7927, False],
+                    [100, self.REWARD_JBOX_PIECE, 100, False],
+                    [200, self.REWARD_BACKGROUND, 12, False],
+                    [300, self.REWARD_BONUS_TUNE_GAUGE, 200, False],
+                    [400, self.REWARD_MUSIC, 90000058, False],
+                    [500, self.REWARD_JUBIBELL, 31, False],
+                    [9999, self.REWARD_TITLE, 7928, False],
+                ],
+                "win_rewards": [
+                    # Reward Type, Value, IsSpecial
+                    # TODO: T-EMO 50
+                    # [6, 501, False]
+                ],
+                "basic_rewards": [
+                    # Reward Type, Value, IsSpecial
+                    # TODO: T-EMO 100
+                    # [6, 1001, False]
+                ],
+            },
+            {
+                "id": 4,
+                "name": "第3回 PJ MATCH 過去 VS 未来",
+                "state": 1,
+                "end_time": Time.end_of_this_month(),
+                "teams": ["過去", "未来"],
+                "player_rewards": [
+                    # Need point, Reward Type, Value, IsSpecial
+                    [10, self.REWARD_TITLE, 7949, False],
+                    [100, self.REWARD_JBOX_PIECE, 100, False],
+                    [200, self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+                    [300, self.REWARD_BONUS_TUNE_GAUGE, 100, False],
+                    [400, self.REWARD_MUSIC, 90000134, False],
+                    [500, self.REWARD_BONUS_TUNE_GAUGE, 200, False],
+                    [9999, self.REWARD_TITLE, 7950, False],
+                ],
+                "win_rewards": [
+                    # Reward Type, Value, IsSpecial
+                    # TODO: T-EMO 50
+                    # [6, 501, False]
+                ],
+                "basic_rewards": [
+                    # Reward Type, Value, IsSpecial
+                    # TODO: T-EMO 100
+                    # [6, 1001, False]
+                ],
+            },
+        ]
 
     def __get_course_list(self) -> List[Dict[str, Any]]:
         # Note that several of the below courses originally included removed songs, because older
@@ -1268,7 +1399,3761 @@ class JubeatFesto(
             },
         ]
 
+    def __get_emo_list(self) -> List[List[Any]]:
+        return [
+            # Emo ID, Texture ID, Exchangeable
+            [2, 1, False],
+        ]
+
+    def __get_shop_list(self) -> List[Dict[str, Any]]:
+        # Maximum number of shops is 5
+        # Maximum number of items per shop is 100
+        return [
+            # festo SHOP
+            {
+                "id": 1,
+                "texture_id": 5,
+                "type": 5,
+                "emo_id": 2,
+                "priority": 0,
+                "items": [
+                    # Type, Value, Price, IsSecret, Special
+                    [self.REWARD_MUSIC, 90001015, 50, False, False],  # Icicles [ 2 ]
+                    [self.REWARD_MUSIC, 90001013, 50, False, False],  # I'm so Happy [ 2 ]
+                    [self.REWARD_MUSIC, 90000097, 50, False, False],  # ATRAX
+                    [self.REWARD_MUSIC, 90000020, 50, False, False],  # Analyse Katharsis
+                    [self.REWARD_MUSIC, 90000053, 300, False, False],  # Apex of the World
+                    [self.REWARD_MUSIC, 90000098, 50, False, False],  # Arena Deiporta
+                    [self.REWARD_MUSIC, 90001025, 50, False, False],  # Our Faith [ 2 ]
+                    [self.REWARD_MUSIC, 90000060, 50, False, False],  # Virtual Bit
+                    [self.REWARD_MUSIC, 90001024, 50, False, False],  # VALLIS-NERIA [ 2 ]
+                    [self.REWARD_MUSIC, 90000136, 50, False, False],  # Winter Gift ～クリスピーからの贈りもの～
+                    [self.REWARD_MUSIC, 90000061, 50, False, False],  # WELCOME TO MOTOWN PARK
+                    [self.REWARD_MUSIC, 90000006, 50, False, False],  # EMOTiON TRiPPER
+                    [self.REWARD_MUSIC, 90000065, 50, False, False],  # Endless Beats ⇔ Endless Parties
+                    [self.REWARD_MUSIC, 90001019, 50, False, False],  # ALL MY HEART -この恋に、わたしの全てを賭ける- [ 2 ]
+                    [self.REWARD_MUSIC, 90000106, 50, False, False],  # おにぎりディスコ
+                    [self.REWARD_MUSIC, 90000070, 300, False, False],  # 革命パッショネイト
+                    [self.REWARD_MUSIC, 90001017, 50, False, False],  # [E] [ 2 ]
+                    [self.REWARD_MUSIC, 90000052, 100, False, False],  # Catch Our Fire!
+                    [self.REWARD_MUSIC, 90001014, 50, False, False],  # Queen's Paradise [ 2 ]
+                    [self.REWARD_MUSIC, 90001012, 50, False, False],  # cloche [ 2 ]
+                    [self.REWARD_MUSIC, 90001021, 100, False, False],  # Chronos [ 2 ]
+                    [self.REWARD_MUSIC, 90000143, 300, False, False],  # Get On The Floor
+                    [self.REWARD_MUSIC, 90001018, 100, False, False],  # Sakura Sunrise [ 2 ]
+                    [self.REWARD_MUSIC, 80000119, 150, False, False],  # 飽和世界
+                    [self.REWARD_MUSIC, 90000004, 50, False, False],  # Sahara
+                    [self.REWARD_MUSIC, 90000001, 50, False, False],  # Samba Ramba
+                    [self.REWARD_MUSIC, 90001004, 50, False, False],  # SigSig [ 2 ]
+                    [self.REWARD_MUSIC, 90000103, 50, False, False],  # シンクロフィッシュ
+                    [self.REWARD_MUSIC, 90000068, 50, False, False],  # スイーツはとまらない♪
+                    [self.REWARD_MUSIC, 90000137, 50, False, False],  # Super GERO GE-RO
+                    [self.REWARD_MUSIC, 90001011, 50, False, False],  # Snow Goose [ 2 ]
+                    [self.REWARD_MUSIC, 90000058, 50, False, False],  # スノーホワイト
+                    [self.REWARD_MUSIC, 90001016, 50, False, False],  # スペースカーニバル [ 2 ]
+                    [self.REWARD_MUSIC, 90001020, 50, False, False],  # 創世ノート [ 2 ]
+                    [self.REWARD_MUSIC, 90001006, 50, False, False],  # sola [ 2 ]
+                    [self.REWARD_MUSIC, 90000062, 50, False, False],  # Sorrows
+                    [self.REWARD_MUSIC, 90000105, 50, False, False],  # たたえよ！絶対覇権アリーシャ帝国
+                    [self.REWARD_MUSIC, 90000022, 50, False, False],  # タンポポ
+                    [self.REWARD_MUSIC, 90001010, 50, False, False],  # ツーマンライブ [ 2 ]
+                    [self.REWARD_MUSIC, 90000021, 50, False, False],  # 月影小町
+                    [self.REWARD_MUSIC, 90001003, 50, False, False],  # つぼみ [ 2 ]
+                    [self.REWARD_MUSIC, 90000069, 50, False, False],  # 熱情のサパデアード
+                    [self.REWARD_MUSIC, 90000094, 150, False, False],  # ネリと琥珀糖
+                    [self.REWARD_MUSIC, 90000104, 50, False, False],  # 箱庭のエチュード
+                    [self.REWARD_MUSIC, 90000142, 300, False, False],  # Pacify
+                    [self.REWARD_MUSIC, 90000087, 200, False, False],  # 花ハ踊レヤいろはにほ（ハピネス mix）
+                    [self.REWARD_MUSIC, 90000088, 200, False, False],  # ハム太郎とっとこうた（すーぱーとっとこみっくす）
+                    [self.REWARD_MUSIC, 80000040, 150, False, False],  # PF flowing
+                    [self.REWARD_MUSIC, 90000095, 50, False, False],  # BEEF
+                    [self.REWARD_MUSIC, 90000071, 50, False, False],  # ヒカリユリイカ
+                    [self.REWARD_MUSIC, 90000102, 50, False, False],  # ビター・エスケープ
+                    [self.REWARD_MUSIC, 90000145, 300, False, False],  # ビューティフル レシート
+                    [self.REWARD_MUSIC, 90000055, 500, False, False],  # Beyond the BLUE
+                    [self.REWARD_MUSIC, 90000005, 50, False, False],  # Phantasmagoria
+                    [self.REWARD_MUSIC, 90000090, 100, False, False],  # 50th Memorial Songs -The BEMANI History-
+                    [self.REWARD_MUSIC, 90000093, 100, False, False],  # 50th Memorial Songs -二人の時 ～under the cherry blossoms～-
+                    [self.REWARD_MUSIC, 90000092, 100, False, False],  # 50th Memorial Songs -Flagship medley-
+                    [self.REWARD_MUSIC, 90001001, 50, False, False],  # Proof of the existence [ 2 ]
+                    [self.REWARD_MUSIC, 90000072, 50, False, False],  # ベビーステップ
+                    [self.REWARD_MUSIC, 90000059, 50, False, False],  # Hopeful Frontier!!!
+                    [self.REWARD_MUSIC, 90000054, 400, False, False],  # 僕らの時間
+                    [self.REWARD_MUSIC, 90001023, 50, False, False],  # Polaris [ 2 ]
+                    [self.REWARD_MUSIC, 90000063, 50, False, False],  # 廻る季節のゆく先に
+                    [self.REWARD_MUSIC, 90000107, 50, False, False],  # めた・メタ？ひまわり＊パンチ
+                    [self.REWARD_MUSIC, 90000067, 50, False, False],  # MODEL FT2 Miracle Version
+                    [self.REWARD_MUSIC, 90001009, 50, False, False],  # unisonote [ 2 ]
+                    [self.REWARD_MUSIC, 90000046, 50, False, False],  # Light Shine
+                    [self.REWARD_MUSIC, 90001002, 50, False, False],  # Life connection [ 2 ]
+                    [self.REWARD_MUSIC, 90000066, 50, False, False],  # Wuv U
+
+                    [self.REWARD_MUSIC, 90000168, 150, False, False],  # X-Plan
+                    [self.REWARD_MUSIC, 90000161, 150, False, False],  # All Clear!!
+                    [self.REWARD_MUSIC, 90000163, 150, False, False],  # 狂水一華
+                    [self.REWARD_MUSIC, 90000160, 150, False, False],  # Crazy Shuffle
+                    [self.REWARD_MUSIC, 90000162, 150, False, False],  # 恋歌疾風！かるたクイーンいろは
+                    [self.REWARD_MUSIC, 90000165, 150, False, False],  # Jetcoaster Windy
+                    [self.REWARD_MUSIC, 90000166, 150, False, False],  # 灼熱Beach Side Bunny
+                    [self.REWARD_MUSIC, 90000149, 150, False, False],  # Sparkle Smilin'
+                    [self.REWARD_MUSIC, 90000148, 150, False, False],  # 追憶のアラウカリア
+                    [self.REWARD_MUSIC, 90000167, 150, False, False],  # Din Don Dan
+                    [self.REWARD_MUSIC, 90000146, 150, False, False],  # TRIUMPH
+                    [self.REWARD_MUSIC, 90000144, 150, False, False],  # Right Time Right Way
+                    [self.REWARD_MUSIC, 90000147, 150, False, False],  # ラブキラ☆スプラッシュ
+
+                    [self.REWARD_MUSIC, 90000127, 50, False, False],  # Agnus Dei
+                    [self.REWARD_MUSIC, 90000101, 50, False, False],  # Our Love
+                    [self.REWARD_MUSIC, 90000128, 50, False, False],  # Catapulted Arch
+                    [self.REWARD_MUSIC, 90000130, 50, False, False],  # キヤロラ衛星の軌跡
+                    [self.REWARD_MUSIC, 90000131, 50, False, False],  # COSMIC SYMPHONY
+                    [self.REWARD_MUSIC, 90000129, 50, False, False],  # Surf on the Light
+                    [self.REWARD_MUSIC, 90000056, 50, False, False],  # The Kingsroad
+                    [self.REWARD_MUSIC, 90000126, 50, False, False],  # zeeros
+                    [self.REWARD_MUSIC, 90000064, 50, False, False],  # Duality
+                    [self.REWARD_MUSIC, 90000158, 50, False, False],  # Toy Robot Factory
+                    [self.REWARD_MUSIC, 80000128, 50, False, False],  # ミカヅキ:コネクト
+                    [self.REWARD_MUSIC, 90000123, 50, False, False],  # ゆめのかなたで
+                    [self.REWARD_MUSIC, 90000096, 50, False, False],  # LAST OATH
+                    [self.REWARD_MUSIC, 90000180, 50, False, False],  # Lava Flow
+                    [self.REWARD_MUSIC, 90001035, 50, False, False],  # Lava Flow [ 2 ]
+                    [self.REWARD_MUSIC, 90000125, 50, False, False],  # ランカーキラーガール
+                    [self.REWARD_MUSIC, 90000100, 50, False, False],  # RAISE YOUR HEADS UP
+                ],
+            },
+
+            # emo MART
+            {
+                "id": 2,
+                "texture_id": 2,
+                "type": 2,
+                "emo_id": 2,
+                "priority": 0,
+                "items": [
+                    # Type, Value, Price, IsSecret, Special
+
+                    # Jubibells
+                    [self.REWARD_JUBIBELL, 1, 20, False, False],
+                    [self.REWARD_JUBIBELL, 2, 20, False, False],
+                    [self.REWARD_JUBIBELL, 3, 20, False, False],
+                    [self.REWARD_JUBIBELL, 4, 20, False, False],
+                    [self.REWARD_JUBIBELL, 5, 20, False, False],
+                    [self.REWARD_JUBIBELL, 6, 20, False, False],
+                    [self.REWARD_JUBIBELL, 7, 20, False, False],
+                    [self.REWARD_JUBIBELL, 8, 20, False, False],
+                    [self.REWARD_JUBIBELL, 9, 20, False, False],
+                    [self.REWARD_JUBIBELL, 10, 20, False, False],
+                    [self.REWARD_JUBIBELL, 11, 20, False, False],
+                    [self.REWARD_JUBIBELL, 12, 20, False, False],
+                    [self.REWARD_JUBIBELL, 13, 20, False, False],
+                    [self.REWARD_JUBIBELL, 14, 20, False, False],
+                    [self.REWARD_JUBIBELL, 15, 20, False, False],
+                    [self.REWARD_JUBIBELL, 16, 20, False, False],
+                    [self.REWARD_JUBIBELL, 17, 20, False, False],
+                    [self.REWARD_JUBIBELL, 18, 20, False, False],
+                    [self.REWARD_JUBIBELL, 19, 20, False, False],
+                    [self.REWARD_JUBIBELL, 20, 20, False, False],
+                    [self.REWARD_JUBIBELL, 21, 20, False, False],
+                    [self.REWARD_JUBIBELL, 22, 20, False, False],
+                    [self.REWARD_JUBIBELL, 23, 20, False, False],
+                    [self.REWARD_JUBIBELL, 24, 20, False, False],
+                    [self.REWARD_JUBIBELL, 25, 20, False, False],
+                    [self.REWARD_JUBIBELL, 26, 20, False, False],
+                    [self.REWARD_JUBIBELL, 27, 20, False, False],
+                    [self.REWARD_JUBIBELL, 28, 20, False, False],
+                    [self.REWARD_JUBIBELL, 29, 20, False, False],
+                    [self.REWARD_JUBIBELL, 30, 20, False, False],
+                    [self.REWARD_JUBIBELL, 31, 20, False, False],
+
+                    # Tickets
+                    [self.REWARD_BONUS_TUNE_TICKET, 1, 200, False, False],  # BONUS TUNE TICKET
+                    [self.REWARD_FAV_FEVER_TICKET, 1, 200, False, False],  # FAV FEVER TICKET
+                ]
+            },
+        ]
+
+    def __get_travel_list(self) -> Any:
+        TRAVEL_MAP_TYPE_FOREVER: Final[int] = 1
+        TRAVEL_MAP_TYPE_TIME_BASED: Final[int] = 2
+
+        CELL_POS_TOP: Final[int] = 0
+        CELL_POS_TOP_RIGHT: Final[int] = 1
+        CELL_POS_RIGHT: Final[int] = 2
+        CELL_POS_BOTTOM_RIGHT: Final[int] = 3
+        CELL_POS_BOTTOM: Final[int] = 4
+        CELL_POS_BOTTOM_LEFT: Final[int] = 5
+        CELL_POS_LEFT: Final[int] = 6
+        CELL_POS_TOP_LEFT: Final[int] = 7
+
+        MISSION_TYPE_CLEAR: Final[int] = 0
+        MISSION_TYPE_MUSIC: Final[int] = 1
+
+        # 10, 20, 30, 40, 50, 60, 70, 80, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109
+        MISSION_TYPE_LEVEL: Final[int] = 2
+
+        # ex) 101 - 10: 횟수, 1: 판정 (1: MISS, 2: MISS,POOR, 3: PERFECT,GREAT,GOOD, 4: PERFECT,GREAT, 5: PERFECT)
+        MISSION_TYPE_JUDGE: Final[int] = 3
+
+        MISSION_TYPE_HARD: Final[int] = 4
+        MISSION_TYPE_COMBO: Final[int] = 5
+
+        # 1: Rating D, 2: Rating C, 3: Rating B, 4: Rating A, 5: Rating S, 6: Rating SS, 7: Rating SSS, 8: Rating EXC
+        MISSION_TYPE_RATING: Final[int] = 6
+
+        # Genre - 6: Pops, 7: Anime, 8: Social Music, 9: Touhou, 10: Game, 11: Classic, 12: Original
+        # Level - 14: LEVEL 1, 15: LEVEL 2, 16: LEVEL 3, 17: LEVEL 4, 18: LEVEL 5, 19: LEVEL 6, 20: LEVEL 7, 21: LEVEL 8, 22: LEVEL 9, 23: LEVEL 10,
+        # Name - 25: ア, 26: カ, 27: サ, 28: タ, 29: ナ, 30: ハ, 31: マ, 32: ヤ, 33: ラ, 34: ワ,
+        # 35: Hold Songs
+        # Versions - 75: jubeat, 76: ripples, 77: knit, 78: copious, 79: saucer, 80: saucer fulfill, 81: prop, 82: Qubell, 83: clan, 84: festo,
+        # Artists
+        # 86: Sota Fujimori, 87: DJ YOSHITAKA, 88: 猫叉Master, 89: TAG,
+        # 90: wac, 91: L.E.D, 92: ひなビタ♪, 93: Akhuta,
+        # 94: 劇団レコード, 95: S-C-U, 96: Ryu☆, 97: kors k,
+        # 98: dj TAKA, 99: DJ TOTTO, 100: Mutsuhiko Izumi, 101: 肥塚 良彦,
+        # 102: TOMOSUKE, 103: あさき, 104: seiya-murai, 105: PON,
+        # 106: Qrispy Joybox, 107: GUHROOVY, 108: U1-ASAMi, 109: Hommarju,
+        # 110: ARM, 111: A応P, 112: 猫大樹, 113: Mayumi Morinaga
+        # 122: Weekly Recommended Songs
+        MISSION_TYPE_CATEGORY: Final[int] = 7
+
+        # Mission Type Select Type
+        # 1: Any song, 5: RANDOM SELECT, 10: MATCHING SELECT
+        MISSION_TYPE_SELECT_TYPE: Final[int] = 8
+
+        # Mission Type Marker
+        # 1: Cyber, 2: Flower, 3: Afro, 4: Shutter,
+        # 6: Fireworks, 9: Gauge, 10: Ice, 11: Volcano, 13: Sand Art, 17: ripples, 20: Touch, 26: knit, 30: Stopwatch, 33: Circus, 36: Saucer, 39: prop, 40: Qubell, 45: clan, 46: festo
+        MISSION_TYPE_MARKER: Final[int] = 10
+
+        # {
+        #     "id": 1,
+        #     "side": 1,
+        #     "name": "",
+        #     "texture_name": "",
+        #     "type": TRAVEL_MAP_TYPE_FOREVER,
+        #     "music_color_index": 0,
+        #     "compass_cost": 800,
+        #     "start_time": 0,
+        #     "end_time": 0,
+        #     "phases": [
+        #         {
+        #             "name": "PHASE LINE 1",
+        #             "rewards": [
+        #                 [self.REWARD_MUSIC, 90000135, False],
+        #                 [6, 30, False],
+        #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+        #              ],
+        #             "cells": [
+        #                 {
+        #             "pos": CELL_POS_TOP,
+        #             "keyword": "おとめ座",
+        #             "missions": [
+        #                 [MISSION_TYPE_LEVEL, 10],
+        #                     [MISSION_TYPE_COMBO, 10],
+        #                     [MISSION_TYPE_RATING, 3],
+        #                 ],
+        #             },
+        #           ],
+        #       },
+        #     ],
+        # },
+
+        return [
+            {
+                "id": 1,
+                "side": 1,
+                "name": "Smith's memories",
+                "texture_name": "011_n-smith-a",
+                "type": TRAVEL_MAP_TYPE_FOREVER,
+                "music_color_index": 0,
+                "compass_cost": 800,
+                "start_time": 0,
+                "end_time": 0,
+                "phases": [
+                    {
+                        "name": "PHASE LINE 1",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000135, False],
+                            [6, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "おとめ座",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 10],
+                                    [MISSION_TYPE_COMBO, 10],
+                                    [MISSION_TYPE_RATING, 3],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "一等星",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 20],
+                                    [MISSION_TYPE_JUDGE, 105],
+                                    [MISSION_TYPE_RATING, 3],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "白く輝く",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_JUDGE, 205],
+                                    [MISSION_TYPE_RATING, 3],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "name": "PHASE LINE 2",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000121, False],
+                            [6, 10, False],
+                            [6, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "君がいない朝",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 20],
+                                    [MISSION_TYPE_JUDGE, 205],
+                                    [MISSION_TYPE_COMBO, 30],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "さようなら",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 40],
+                                    [MISSION_TYPE_JUDGE, 305],
+                                    [MISSION_TYPE_RATING, 3],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_LEFT,
+                                "keyword": "静かな部屋",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_COMBO, 30],
+                                    [MISSION_TYPE_RATING, 2],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "明けない夜",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 20],
+                                    [MISSION_TYPE_JUDGE, 204],
+                                    [MISSION_TYPE_CATEGORY, 12],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "name": "PHASE LINE 3",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000119, False],
+                            [6, 40, False],
+                            [6, 50, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "夜空",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 40],
+                                    [MISSION_TYPE_JUDGE, 504],
+                                    [MISSION_TYPE_RATING, 3],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "君のところへ",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_JUDGE, 405],
+                                    [MISSION_TYPE_COMBO, 50],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "きらきら",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_COMBO, 30],
+                                    [MISSION_TYPE_CATEGORY, 25],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "天の川",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 20],
+                                    [MISSION_TYPE_JUDGE, 505],
+                                    [MISSION_TYPE_RATING, 3],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "飛んでいく",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 40],
+                                    [MISSION_TYPE_COMBO, 20],
+                                    [MISSION_TYPE_RATING, 4],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "星を渡って",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_COMBO, 40],
+                                    [MISSION_TYPE_RATING, 3],
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            # {
+            #     "id": 2,
+            #     "side": 1,
+            #     "name": "レインボーサマーメドレー！",
+            #     "texture_name": "031_s-mdl-smr",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2020, 10, 2),
+            #     "end_time": Time.timestamp_from_date(2020, 11, 5),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 40000154, False],
+            #                 [6, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "夏の想い出",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "キラキラ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "海まで行こう",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_JUDGE, 1004],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 80000135, False],
+            #                 [6, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "買うぞ?！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "走れ?！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                         [MISSION_TYPE_CATEGORY, 29],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "お会計?！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "買いすぎた…",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_JUDGE, 2004],
+            #                         [MISSION_TYPE_CATEGORY, 28],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000099, False],
+            #                 [6, 10, False],
+            #                 [6, 20, False],
+            #                 [6, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "その指で",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_JUDGE, 405],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "見せてくれ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_COMBO, 30],
+            #                         [MISSION_TYPE_CATEGORY, 12],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "沸騰する",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_COMBO, 20],
+            #                         [MISSION_TYPE_MARKER, 3],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "マッドネス",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 20],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "ハイテンポ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_JUDGE, 201],
+            #                         [MISSION_TYPE_CATEGORY, 27],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "イカすプレー",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_JUDGE, 1004],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "お、おまー！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                         [MISSION_TYPE_CATEGORY, 31],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "アッチィ！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 301],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ]
+            # },
+            # {
+            #     "id": 3,
+            #     "side": 1,
+            #     "name": "DISC TELLER -Happy-",
+            #     "texture_name": "041_s-dsc-happy",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2020, 10, 16),
+            #     "end_time": Time.timestamp_from_date(2020, 11, 5),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000151, False],
+            #                 [6, 10, False],
+            #                 [6, 20, False],
+            #                 [6, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "メソメソ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 205],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "マミレル",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 1004],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "ナガイカミ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 404],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_CATEGORY, 33],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "シンセカイヘ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_JUDGE, 301],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "トガメナイデ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 403],
+            #                         [MISSION_TYPE_COMBO, 40],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "フミダス",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                         [MISSION_TYPE_MARKER, 17],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "ワクワク",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 301],
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "ジャンプ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                         [MISSION_TYPE_MUSIC, 60000073],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ]
+            # },
+            # {
+            #     "id": 4,
+            #     "side": 1,
+            #     "name": "スペイシーオータムメドレー！",
+            #     "texture_name": "061_s-mdl-otm",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2020, 11, 6),
+            #     "end_time": Time.timestamp_from_date(2020, 12, 3),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 40000059, False],
+            #                 [6, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False]
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "タネ　マク",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "メ　デル",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "ピースフル",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 70000138, False],
+            #                 [6, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "SPACE開墾",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "SPACE麦わら",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                         [MISSION_TYPE_MARKER, 1],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "SPACEクワ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "SPACE俺が村",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000133, False],
+            #                 [6, 10, False],
+            #                 [6, 20, False],
+            #                 [6, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "宇宙米",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_JUDGE, 101],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "大収穫宇宙",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "宇宙栽培",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                         [MISSION_TYPE_MARKER, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "宇宙の実り",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_CLEAR, 0],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "宇宙かかし",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "黄金の宇宙",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_JUDGE, 3004],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "宇宙的豊作",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_MARKER, 9],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "宇宙の秋",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 20],
+            #                         [MISSION_TYPE_RATING, 7],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ]
+            # },
+            # {
+            #     "id": 5,
+            #     "side": 1,
+            #     "name": "ユビシアター<ひとりぼっちのドラゴン>",
+            #     "texture_name": "051_s-ttr-drago",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2020, 12, 4),
+            #     "end_time": Time.timestamp_from_date(2020, 12, 10),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000157, False],
+            #                 [6, 10, False],
+            #                 [6, 20, False],
+            #                 [6, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "誰が決めた",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 405],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_CATEGORY, 25],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "冒険",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                         [MISSION_TYPE_MARKER, 9],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "孤独",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1004],
+            #                         [MISSION_TYPE_JUDGE, 201],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "はばたく音",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "探す",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 2003],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "仲間",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "旅立ち",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 201],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "大空",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                         [MISSION_TYPE_CATEGORY, 6],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 6,
+            #     "side": 1,
+            #     "name": "お年emo玉キャンペーン!2021",
+            #     "texture_name": "101_s-emo-2021",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2020, 12, 25),
+            #     "end_time": Time.timestamp_from_date(2021, 1, 3),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [6, 5, False],
+            #                 [6, 15, False],
+            #                 [6, 25, False],
+            #                 [6, 50, False],
+            #                 [6, 80, False],
+            #                 [6, 100, False],
+            #                 [6, 150, False],
+            #                 [6, 300, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "2021年も",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 21],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "皆様にとって",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 213],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "健やかな",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 21],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "一年に",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 213],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "なりますよう",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 21],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "心から",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 213],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "お祈り",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 21],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "申し上げます",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 213],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 7,
+            #     "side": 1,
+            #     "name": "ロンリーウィンターメドレー！",
+            #     "texture_name": "091_s-mdl-wtr",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2020, 12, 25),
+            #     "end_time": Time.timestamp_from_date(2021, 1, 21),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 60001006, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "無彩の恋心",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "儚い恋心",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 2004],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "凍てつく恋心",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 80000085, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "もう二度と",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_JUDGE, 1004],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "涙",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "心の叫び",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_JUDGE, 201],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "逢わぬように",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 2004],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_CATEGORY, 6],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000117, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "愛に縋る",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "出会い",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "悲しみ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_JUDGE, 2004],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "ループ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "もういらない",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "虚空",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "慰め",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                         [MISSION_TYPE_JUDGE, 501],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "裏切り",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_MARKER, 10],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 8,
+            #     "side": 1,
+            #     "name": "ドライブチューン！with MILK",
+            #     "texture_name": "111_s-drv-mlk",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2021, 1, 8),
+            #     "end_time": Time.timestamp_from_date(2021, 1, 28),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000179, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "テイクアウト",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3003],
+            #                         [MISSION_TYPE_JUDGE, 604],
+            #                         [MISSION_TYPE_JUDGE, 95],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "いつもの",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 369],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_SELECT_TYPE, 10],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "ほっと一息",
+            #                     "missions": [
+            #                         [MISSION_TYPE_MUSIC, 50000136],
+            #                         [MISSION_TYPE_JUDGE, 3693],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "Mサイズで",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "まろやか",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 6],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "さわやか笑顔",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_JUDGE, 695],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "口笛ふいて",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 694],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "ごきげん",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_CATEGORY, 35],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 9,
+            #     "side": 1,
+            #     "name": "DISC TELLER -Cybernetics-",
+            #     "texture_name": "071_s-dsc-cyber",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2021, 2, 3),
+            #     "end_time": Time.timestamp_from_date(2021, 2, 23),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000132, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "アウト",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "マクロ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_CATEGORY, 10],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "ミクロ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "イン",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 4004],
+            #                         [MISSION_TYPE_CATEGORY, 29],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "シナプス",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "パルス",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 502],
+            #                         [MISSION_TYPE_SELECT_TYPE, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "セル",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_RATING, 7],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "レセプター",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 201],
+            #                         [MISSION_TYPE_MARKER, 9],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            {
+                "id": 10,
+                "side": 1,
+                "name": "Kotaro's memories",
+                "texture_name": "021_n-kotaro-a",
+                "type": TRAVEL_MAP_TYPE_FOREVER,
+                "music_color_index": 0,
+                "compass_cost": 800,
+                "start_time": 0,
+                "end_time": 0,
+                "phases": [
+                    {
+                        "name": "PHASE LINE 1",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 50000060, False],
+                            [6, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False]
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "生地onソース",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_COMBO, 50],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "ペパロニ",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_RATING, 5],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "山盛りチーズ",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_JUDGE, 1005],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "name": "PHASE LINE 2",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000181, False],
+                            [6, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "Fire",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_COMBO, 100],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "Bang!!",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_RATING, 5],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "System down",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_JUDGE, 3005],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "Emergency",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_CATEGORY, 35],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "name": "PHASE LINE 3",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000152, False],
+                            [6, 40, False],
+                            [6, 50, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "燃える太陽",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 70],
+                                    [MISSION_TYPE_COMBO, 200],
+                                    [MISSION_TYPE_MUSIC, 50000060],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "つたう滴",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_RATING, 6],
+                                    [MISSION_TYPE_CATEGORY, 35],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "夕陽を背に",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 70],
+                                    [MISSION_TYPE_JUDGE, 5005],
+                                    [MISSION_TYPE_CATEGORY, 30],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "大地を蹴って",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_RATING, 6],
+                                    [MISSION_TYPE_SELECT_TYPE, 5],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "荒野をゆく",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 70],
+                                    [MISSION_TYPE_JUDGE, 102],
+                                    [MISSION_TYPE_CATEGORY, 122],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "遥かな道",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 70],
+                                    [MISSION_TYPE_MARKER, 36],
+                                    [MISSION_TYPE_COMBO, 100],
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            # {
+            #     "id": 11,
+            #     "side": 1,
+            #     "name": "Party goes on -GIRLS NIGHT-",
+            #     "texture_name": "121_s-pgo-girl",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2021, 3, 17),
+            #     "end_time": Time.timestamp_from_date(2021, 4, 13),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001026, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "今宵",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "ヒールで",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "踊り明かす",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001028, False],
+            #                 [self.REWARD_EMO, 15, False],
+            #                 [self.REWARD_EMO, 15, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "輝く",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1504],
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "フロアで",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_CATEGORY, 7],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "きらめく",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_CATEGORY, 25],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "あなたは",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "最高！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_SELECT_TYPE, 5],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001027, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "もっと",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 102],
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "踊って",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 6],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "ヒールが",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "折れたら",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_CATEGORY, 9],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "裸足で",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_CATEGORY, 35],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "踊るだけ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_MARKER, 46],
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 12,
+            #     "side": 1,
+            #     "name": "ユビシアター<光に包まれて>",
+            #     "texture_name": "081_s-ttr-hikari",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2021, 3, 31),
+            #     "end_time": Time.timestamp_from_date(2021, 4, 20),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000124, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "想い",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_CATEGORY, 30],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "パーツ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 152],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "祈り",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_JUDGE, 101],
+            #                         [MISSION_TYPE_CATEGORY, 28],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "願い",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "光",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 152],
+            #                         [MISSION_TYPE_SELECT_TYPE, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "ガラスの瞳",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_CATEGORY, 27],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "集めて",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_CATEGORY, 11],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "冥界",
+            #                     "missions": [
+            #                         [MISSION_TYPE_MARKER, 11],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 13,
+            #     "side": 1,
+            #     "name": "ドライブチューン！with SODA",
+            #     "texture_name": "141_s-drv-soda",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2021, 4, 21),
+            #     "end_time": Time.timestamp_from_date(2021, 5, 11),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000182, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "プシュッと",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 5003],
+            #                         [MISSION_TYPE_JUDGE, 4004],
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "開けて！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "シュワッと",
+            #                     "missions": [
+            #                         [MISSION_TYPE_MUSIC, 50000160],
+            #                         [MISSION_TYPE_JUDGE, 101],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "爽快！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "グゥッと",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "飲み干し！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_JUDGE, 1505],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "缶は",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 400],
+            #                         [MISSION_TYPE_CATEGORY, 26],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "リサイクル！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 6],
+            #                         [MISSION_TYPE_SELECT_TYPE, 5],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 14,
+            #     "side": 1,
+            #     "name": "ウキウキスプリングメドレー！",
+            #     "texture_name": "131_s-uki-spr",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2021, 5, 6),
+            #     "end_time": Time.timestamp_from_date(2021, 6, 15),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 20000051, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "爽やかな風",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "音をのせて",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "キラリ輝く",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_JUDGE, 305],
+            #                         [MISSION_TYPE_RATING, 3],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 80000025, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "嬉しさ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "楽しさ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_JUDGE, 1004],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "管に",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                         [MISSION_TYPE_CATEGORY, 11],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "吹き込んで",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000153, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "踊れや",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "騒げや",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_JUDGE, 1002],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "心地よい",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 90],
+            #                         [MISSION_TYPE_COMBO, 150],
+            #                         [MISSION_TYPE_MUSIC, 80000025],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "喧騒と",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_JUDGE, 501],
+            #                         [MISSION_TYPE_SELECT_TYPE, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "小粋な",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "リズムに",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 90],
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_CATEGORY, 35],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "心が",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_MARKER, 2],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "震える",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_CATEGORY, 8],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 15,
+            #     "side": 1,
+            #     "name": "DISC TELLER -Intangible-",
+            #     "texture_name": "151_s-dsc-int",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2021, 6, 9),
+            #     "end_time": Time.timestamp_from_date(2021, 7, 21),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000164, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "トロリ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "ポタン",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_CATEGORY, 30],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "ペチャ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_COMBO, 400],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "グルリ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 4004],
+            #                         [MISSION_TYPE_SELECT_TYPE, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "トクン",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_RATING, 7],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "シーン",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 502],
+            #                         [MISSION_TYPE_CATEGORY, 35],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "スポン",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 90],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "キラリ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 201],
+            #                         [MISSION_TYPE_MARKER, 39],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 16,
+            #     "side": 1,
+            #     "name": "Party goes on -BURNING UP！-",
+            #     "texture_name": "161_s-pgo-burn",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2021, 6, 30),
+            #     "end_time": Time.timestamp_from_date(2021, 7, 27),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001031, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "熱い",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "ソウルで",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "突き進め！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001029, False],
+            #                 [self.REWARD_EMO, 15, False],
+            #                 [self.REWARD_EMO, 15, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "燃える",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "瞳で",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_CATEGORY, 8],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "狙いを",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 101],
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "定めて",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_SELECT_TYPE, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "撃ち抜け！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001030, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "その",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 5004],
+            #                         [MISSION_TYPE_LEVEL, 90],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "情熱を",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 400],
+            #                         [MISSION_TYPE_CATEGORY, 6],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "絶やさず",
+            #                     "missions": [
+            #                         [MISSION_TYPE_MARKER, 26],
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "たぎらせ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 102],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "夢を",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_CATEGORY, 35],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "現実に！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 101],
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 17,
+            #     "side": 1,
+            #     "name": "ネイチャーサマーメドレー！",
+            #     "texture_name": "171_s-mdl-smr2",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2021, 7, 21),
+            #     "end_time": Time.timestamp_from_date(2021, 8, 31),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 80000113, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "魂の声に",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_JUDGE, 1004],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "したがって",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3003],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "自然体で",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_JUDGE, 505],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 60000077, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "暑さを避けて",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_JUDGE, 1504],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "涼しい森に",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1005],
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "迷い込んだら",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_JUDGE, 252],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "最後…",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 2004],
+            #                         [MISSION_TYPE_COMBO, 150],
+            #                         [MISSION_TYPE_MUSIC, 80000113],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000120, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "いくよーっ！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "せーのっ！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 152],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "ス！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_CATEGORY, 27],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "プ！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_COMBO, 400],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "ラ！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 90],
+            #                         [MISSION_TYPE_JUDGE, 5004],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "ッ！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_MUSIC, 60000077],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "シ！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                         [MISSION_TYPE_JUDGE, 151],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "ュ！",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_MARKER, 6],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 18,
+            #     "side": 1,
+            #     "name": "DISC TELLER -Buzz-",
+            #     "texture_name": "181_s-dsc-buz",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2021, 9, 1),
+            #     "end_time": Time.timestamp_from_date(2021, 9, 28),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000184, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "エンジン",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "ブンブン",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_SELECT_TYPE, 10],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "トドロケ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_MUSIC, 50000025],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "ブオーン",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 4004],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "スピード",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_RATING, 7],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "ダシスギ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 502],
+            #                         [MISSION_TYPE_CATEGORY, 35],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "アツアツ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 90],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "チュウイ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 201],
+            #                         [MISSION_TYPE_MARKER, 30],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 19,
+            #     "side": 1,
+            #     "name": "Party goes on -FEEL SORROW-",
+            #     "texture_name": "191_s-pgo-feel",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2021, 10, 13),
+            #     "end_time": Time.timestamp_from_date(2021, 11, 9),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001032, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "ちらばった",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "思い出を",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 30],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "集めている",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 301],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001033, False],
+            #                 [self.REWARD_EMO, 15, False],
+            #                 [self.REWARD_EMO, 15, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "まんねりな",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 6],
+            #                         [MISSION_TYPE_LEVEL, 40],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "毎日が",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3004],
+            #                         [MISSION_TYPE_CATEGORY, 8],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "心に",
+            #                     "missions": [
+            #                         [MISSION_TYPE_MUSIC, 90001032],
+            #                         [MISSION_TYPE_JUDGE, 1505],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "隙間を",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "生み出す",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 2005],
+            #                         [MISSION_TYPE_SELECT_TYPE, 10],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90001034, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 50, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "ぽっかり",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 101],
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "空いた",
+            #                     "missions": [
+            #                         [MISSION_TYPE_MUSIC, 90001033],
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "隙間を",
+            #                     "missions": [
+            #                         [MISSION_TYPE_RATING, 7],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "埋めるように",
+            #                     "missions": [
+            #                         [MISSION_TYPE_MARKER, 13],
+            #                         [MISSION_TYPE_CATEGORY, 9],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "ただただ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "えがく",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 5005],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 20,
+            #     "side": 1,
+            #     "name": "レジェンダリーオータムメドレー！",
+            #     "texture_name": "201_s-mdl-atm2",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 800,
+            #     "start_time": Time.timestamp_from_date(2021, 11, 17),
+            #     "end_time": Time.timestamp_from_date(2021, 12, 14),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 70000133, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "蜃気楼と共に",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1504],
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "幻の都を望む",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "熱砂を越えて",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 2003],
+            #                         [MISSION_TYPE_LEVEL, 30],
+            #                         [MISSION_TYPE_COMBO, 50],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 2",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 80001013, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "女神の傷跡",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 502],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_MUSIC, 70000133],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "森の声",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_JUDGE, 3004],
+            #                         [MISSION_TYPE_COMBO, 150],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "土の記憶",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 1505],
+            #                         [MISSION_TYPE_JUDGE, 301],
+            #                         [MISSION_TYPE_CATEGORY, 33],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "循環する命",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 4],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #         {
+            #             "name": "PHASE LINE 3",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000118, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "まだ見ぬ海よ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                         [MISSION_TYPE_SELECT_TYPE, 10],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "大西洋",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_JUDGE, 102],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "地中海",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 90],
+            #                         [MISSION_TYPE_JUDGE, 5005],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "カリブ海",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_MUSIC, 80001013],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "メキシコ湾",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 90],
+            #                         [MISSION_TYPE_JUDGE, 101],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "太平洋",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_MARKER, 13],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "インド洋",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                         [MISSION_TYPE_CATEGORY, 35],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "北極海",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 80],
+            #                         [MISSION_TYPE_JUDGE, 5004],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            # {
+            #     "id": 21,
+            #     "side": 1,
+            #     "name": "ドライブチューン！with CAPCCINO",
+            #     "texture_name": "211_s-drv-cpc",
+            #     "type": TRAVEL_MAP_TYPE_TIME_BASED,
+            #     "music_color_index": 0,
+            #     "compass_cost": 500,
+            #     "start_time": Time.timestamp_from_date(2021, 12, 15),
+            #     "end_time": Time.timestamp_from_date(2022, 1, 4),
+            #     "phases": [
+            #         {
+            #             "name": "PHASE LINE 1",
+            #             "rewards": [
+            #                 [self.REWARD_MUSIC, 90000194, False],
+            #                 [self.REWARD_EMO, 10, False],
+            #                 [self.REWARD_EMO, 20, False],
+            #                 [self.REWARD_EMO, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+            #                 [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+            #             ],
+            #             "cells": [
+            #                 {
+            #                     "pos": CELL_POS_TOP,
+            #                     "keyword": "てっぺんの星",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 4004],
+            #                         [MISSION_TYPE_COMBO, 150],
+            #                         [MISSION_TYPE_CATEGORY, 11],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_RIGHT,
+            #                     "keyword": "もみの木",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_COMBO, 100],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_RIGHT,
+            #                     "keyword": "オーナメント",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 50],
+            #                         [MISSION_TYPE_COMBO, 200],
+            #                         [MISSION_TYPE_SELECT_TYPE, 10],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_RIGHT,
+            #                     "keyword": "ふわふわの雪",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 101],
+            #                         [MISSION_TYPE_RATING, 5],
+            #                         [MISSION_TYPE_MUSIC, 50000278],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM,
+            #                     "keyword": "☆メリクリ☆",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 60],
+            #                         [MISSION_TYPE_COMBO, 150],
+            #                         [MISSION_TYPE_MARKER, 36],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_BOTTOM_LEFT,
+            #                     "keyword": "キャンディ",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_RATING, 6],
+            #                         [MISSION_TYPE_CATEGORY, 122],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_LEFT,
+            #                     "keyword": "くつした",
+            #                     "missions": [
+            #                         [MISSION_TYPE_JUDGE, 202],
+            #                         [MISSION_TYPE_COMBO, 300],
+            #                         [MISSION_TYPE_CATEGORY, 35],
+            #                     ],
+            #                 },
+            #                 {
+            #                     "pos": CELL_POS_TOP_LEFT,
+            #                     "keyword": "ベル",
+            #                     "missions": [
+            #                         [MISSION_TYPE_LEVEL, 70],
+            #                         [MISSION_TYPE_JUDGE, 3005],
+            #                         [MISSION_TYPE_CATEGORY, 6],
+            #                     ],
+            #                 },
+            #             ],
+            #         },
+            #     ],
+            # },
+            {
+                "id": 22,
+                "side": 1,
+                "name": "スターティングウィンターメドレー！",
+                "texture_name": "221_s-mdl-wtr2",
+                "type": TRAVEL_MAP_TYPE_TIME_BASED,
+                "music_color_index": 0,
+                "compass_cost": 800,
+                "start_time": Time.timestamp_from_date(2022, 1, 12),
+                "end_time": Time.timestamp_from_date(2022, 2, 1),
+                "phases": [
+                    {
+                        "name": "PHASE LINE 1",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 70000174, False],
+                            [self.REWARD_EMO, 10, False],
+                            [self.REWARD_EMO, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "ワン！",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 30],
+                                    [MISSION_TYPE_RATING, 6],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "ツー！",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 1004],
+                                    [MISSION_TYPE_JUDGE, 2003],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "スリー！",
+                                "missions": [
+                                    [MISSION_TYPE_SELECT_TYPE, 10],
+                                    [MISSION_TYPE_RATING, 4],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "アチョー！",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 50000146],
+                                    [MISSION_TYPE_CLEAR, 0],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "name": "PHASE LINE 2",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 50000042, False],
+                            [self.REWARD_EMO, 10, False],
+                            [self.REWARD_EMO, 10, False],
+                            [self.REWARD_EMO, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "音楽隊",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 50000136],
+                                    [MISSION_TYPE_RATING, 7],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "かわいい",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_COMBO, 100],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "赤ちゃん",
+                                "missions": [
+                                    [MISSION_TYPE_MARKER, 45],
+                                    [MISSION_TYPE_CLEAR, 0],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "笑い声",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 70],
+                                    [MISSION_TYPE_CATEGORY, 6],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "あちらこちら",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 101],
+                                    [MISSION_TYPE_LEVEL, 30],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "てんやわんや",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 1005],
+                                    [MISSION_TYPE_LEVEL, 80],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "name": "PHASE LINE 3",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000150, False],
+                            [self.REWARD_EMO, 10, False],
+                            [self.REWARD_EMO, 20, False],
+                            [self.REWARD_EMO, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "有名配信者",
+                                "missions": [
+                                    [MISSION_TYPE_RATING, 7],
+                                    [MISSION_TYPE_LEVEL, 80],
+                                    [MISSION_TYPE_CATEGORY, 8],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "ゲームやるぞ",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 3005],
+                                    [MISSION_TYPE_SELECT_TYPE, 10],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "チート",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 70],
+                                    [MISSION_TYPE_MUSIC, 50000201],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "視聴者ゼロ",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 4004],
+                                    [MISSION_TYPE_COMBO, 500],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "イケメンさん",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 100],
+                                    [MISSION_TYPE_RATING, 5],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_LEFT,
+                                "keyword": "もう一回！",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 502],
+                                    [MISSION_TYPE_CATEGORY, 29],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "勝利の雄叫び",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 90],
+                                    [MISSION_TYPE_COMBO, 400],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "まったねー",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 201],
+                                    [MISSION_TYPE_MARKER, 33],
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 23,
+                "side": 1,
+                "name": "DISC TELLER -Conflict-",
+                "texture_name": "231_s-dsc-cnf",
+                "type": TRAVEL_MAP_TYPE_TIME_BASED,
+                "music_color_index": 0,
+                "compass_cost": 800,
+                "start_time": Time.timestamp_from_date(2022, 3, 30),
+                "end_time": Time.timestamp_from_date(2022, 4, 19),
+                "phases": [
+                    {
+                        "name": "PHASE LINE 1",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000193, False],
+                            [self.REWARD_EMO, 10, False],
+                            [self.REWARD_EMO, 20, False],
+                            [self.REWARD_EMO, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "茶渋の名残",
+                                "missions": [
+                                    [MISSION_TYPE_SELECT_TYPE, 10],
+                                    [MISSION_TYPE_COMBO, 400],
+                                    [MISSION_TYPE_JUDGE, 5005],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "きれい好き",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 70],
+                                    [MISSION_TYPE_CATEGORY, 122],
+                                    [MISSION_TYPE_RATING, 6],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "家デート",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 90000113],
+                                    [MISSION_TYPE_MARKER, 20],
+                                    [MISSION_TYPE_RATING, 5],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "アルコール",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 90],
+                                    [MISSION_TYPE_JUDGE, 7004],
+                                    [MISSION_TYPE_CATEGORY, 35],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "重曹",
+                                "missions": [
+                                    [MISSION_TYPE_CATEGORY, 6],
+                                    [MISSION_TYPE_CATEGORY, 7],
+                                    [MISSION_TYPE_LEVEL, 80],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_LEFT,
+                                "keyword": "アルカリ",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 50000237],
+                                    [MISSION_TYPE_RATING, 4],
+                                    [MISSION_TYPE_JUDGE, 101],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "ラブロード",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 51],
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_RATING, 7],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "きれいな瞳",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 80],
+                                    [MISSION_TYPE_CATEGORY, 11],
+                                    [MISSION_TYPE_COMBO, 500],
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 24,
+                "side": 1,
+                "name": "afterglow of Symphony",
+                "texture_name": "251_s-bmn-smp",
+                "type": TRAVEL_MAP_TYPE_FOREVER,
+                "music_color_index": 0,
+                "compass_cost": 1000,
+                "start_time": 0,
+                "end_time": 0,
+                "phases": [
+                    {
+                        "name": "PHASE LINE 1",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000254, False],
+                            [6, 10, False],
+                            [6, 20, False],
+                            [6, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "鳴り響く",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 6004],
+                                    [MISSION_TYPE_COMBO, 300],
+                                    [MISSION_TYPE_CATEGORY, 31],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "BEMANI",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 90],
+                                    [MISSION_TYPE_RATING, 6],
+                                    [MISSION_TYPE_COMBO, 200],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "調べ",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 50],
+                                    [MISSION_TYPE_COMBO, 300],
+                                    [MISSION_TYPE_SELECT_TYPE, 10],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "SYMPHONY",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 51],
+                                    [MISSION_TYPE_RATING, 5],
+                                    [MISSION_TYPE_MUSIC, 90000197],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "ホール",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 60],
+                                    [MISSION_TYPE_COMBO, 200],
+                                    [MISSION_TYPE_MARKER, 40],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_LEFT,
+                                "keyword": "拍手",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 4005],
+                                    [MISSION_TYPE_RATING, 6],
+                                    [MISSION_TYPE_CATEGORY, 6],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "コンサート",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 102],
+                                    [MISSION_TYPE_COMBO, 400],
+                                    [MISSION_TYPE_CATEGORY, 35],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "観客",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 70],
+                                    [MISSION_TYPE_JUDGE, 4005],
+                                    [MISSION_TYPE_CATEGORY, 8],
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 25,
+                "side": 1,
+                "name": "festo島ライブカメラ",
+                "texture_name": "241_s-live-cam",
+                "type": TRAVEL_MAP_TYPE_FOREVER,
+                "music_color_index": 0,
+                "compass_cost": 10000,
+                "start_time": 0,
+                "end_time": 0,
+                "phases": [
+                    {
+                        "name": "PHASE LINE 1",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000047, False],
+                            [6, 10, False],
+                            [6, 20, False],
+                            [6, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "10年",
+                                "missions": [
+                                    [MISSION_TYPE_SELECT_TYPE, 10],
+                                    [MISSION_TYPE_COMBO, 600],
+                                    [MISSION_TYPE_JUDGE, 51],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "集大成",
+                                "missions": [
+                                    [MISSION_TYPE_LEVEL, 100],
+                                    [MISSION_TYPE_RATING, 7],
+                                    [MISSION_TYPE_CATEGORY, 35],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "大回顧展",
+                                "missions": [
+                                    [MISSION_TYPE_CATEGORY, 6],
+                                    [MISSION_TYPE_LEVEL, 100],
+                                    [MISSION_TYPE_JUDGE, 4005],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "ジャケット",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 10000065],
+                                    [MISSION_TYPE_JUDGE, 5005],
+                                    [MISSION_TYPE_COMBO, 400],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "限定メモ帳",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 30000048],
+                                    [MISSION_TYPE_CATEGORY, 29],
+                                    [MISSION_TYPE_JUDGE, 52],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_LEFT,
+                                "keyword": "本当に編んだ",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 30000121],
+                                    [MISSION_TYPE_CATEGORY, 31],
+                                    [MISSION_TYPE_COMBO, 500],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "紙ねんど",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 40000051],
+                                    [MISSION_TYPE_CATEGORY, 9],
+                                    [MISSION_TYPE_JUDGE, 7004],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "曲がる針金",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 30000127],
+                                    [MISSION_TYPE_CATEGORY, 11],
+                                    [MISSION_TYPE_COMBO, 600],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "name": "PHASE LINE 2",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000229, False],
+                            [6, 10, False],
+                            [6, 20, False],
+                            [6, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "BlackY",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 90000047],
+                                    [MISSION_TYPE_CATEGORY, 6],
+                                    [MISSION_TYPE_JUDGE, 2],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "最強",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 20000120],
+                                    [MISSION_TYPE_CATEGORY, 8],
+                                    [MISSION_TYPE_COMBO, 700],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "挑め",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 50000102],
+                                    [MISSION_TYPE_CATEGORY, 10],
+                                    [MISSION_TYPE_JUDGE, 2],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "染まる",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 50000208],
+                                    [MISSION_TYPE_CATEGORY, 122],
+                                    [MISSION_TYPE_COMBO, 800],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "10.9999....",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 50000323],
+                                    [MISSION_TYPE_CATEGORY, 33],
+                                    [MISSION_TYPE_JUDGE, 2],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_LEFT,
+                                "keyword": "TUNE RUN",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 60000010],
+                                    [MISSION_TYPE_CATEGORY, 28],
+                                    [MISSION_TYPE_COMBO, 800],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "KAC",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 90000057],
+                                    [MISSION_TYPE_CATEGORY, 27],
+                                    [MISSION_TYPE_JUDGE, 2],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "超えろ",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 70000110],
+                                    [MISSION_TYPE_CATEGORY, 25],
+                                    [MISSION_TYPE_COMBO, 900],
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "name": "PHASE LINE 3",
+                        "rewards": [
+                            [self.REWARD_MUSIC, 90000229, False],
+                            [6, 10, False],
+                            [6, 20, False],
+                            [6, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 10, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 20, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 30, False],
+                            [self.REWARD_BONUS_TUNE_GAUGE, 40, False],
+                        ],
+                        "cells": [
+                            {
+                                "pos": CELL_POS_TOP,
+                                "keyword": "最終章",
+                                "missions": [
+                                    [MISSION_TYPE_RATING, 8],
+                                    [MISSION_TYPE_COMBO, 1000],
+                                    [MISSION_TYPE_HARD, 1],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_RIGHT,
+                                "keyword": "ジャングル",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 90000229],
+                                    [MISSION_TYPE_JUDGE, 1],
+                                    [MISSION_TYPE_SELECT_TYPE, 10],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_RIGHT,
+                                "keyword": "先には",
+                                "missions": [
+                                    [MISSION_TYPE_CATEGORY, 122],
+                                    [MISSION_TYPE_RATING, 7],
+                                    [MISSION_TYPE_JUDGE, 52],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_RIGHT,
+                                "keyword": "道路",
+                                "missions": [
+                                    [MISSION_TYPE_JUDGE, 9005],
+                                    [MISSION_TYPE_LEVEL, 100],
+                                    [MISSION_TYPE_CATEGORY, 10],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM,
+                                "keyword": "光",
+                                "missions": [
+                                    [MISSION_TYPE_SELECT_TYPE, 5],
+                                    [MISSION_TYPE_SELECT_TYPE, 10],
+                                    [MISSION_TYPE_JUDGE, 9005],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_BOTTOM_LEFT,
+                                "keyword": "後夜祭",
+                                "missions": [
+                                    [MISSION_TYPE_RATING, 8],
+                                    [MISSION_TYPE_COMBO, 900],
+                                    [MISSION_TYPE_CATEGORY, 12],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_LEFT,
+                                "keyword": "festo",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 90000180],
+                                    [MISSION_TYPE_HARD, 1],
+                                    [MISSION_TYPE_RATING, 7],
+                                ],
+                            },
+                            {
+                                "pos": CELL_POS_TOP_LEFT,
+                                "keyword": "ありがとう",
+                                "missions": [
+                                    [MISSION_TYPE_MUSIC, 90000123],
+                                    [MISSION_TYPE_COMBO, 1000],
+                                    [MISSION_TYPE_CATEGORY, 26],
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ]
+
     def __get_global_info(self) -> Node:
+        game_config = self.get_game_config()
+
         info = Node.void("info")
 
         # Event info.
@@ -1276,84 +5161,61 @@ class JubeatFesto(
         info.add_child(event_info)
         for event in self.EVENTS:
             evt = Node.void("event")
-            event_info.add_child(evt)
+            # event_info.add_child(evt)
             evt.set_attribute("type", str(event))
             evt.add_child(Node.u8("state", 1 if self.EVENTS[event]["enabled"] else 0))
 
-        genre_def_music = Node.void("genre_def_music")
-        info.add_child(genre_def_music)
+        # Each of the following two sections should have zero or more child nodes (no
+        # particular name) which look like the following:
+        #     <node>
+        #         <id __type="s32">songid</id>
+        #         <stime __type="str">start time?</stime>
+        #         <etime __type="str">end time?</etime>
+        #     </node>
+        # Share music?
+        share_music = Node.void("share_music")
+        info.add_child(share_music)
+
+        # genre_def_music = Node.void("genre_def_music")
+        # info.add_child(genre_def_music)
+        # genre_def = Node.void("genre_def")
+        # genre_def_music.add_child(genre_def)
+        # genre_def.set_attribute("release_code", "2018090501")
+        # genre_def.set_attribute("data_version", "0")
+        # genre_def.set_attribute("id", "1")  # genre id
 
         info.add_child(
             Node.s32_array(
                 "black_jacket_list",
                 [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
                 ],
             )
         )
+
+        weekly_music = Node.void("weekly_music")
+        info.add_child(weekly_music)
+        weekly_music.add_child(Node.s32("value", 5))
+        # The following section should have zero or more child nodes (no particular
+        # name) which look like the following, with a song ID in the node's id attribute:
+        #     <node id="" />
+        weekly_music_list = Node.void("music_list")
+        weekly_music.add_child(weekly_music_list)
 
         # Mapping of what music is allowed by default, if this is set to all 0's
         # then the game will crash because it can't figure out what default song
@@ -1365,70 +5227,22 @@ class JubeatFesto(
             Node.s32_array(
                 "white_music_list",
                 [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
                 ],
             )
         )
@@ -1440,22 +5254,10 @@ class JubeatFesto(
             Node.s32_array(
                 "white_marker_list",
                 [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
                 ],
             )
         )
@@ -1464,22 +5266,33 @@ class JubeatFesto(
             Node.s32_array(
                 "white_theme_list",
                 [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                    -1, -1, -1, -1,
+                ],
+            )
+        )
+
+        info.add_child(
+            Node.s32_array(
+                "add_default_music_list",
+                [
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
                 ],
             )
         )
@@ -1489,70 +5302,22 @@ class JubeatFesto(
             Node.s32_array(
                 "open_music_list",
                 [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
                 ],
             )
         )
@@ -1561,70 +5326,22 @@ class JubeatFesto(
             Node.s32_array(
                 "shareable_music_list",
                 [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
                 ],
             )
         )
@@ -1636,74 +5353,27 @@ class JubeatFesto(
             Node.s32_array(
                 "hot_music_list",
                 [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    -4194304,
-                    -2080769,
-                    -1,
-                    -17,
-                    -3,
-                    -33554433,
-                    -242,
-                    -268435473,
-                    1073741823,
-                    -1073748992,
-                    15,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, -4194304, -2080769, -1,
+                    -17, -3, -33554433, -242,
+                    -268435473, 1073741823, -1073748992, 15,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
                 ],
             )
         )
 
+        # Guest Play jbox
         jbox = Node.void("jbox")
         info.add_child(jbox)
         jbox.add_child(Node.s32("point", 0))
@@ -1713,15 +5383,15 @@ class JubeatFesto(
         emblem.add_child(normal)
         premium = Node.void("premium")
         emblem.add_child(premium)
-        normal.add_child(Node.s16("index", 2))
-        premium.add_child(Node.s16("index", 1))
+        normal.add_child(Node.s16("index", 0))
+        premium.add_child(Node.s16("index", 18))
 
+        # Brithday survey
         born = Node.void("born")
         info.add_child(born)
-        born.add_child(Node.s8("status", 0))
-        born.add_child(Node.s16("year", 0))
+        born.add_child(Node.s8("status", 1))
+        # born.add_child(Node.s16("year", 0))
 
-        game_config = self.get_game_config()
         konami_logo_50th = Node.void("konami_logo_50th")
         info.add_child(konami_logo_50th)
         konami_logo_50th.add_child(Node.bool("is_available", game_config.get_bool("50th_anniversary")))
@@ -1732,14 +5402,111 @@ class JubeatFesto(
 
         all_music_matching = Node.void("all_music_matching")
         info.add_child(all_music_matching)
-        all_music_matching.add_child(Node.bool("is_available", True))
-
-        department = Node.void("department")
-        info.add_child(department)
-        department.add_child(Node.void("shop_list"))
+        all_music_matching.add_child(Node.bool("is_available", game_config.get_bool("all_music_matching")))
 
         question_list = Node.void("question_list")
         info.add_child(question_list)
+
+        department = Node.void("department")
+        info.add_child(department)
+        shop_list = Node.void("shop_list")
+        department.add_child(shop_list)
+        for shop in self.__get_shop_list():
+            shopnode = Node.void("shop")
+            shop_list.add_child(shopnode)
+            shopnode.set_attribute("id", str(shop["id"]))
+            shopnode.add_child(Node.s32("tex_id", shop["texture_id"]))
+            shopnode.add_child(Node.s8("type", shop["type"]))  # 1: T-emo, 2: emo MART, 3: E-emo, 4: festo SHOP
+            shopnode.add_child(Node.s32("emo_id", shop["emo_id"]))
+            shopnode.add_child(Node.s32("priority", shop["priority"]))
+            shopnode.add_child(Node.u64("etime", shop["end_time"] if shop.get("end_time") else 0))
+
+            item_list = Node.void("item_list")
+            shopnode.add_child(item_list)
+            for item_id, item in enumerate(shop["items"]):
+                itemnode = Node.void("item")
+                item_list.add_child(itemnode)
+                itemnode.set_attribute("id", str(item_id + 1))
+                itemnode.add_child(Node.s32("priority", 0))
+                itemnode.add_child(Node.s32("price", item[2]))
+                itemnode.add_child(Node.bool("is_secret", item[3]))
+                itemdetail = Node.void("detail")
+                itemnode.add_child(itemdetail)
+                itemdetail.set_attribute("type", str(item[0]))
+                itemdetail.add_child(Node.s32("value", item[1]))
+                itemdetail.add_child(Node.bool("is_special", item[4]))
+
+        current_team_battle = game_config.get_int("current_team_battle")
+        team_battles = self.__get_team_battle_list()
+        if current_team_battle > 0 and current_team_battle <= len(team_battles):
+            battle = team_battles[current_team_battle - 1]
+            team_battle = Node.void("team_battle")
+            info.add_child(team_battle)
+            if battle["state"] == 1:
+                team_battle_open = Node.void("open")
+                team_battle.add_child(team_battle_open)
+                team_battle_open.set_attribute("id", str(battle["id"]))
+                team_battle_open.add_child(Node.u64("etime", battle["end_time"] * 1000))
+                team_battle_open.add_child(Node.u64("utime", Time.now() * 1000))
+                team_list = Node.void("team_list")
+                team_battle_open.add_child(team_list)
+                for team_id, team_name in enumerate(battle["teams"]):
+                    teamnode = Node.void("team")
+                    team_list.add_child(teamnode)
+                    teamnode.set_attribute("id", str(team_id + 1))
+                    teamnode.add_child(Node.string("name", team_name))
+                    teamnode.add_child(Node.s32("point", 0))
+
+                player_reward = Node.void("player_reward")
+                team_battle_open.add_child(player_reward)
+                player_reward_list = Node.void("reward_list")
+                player_reward.add_child(player_reward_list)
+                for reward in battle["player_rewards"]:
+                    rewardnode = Node.void("reward")
+                    player_reward_list.add_child(rewardnode)
+                    rewardnode.add_child(Node.s32("point", reward[0]))
+                    rewardnode.set_attribute("type", str(reward[1]))
+                    rewardnode.add_child(Node.s32("value", reward[2]))
+                    rewardnode.add_child(Node.bool("is_special", reward[3]))
+            elif battle["state"] == 2:
+                team_battle_close = Node.void("closed")
+                team_battle.add_child(team_battle_close)
+                team_battle_close.set_attribute("id", str(battle["id"]))
+
+                team_battle_award = Node.void("award")
+                team_battle.add_child(team_battle_award)
+                team_battle_award.set_attribute("id", str(battle["id"]))
+                team_list = Node.void("team_list")
+                team_battle_award.add_child(team_list)
+                for team_id, team_name in enumerate(battle["teams"]):
+                    teamnode = Node.void("team")
+                    team_list.add_child(teamnode)
+                    teamnode.set_attribute("id", str(team_id + 1))
+                    teamnode.add_child(Node.string("name", team_name))
+                    teamnode.add_child(Node.s32("point", 0))
+                team_reward = Node.void("reward")
+                team_battle_award.add_child(team_reward)
+                win_reward_list = Node.void("win_reward_list")
+                team_reward.add_child(win_reward_list)
+                for reward in battle["win_rewards"]:
+                    rewardnode = Node.void("reward")
+                    win_reward_list.add_child(rewardnode)
+                    rewardnode.set_attribute("type", str(reward[0]))
+                    rewardnode.add_child(Node.s32("value", reward[1]))
+                    rewardnode.add_child(Node.bool("is_special", reward[2]))
+                bsc_reward_list = Node.void("bsc_reward_list")
+                team_reward.add_child(bsc_reward_list)
+                for reward in battle["basic_rewards"]:
+                    rewardnode = Node.void("reward")
+                    bsc_reward_list.add_child(rewardnode)
+                    rewardnode.set_attribute("type", str(reward[0]))
+                    rewardnode.add_child(Node.s32("value", reward[1]))
+                    rewardnode.add_child(Node.bool("is_special", reward[2]))
+
+        # QR code news that appears when the game ends
+        qr = Node.void("qr")
+        info.add_child(qr)
+        qr.add_child(Node.s32("flag", 2))  # 0: no news, 1: PASELI news, 2: BEMANI rush 2020 news
 
         # Set up TUNE RUN course requirements
         clan_course_list = Node.void("course_list")
@@ -1769,7 +5536,7 @@ class JubeatFesto(
 
             # Basics
             clan_course = Node.void("course")
-            clan_course_list.add_child(clan_course)
+            # clan_course_list.add_child(clan_course)
             clan_course.set_attribute("release_code", str(dataver))
             clan_course.set_attribute("version_id", "0")
             clan_course.set_attribute("id", str(course["id"]))
@@ -1814,98 +5581,295 @@ class JubeatFesto(
             reward_list = Node.void("reward_list")
             clear.add_child(reward_list)
 
-        # Each of the following two sections should have zero or more child nodes (no
-        # particular name) which look like the following:
-        #     <node>
-        #         <id __type="s32">songid</id>
-        #         <stime __type="str">start time?</stime>
-        #         <etime __type="str">end time?</etime>
-        #     </node>
-        # Share music?
-        share_music = Node.void("share_music")
-        info.add_child(share_music)
+        emo_list = Node.void("emo_list")
+        info.add_child(emo_list)
+        for emo in self.__get_emo_list():
+            emonode = Node.void("emo")
+            emo_list.add_child(emonode)
+            emonode.set_attribute("id", str(emo[0]))
+            emonode.add_child(Node.s32("tex_id", emo[1]))
+            emonode.add_child(Node.bool("is_exchange", emo[2]))
 
-        weekly_music = Node.void("weekly_music")
-        info.add_child(weekly_music)
-        weekly_music.add_child(Node.s32("value", 0))
+        hike_event = Node.void("hike_event")
+        info.add_child(hike_event)
 
-        info.add_child(
-            Node.s32_array(
-                "add_default_music_list",
-                [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                ],
-            )
-        )
+        hikes = [
+            # フラッグラリー！！ SYMPHONY編 Track 1
+            # {
+            #     "id": 6,
+            #     "end_time": Time.end_of_this_month(),
+            #     "flags": [
+            #         {
+            #             "id": 1,
+            #             "start_time": 0,
+            #             "need_point": 150,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000203, False],  # 天空の夜明け (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 2,
+            #             "start_time": 0,
+            #             "need_point": 300,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000198, False],  # Timepiece phase II (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 3,
+            #             "start_time": 0,
+            #             "need_point": 450,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000197, False],  # FLOWER (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 4,
+            #             "start_time": 0,
+            #             "need_point": 600,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000199, False],  # 海神 (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 5,
+            #             "start_time": 0,
+            #             "need_point": 750,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000200, False],  # バッドエンド・シンドローム (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 6,
+            #             "start_time": 0,
+            #             "need_point": 900,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000202, False],  # 朧 (BEMANI SYMPHONY Arr.)
+            #         },
+            #     ]
+            # },
 
-        # The following section should have zero or more child nodes (no particular
-        # name) which look like the following, with a song ID in the node's id attribute:
-        #     <node id="" />
-        weekly_music_list = Node.void("music_list")
-        weekly_music.add_child(weekly_music_list)
+            # フラッグラリー！！ SYMPHONY編 Track 2
+            # {
+            #     "id": 7,
+            #     "end_time": Time.end_of_this_month(),
+            #     "flags": [
+            #         {
+            #             "id": 1,
+            #             "start_time": 0,
+            #             "need_point": 150,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000206, False],  # Idola (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 2,
+            #             "start_time": 0,
+            #             "need_point": 300,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000204, False],  # サヨナラ・ヘヴン (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 3,
+            #             "start_time": 0,
+            #             "need_point": 450,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000208, False],  # starmine (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 4,
+            #             "start_time": 0,
+            #             "need_point": 600,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000213, False],  # 流砂の嵐 (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 5,
+            #             "start_time": 0,
+            #             "need_point": 750,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000209, False],  # Colorful Cookie (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 6,
+            #             "start_time": 0,
+            #             "need_point": 900,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000205, False],  # Lachryma (BEMANI SYMPHONY Arr.)
+            #         },
+            #     ]
+            # },
+
+            # フラッグラリー！！ SYMPHONY編 Track 3
+            # {
+            #     "id": 8,
+            #     "end_time": Time.end_of_this_month(),
+            #     "flags": [
+            #         {
+            #             "id": 1,
+            #             "start_time": 0,
+            #             "need_point": 150,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000211, False],  # Element of SPADA (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 2,
+            #             "start_time": 0,
+            #             "need_point": 300,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000214, False],  # さよなら世界 (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 3,
+            #             "start_time": 0,
+            #             "need_point": 450,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000212, False],  # 嘆きの樹 (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 4,
+            #             "start_time": 0,
+            #             "need_point": 600,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000210, False],  # POSSESSION (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 5,
+            #             "start_time": 0,
+            #             "need_point": 750,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000207, False],  # Everlasting Message (BEMANI SYMPHONY Arr.)
+            #         },
+            #         {
+            #             "id": 6,
+            #             "start_time": 0,
+            #             "need_point": 900,
+            #             "bgm_id": 0,
+            #             "se_id": 0,
+            #             "is_index_white": False,
+            #             "reward": [self.REWARD_MUSIC, 90000201, False],  # Lisa-RICCIA (BEMANI SYMPHONY Arr.)
+            #         },
+            #     ]
+            # },
+
+            # フラッグラリー！！ 真夏の歌合戦編
+            {
+                "id": 9,
+                "end_time": Time.end_of_this_month(),
+                "flags": [
+                    {
+                        "id": 1,
+                        "start_time": 0,
+                        "need_point": 150,
+                        "bgm_id": 0,
+                        "se_id": 0,
+                        "is_index_white": False,
+                        "reward": [self.REWARD_MUSIC, 90000250, False],  # 鋳鉄の檻
+                    },
+                    {
+                        "id": 2,
+                        "start_time": 0,
+                        "need_point": 300,
+                        "bgm_id": 0,
+                        "se_id": 0,
+                        "is_index_white": False,
+                        "reward": [self.REWARD_MUSIC, 90000251, False],  # チュッチュ♪マチュピチュ
+                    },
+                    {
+                        "id": 3,
+                        "start_time": 0,
+                        "need_point": 450,
+                        "bgm_id": 0,
+                        "se_id": 0,
+                        "is_index_white": False,
+                        "reward": [self.REWARD_MUSIC, 90000252, False],  # Globe Glitter
+                    },
+                    {
+                        "id": 4,
+                        "start_time": 0,
+                        "need_point": 600,
+                        "bgm_id": 0,
+                        "se_id": 0,
+                        "is_index_white": False,
+                        "reward": [self.REWARD_MUSIC, 90000253, False],  # DUAL STRIKER
+                    },
+                ]
+            },
+        ]
+
+        for hike in hikes:
+            hikenode = Node.void("hike")
+            # hike_event.add_child(hikenode)
+            hikenode.set_attribute("id", str(hike["id"]))
+            hikenode.add_child(Node.u64("etime", int(hike["end_time"]) * 1000))
+            term_list = Node.void("term_list")
+            hikenode.add_child(term_list)
+            for term in hike["flags"]:
+                termnode = Node.void("term")
+                term_list.add_child(termnode)
+                termnode.set_attribute("id", str(term["id"]))
+                termnode.add_child(Node.u64("stime", term["start_time"] * 1000))
+                termnode.add_child(Node.s32("need_point", term["need_point"]))
+                termnode.add_child(Node.s32("bgm_id", term["bgm_id"]))
+                termnode.add_child(Node.s32("se_id", term["se_id"]))
+                termnode.add_child(Node.bool("is_index_white", term["is_index_white"]))
+                reward = Node.void("reward")
+                termnode.add_child(reward)
+                reward.set_attribute("type", str(term["reward"][0]))
+                reward.add_child(Node.s32("value", term["reward"][1]))
+                reward.add_child(Node.bool("is_special", term["reward"][2]))
+
+        # Unsupported tip_list, this probably lets the server control the tips between songs.
+        tip_list = Node.void("tip_list")
+        info.add_child(tip_list)
+
+        tips = [
+            # {
+            #     "id": 2,
+            #     "target": 1,
+            # },
+            # {
+            #     "id": 2,
+            #     "target": 2,
+            # },
+            # {
+            #     "id": 2,
+            #     "target": 2,
+            # },
+        ]
+        for tip in tips:
+            tipnode = Node.void("tip")
+            tip_list.add_child(tipnode)
+            tipnode.set_attribute("id", str(tip["id"]))
+            tipnode.add_child(Node.u8("target", tip["target"]))
 
         # Enable/disable festo dungeon.
         if game_config.get_bool("festo_dungeon"):
@@ -1913,23 +5877,41 @@ class JubeatFesto(
             info.add_child(festo_dungeon)
             festo_dungeon.add_child(Node.u64("etime", (Time.now() + Time.SECONDS_IN_WEEK) * 1000))
 
-        # Unsupported team_battle nodes.
-        info.add_child(Node.void("team_battle"))
+        travel = Node.void("travel")
+        info.add_child(travel)
+        map_list = Node.void("map_list")
+        travel.add_child(map_list)
 
-        # Unsupported EMO list for EMO shop.
-        info.add_child(Node.void("emo_list"))
+        for map in self.__get_travel_list():
+            mapnode = Node.void("map")
+            map_list.add_child(mapnode)
+            mapnode.set_attribute("id", str(map["id"]))
+            mapnode.set_attribute("side", str(map["side"]))
+            mapnode.add_child(Node.string("texture_name", map["texture_name"]))
+            mapnode.add_child(Node.s32("type", map["type"]))  # 1: Normal, 2: Time based
+            mapnode.add_child(Node.s32("music_color_index", map["music_color_index"]))
+            mapnode.add_child(Node.s32("compass_cost", map["compass_cost"]))
+            mapnode.add_child(Node.u64("stime", map["start_time"] * 1000))
+            mapnode.add_child(Node.u64("etime", map["end_time"] * 1000))
+            phase_list = Node.void("phase_list")
+            mapnode.add_child(phase_list)
 
-        # Unsupported hike_event.
-        info.add_child(Node.void("hike_event"))
+            for index, phase in enumerate(map["phases"]):
+                phasenode = Node.void("phase")
+                phase_list.add_child(phasenode)
+                phasenode.set_attribute("index", str(index))
+                cell_list = Node.void("cell_list")
+                phasenode.add_child(cell_list)
 
-        # Unsupported tip_list, this probably lets the server control the tips between songs.
-        info.add_child(Node.void("tip_list"))
-
-        # Unsupported mission travel event, which is very server-controlled.
-        info.add_child(Node.void("travel"))
+                for index, cell in enumerate(phase["cells"]):
+                    cellnode = Node.void("cell")
+                    cell_list.add_child(cellnode)
+                    cellnode.set_attribute("index", str(index))
+                    cellnode.add_child(Node.s32("pos", cell["pos"]))
+                    cellnode.add_child(Node.string("keyword", cell["keyword"]))
 
         # Unsupported stamp rally event, since this poorly undocumented.
-        info.add_child(Node.void("stamp"))
+        # info.add_child(Node.void("stamp"))
 
         return info
 
@@ -1967,70 +5949,22 @@ class JubeatFesto(
             Node.s32_array(
                 "black_jacket_list",
                 [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
                 ],
             )
         )
@@ -2342,7 +6276,7 @@ class JubeatFesto(
         data.add_child(player)
 
         # Basic profile info
-        player.add_child(Node.string("name", profile.get_str("name", "なし")))
+        player.add_child(Node.string("name", profile.get_str("name", "PLAYER")))
         player.add_child(Node.s32("jid", profile.extid))
 
         # Miscelaneous crap
@@ -2418,21 +6352,21 @@ class JubeatFesto(
         item.add_child(
             Node.s32_array(
                 "secret_list",
-                ([-1] * 64) if force_unlock else self.create_owned_items(owned_songs, 64),
+                ([0] * 64) if force_unlock else self.create_owned_items(owned_songs, 64),
             )
         )
 
         # We force unlock all themes, markers, titles, and parts, regardless of what the client ended up earning.
-        item.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list", 16, [-1] * 16)))
-        item.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list", 16, [-1] * 16)))
-        item.add_child(Node.s32_array("title_list", profile.get_int_array("title_list", 160, [-1] * 160)))
-        item.add_child(Node.s32_array("parts_list", profile.get_int_array("parts_list", 160, [-1] * 160)))
+        item.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list", 16, [0] * 16)))
+        item.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list", 16, [0] * 16)))
+        item.add_child(Node.s32_array("title_list", profile.get_int_array("title_list", 160, [0] * 160)))
+        item.add_child(Node.s32_array("parts_list", profile.get_int_array("parts_list", 160, [0] * 160)))
 
         # These get earned by unlocking them through JBOX.
         item.add_child(Node.s32_array("emblem_list", self.create_owned_items(owned_emblems, 96)))
 
         # I got no idea wtf this is, so I'm defaulting it to all on like the above ones.
-        item.add_child(Node.s32_array("commu_list", profile.get_int_array("commu_list", 16, [-1] * 16)))
+        item.add_child(Node.s32_array("commu_list", profile.get_int_array("commu_list", 16, [0] * 16)))
 
         # I have no idea what these are for. I figured it was for the server to grant songs/themes/markers
         # outside of gameplay, but the game doesn't seem to react to setting values here. So, lets set them
@@ -2444,11 +6378,11 @@ class JubeatFesto(
         new.add_child(
             Node.s32_array(
                 "secret_list",
-                ([-1] * 64) if force_unlock else self.create_owned_items(owned_secrets, 64),
+                ([0] * 64) if force_unlock else self.create_owned_items(owned_secrets, 64),
             )
         )
-        new.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list_new", 16, [-1] * 16)))
-        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list_new", 16, [-1] * 16)))
+        new.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list_new", 16, [0] * 16)))
+        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list_new", 16, [0] * 16)))
 
         # Add rivals to profile.
         rivallist = Node.void("rivallist")
@@ -2540,7 +6474,7 @@ class JubeatFesto(
             # There are two significant bits here, bit 0 and bit 1, I think the first
             # one is whether the event is started, second is if its finished?
             event = Node.void("event")
-            event_info.add_child(event)
+            # event_info.add_child(event)
             event.set_attribute("type", str(eventid))
 
             state = 0x0
@@ -2595,9 +6529,6 @@ class JubeatFesto(
         question_list = Node.void("question_list")
         player.add_child(question_list)
 
-        emo_list = Node.void("emo_list")
-        player.add_child(emo_list)
-
         # Some server node
         server = Node.void("server")
         player.add_child(server)
@@ -2615,13 +6546,13 @@ class JubeatFesto(
             status |= self.COURSE_STATUS_CLEARED if status_dict.get_bool("cleared") else 0
 
             coursenode = Node.void("course")
-            course_list.add_child(coursenode)
+            # course_list.add_child(coursenode)
             coursenode.set_attribute("id", str(course["id"]))
             coursenode.add_child(Node.s8("status", status))
 
         # For some reason, this is on the course list node this time around.
         category_list = Node.void("category_list")
-        course_list.add_child(category_list)
+        # course_list.add_child(category_list)
         for categoryid in range(1, 7):
             category = Node.void("category")
             category_list.add_child(category)
@@ -2686,17 +6617,92 @@ class JubeatFesto(
             )
         )
 
-        # Unknown department shop stuff, I think this handles the EMO shop.
+        emo_list = Node.void("emo_list")
+        player.add_child(emo_list)
+        for emo in self.__get_emo_list():
+            emonode = Node.void("emo")
+            emo_list.add_child(emonode)
+            emonode.set_attribute("id", str(emo[0]))
+            emonode.add_child(Node.s32("num", 8000))
+
+        eamuse_gift_list = Node.void("eamuse_gift_list")
+        player.add_child(eamuse_gift_list)
+
         department = Node.void("department")
         player.add_child(department)
-        department.add_child(Node.void("shop_list"))
+        shop_list = Node.void("shop_list")
+        department.add_child(shop_list)
+        for shop in self.__get_shop_list():
+            shopnode = Node.void("shop")
+            shop_list.add_child(shopnode)
+            shopnode.set_attribute("id", str(shop["id"]))
+            shopnode.add_child(Node.bool("is_new", True))
+            shopnode.add_child(Node.bool("is_todays_first", True))
+
+        hike_event = Node.void("hike_event")
+        player.add_child(hike_event)
+
+        hike = Node.void("hike")
+        hike_event.add_child(hike)
+        hike.set_attribute("id", "8")
+        hike.add_child(Node.s32("point", 0))
 
         # Stamp rally stuff, this is too server-controlled and not documented on BemaniWiki.
         stamp = Node.void("stamp")
         player.add_child(stamp)
         stamp.add_child(Node.void("sheet_list"))
 
-        # Missing team_battle, which we do not support.
+        current_team_battle = game_config.get_int("current_team_battle")
+        team_battles = self.__get_team_battle_list()
+        if current_team_battle > 0 and current_team_battle <= len(team_battles):
+            battle = team_battles[current_team_battle - 1]
+            team_battle = Node.void("team_battle")
+            player.add_child(team_battle)
+
+            if battle["state"] == 1:
+                team_battle_open = Node.void("open")
+                team_battle.add_child(team_battle_open)
+                team_battle_open.set_attribute("id", str(current_team_battle))
+                team_battle_open.add_child(Node.u8("team_id", 1))
+                team_battle_open.add_child(Node.s32("boost_count", 0))
+                individual = Node.void("individual")
+                team_battle_open.add_child(individual)
+                individual.add_child(Node.s32("point", 100))
+                # individual.add_child(Node.s32("rank", 0))
+                support = Node.void("support")
+                team_battle_open.add_child(support)
+                support.add_child(Node.s32("point", 0))
+                # support.add_child(Node.s32("rank", 0))
+            elif battle["state"] == 2:
+                team_battle_award = Node.void("award")
+                team_battle.add_child(team_battle_award)
+                team_battle_award.set_attribute("id", str(battle["id"]))
+                team_list = Node.void("team_list")
+                team_battle_award.add_child(team_list)
+                for team_id, team_name in enumerate(battle["teams"]):
+                    teamnode = Node.void("team")
+                    team_list.add_child(teamnode)
+                    teamnode.set_attribute("id", str(team_id + 1))
+                    teamnode.add_child(Node.string("name", team_name))
+                    teamnode.add_child(Node.s32("point", 0))
+                team_reward = Node.void("reward")
+                team_battle_award.add_child(team_reward)
+                win_reward_list = Node.void("win_reward_list")
+                team_reward.add_child(win_reward_list)
+                for reward in battle["win_rewards"]:
+                    rewardnode = Node.void("reward")
+                    win_reward_list.add_child(rewardnode)
+                    rewardnode.set_attribute("type", str(reward[0]))
+                    rewardnode.add_child(Node.s32("value", reward[1]))
+                    rewardnode.add_child(Node.bool("is_special", reward[2]))
+                bsc_reward_list = Node.void("bsc_reward_list")
+                team_reward.add_child(bsc_reward_list)
+                for reward in battle["basic_rewards"]:
+                    rewardnode = Node.void("reward")
+                    bsc_reward_list.add_child(rewardnode)
+                    rewardnode.set_attribute("type", str(reward[0]))
+                    rewardnode.add_child(Node.s32("value", reward[1]))
+                    rewardnode.add_child(Node.bool("is_special", reward[2]))
 
         # Missing eamuse_gift_list, which we do not support.
 
@@ -2709,6 +6715,61 @@ class JubeatFesto(
         festo_dungeon.add_child(Node.s32("clear_flag", profile.get_int("festo_dungeon_clear_flag")))
 
         # Missing travel event, which I do not want to implement.
+
+        travel = Node.void("travel")
+        player.add_child(travel)
+        travel.add_child(Node.s32("select_map_id", 14))
+        travel.add_child(Node.s32("select_map_side", 1))
+        map_list = Node.void("map_list")
+        travel.add_child(map_list)
+
+        for map in self.__get_travel_list():
+            mapnode = Node.void("map")
+            map_list.add_child(mapnode)
+            mapnode.set_attribute("id", str(map["id"]))
+            mapnode.set_attribute("side", str(map["side"]))
+            mapnode.add_child(Node.s32("display_state", 2))  # 1: Tutorial, 2
+            phase_list = Node.void("phase_list")
+            mapnode.add_child(phase_list)
+
+            for phase_index, phase in enumerate(map["phases"]):
+                phasenode = Node.void("phase")
+                phase_list.add_child(phasenode)
+                phasenode.set_attribute("index", str(phase_index))
+                phasenode.add_child(Node.s32("select_cell_index", 0))
+                phasenode.add_child(Node.bool("is_used_compass", False))
+                cell_list = Node.void("cell_list")
+                phasenode.add_child(cell_list)
+
+                for cell_index, cell in enumerate(phase["cells"]):
+                    cellnode = Node.void("cell")
+                    cell_list.add_child(cellnode)
+                    cellnode.set_attribute("index", str(cell_index))
+                    cellnode.add_child(Node.s32("play_count", 0))
+                    cellnode.add_child(Node.bool("is_relief", False))
+                    # TODO: 보상 위치를 플레이어마다 다르게 해야함
+                    reward = phase.get("rewards")
+                    if reward:
+                        if cell_index < len(reward):
+                            rewardnode = Node.void("reward")
+                            cellnode.add_child(rewardnode)
+                            rewardnode.set_attribute("type", str(reward[cell_index][0] or 0))
+                            rewardnode.add_child(Node.s32("value", reward[cell_index][1] or 0))
+                            rewardnode.add_child(Node.bool("is_special", reward[cell_index][2] or False))
+                    mission_list = Node.void("mission_list")
+                    cellnode.add_child(mission_list)
+                    for mission_index, mission in enumerate(cell["missions"]):
+                        missionnode = Node.void("mission")
+                        mission_list.add_child(missionnode)
+                        missionnode.set_attribute("index", str(mission_index))
+                        missionnode.add_child(Node.s32("type", mission[0]))
+                        missionnode.add_child(Node.s32("param", mission[1]))
+
+                        # For testing
+                        if map["id"] == 11 and phase_index in [0]:
+                            missionnode.add_child(Node.bool("is_cleared", True))
+                        else:
+                            missionnode.add_child(Node.bool("is_cleared", False))
 
         return root
 

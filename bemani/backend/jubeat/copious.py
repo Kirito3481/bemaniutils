@@ -22,7 +22,7 @@ class JubeatCopious(
 
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatKnitAppend(self.data, self.config, self.model)
-    
+
     def handle_shopinfo_regist_request(self, request: Node) -> Node:
         # Update the name of this cab for admin purposes
         self.update_machine_name(request.child_value('shop_name'))
@@ -36,7 +36,7 @@ class JubeatCopious(
         data.add_child(Node.u8("is_send", 1))
 
         return shopinfo
-    
+
     def handle_demodata_get_news_request(self, request: Node) -> Node:
         root = Node.void("demodata")
         data = Node.void("data")
@@ -47,7 +47,7 @@ class JubeatCopious(
         officialnews.set_attribute("count", "0")
 
         return root
-    
+
     def handle_demodata_get_hitchart_request(self, request: Node) -> Node:
         root = Node.void("demodata")
         data = Node.void("data")
@@ -62,9 +62,9 @@ class JubeatCopious(
         hitchart_org = Node.void("hitchart_org")
         data.add_child(hitchart_org)
         hitchart_org.set_attribute("count", "0")
-        
+
         return root
-    
+
     def handle_lobby_check_request(self, request: Node) -> Node:
         root = Node.void("lobby")
         data = Node.void("data")
@@ -75,13 +75,13 @@ class JubeatCopious(
         data.add_child(entrant_nr)
         data.add_child(Node.s16("interval", 0))
         data.add_child(Node.s16("entry_timeout", 30))
-        
+
         waitlist = Node.void("waitlist")
         data.add_child(waitlist)
         waitlist.set_attribute("count", "0")
 
         return root
-    
+
     def handle_lobby_entry_request(self, request: Node) -> Node:
         music_id = request.child_value("data/music/id")
         music_seq = request.child_value("data/music/seq")
@@ -101,27 +101,27 @@ class JubeatCopious(
         music.add_child(Node.u8("seq", music_seq))
 
         return root
-    
+
     def handle_lobby_refresh_request(self, request: Node) -> Node:
         root = Node.void("lobby")
         data = Node.void("data")
         root.add_child(data)
         data.add_child(Node.s16("refresh_intr", 5))
         return root
-    
+
     def handle_lobby_report_request(self, request: Node) -> Node:
         root = Node.void("lobby")
         data = Node.void("data")
         root.add_child(data)
         data.add_child(Node.s16("refresh_intr", 5))
         return root
-    
+
     def handle_gametop_regist_request(self, request: Node) -> Node:
         refid = request.child_value("data/player/pass/refid")
         name = request.child_value("data/player/name")
         root = self.new_profile_by_refid(refid, name)
         return root
-    
+
     def handle_gametop_get_pdata_request(self, request: Node) -> Node:
         refid = request.child_value("data/player/pass/refid")
         root = self.get_profile_by_refid(refid)
@@ -129,7 +129,7 @@ class JubeatCopious(
             root = Node.void("gametop")
             root.set_attribute("status", str(Status.NO_PROFILE))
         return root
-    
+
     def handle_gametop_get_mdata_request(self, request: Node) -> Node:
         extid = request.child_value("data/player/jid")
         mdata_ver = request.child_value("data/player/mdata_ver")
@@ -138,7 +138,7 @@ class JubeatCopious(
             root = Node.void("gametop")
             root.set_attribute("status", str(Status.NO_PROFILE))
         return root
-    
+
     def handle_gametop_get_collabo_request(self, request: Node) -> Node:
         # Lincle LINK collabo event
         refid = request.child_value("data/player/refid")
@@ -157,7 +157,7 @@ class JubeatCopious(
         collabo.add_child(Node.u32("yellow_state", 0))
 
         return root
-    
+
     def handle_gameend_regist_request(self, request: Node) -> Node:
         player = request.child("data/player")
 
@@ -188,10 +188,9 @@ class JubeatCopious(
         player.add_child(Node.s32("session_id", 1))
         collabo = Node.void("collabo")
         data.add_child(collabo)
-        collabo.add_child(Node.s32("dellar", 0)) # for collabo event?
+        collabo.add_child(Node.s32("dellar", 0))  # for collabo event?
         return root
 
-    
     def format_profile(self, userid: UserID, profile: Profile) -> Node:
         root = Node.void("gametop")
         data = Node.void("data")
@@ -321,7 +320,7 @@ class JubeatCopious(
         history.set_attribute("count", "0")
 
         return root
-    
+
     def unformat_profile(self, userid: UserID, request: Node, oldprofile: Profile) -> Profile:
         newprofile = oldprofile.clone()
         newprofile.replace_bool("saved", True)
@@ -469,14 +468,14 @@ class JubeatCopious(
         self.update_play_statistics(userid)
 
         return newprofile
-    
+
     def format_scores(self, userid: UserID, profile: Profile, scores: List[Score]) -> Node:
         root = Node.void("gametop")
-        data = Node.void("data")
-        root.add_child(data)
+        datanode = Node.void("data")
+        root.add_child(datanode)
 
         player = Node.void("player")
-        data.add_child(player)
+        datanode.add_child(player)
 
         playdata = Node.void("playdata")
         player.add_child(playdata)
@@ -547,5 +546,5 @@ class JubeatCopious(
                 bar = Node.u8_array("bar", ghost)
                 musicdata.add_child(bar)
                 bar.set_attribute("seq", str(i))
-        
+
         return root

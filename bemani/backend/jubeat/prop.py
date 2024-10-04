@@ -1183,6 +1183,13 @@ class JubeatProp(
         #     <gift reason="??" kind="??">
         #         <id __type="s32">??</id>
         #     </gift>
+        gift = Node.void("gift")
+        gift_list.add_child(gift)
+        # Item Kind
+        # 1: music
+        gift.set_attribute("kind", "1")  # only 1
+        gift.set_attribute("reason", "1")  # doesn't matter
+        gift.add_child(Node.s32("id", 60001023))  # music id
 
         return root
 

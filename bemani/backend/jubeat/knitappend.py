@@ -23,7 +23,7 @@ class JubeatKnitAppend(
 
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatKnit(self.data, self.config, self.model)
-    
+
     def handle_shopinfo_regist_request(self, request: Node) -> Node:
         testmode = request.child("testmode")
         is_send = None
@@ -47,18 +47,18 @@ class JubeatKnitAppend(
         root = Node.void("demodata")
         data = Node.void("data")
         root.add_child(data)
-        
+
         officialnews = Node.void("officialnews")
         data.add_child(officialnews)
         officialnews.set_attribute("count", "0")
 
         return root
-    
+
     def handle_demodata_get_hitchart_request(self, request: Node) -> Node:
         root = Node.void("demodata")
         data = Node.void("data")
         root.add_child(data)
-        
+
         hitchart = Node.void("hitchart")
         data.add_child(hitchart)
         hitchart.set_attribute("count", "0")
@@ -71,9 +71,9 @@ class JubeatKnitAppend(
         hitchart = Node.void("hitchart_org")
         data.add_child(hitchart)
         hitchart.set_attribute("count", "0")
-        
+
         return root
-    
+
     def handle_lobby_check_request(self, request: Node) -> Node:
         root = Node.void("lobby")
         data = Node.void("data")
@@ -84,13 +84,13 @@ class JubeatKnitAppend(
         data.add_child(entrant_nr)
         data.add_child(Node.s16("interval", 0))
         data.add_child(Node.s16("entry_timeout", 30))
-        
+
         waitlist = Node.void("waitlist")
         data.add_child(waitlist)
         waitlist.set_attribute("count", "0")
 
         return root
-    
+
     def handle_lobby_entry_request(self, request: Node) -> Node:
         music_id = request.child_value("data/music/id")
         music_seq = request.child_value("data/music/seq")
@@ -110,30 +110,30 @@ class JubeatKnitAppend(
         music.add_child(Node.u8("seq", music_seq))
 
         return root
-    
+
     def handle_lobby_refresh_request(self, request: Node) -> Node:
         root = Node.void("lobby")
         data = Node.void("data")
         root.add_child(data)
         data.add_child(Node.s16("refresh_intr", 5))
         return root
-    
+
     def handle_lobby_report_request(self, request: Node) -> Node:
         root = Node.void("lobby")
         data = Node.void("data")
         root.add_child(data)
         data.add_child(Node.s16("refresh_intr", 5))
         return root
-    
+
     def handle_netlog_send_request(self, request: Node) -> Node:
         return Node.void("netlog")
-    
+
     def handle_gametop_regist_request(self, request: Node) -> Node:
         refid = request.child_value("data/player/pass/refid")
         name = request.child_value("data/player/name")
         root = self.new_profile_by_refid(refid, name)
         return root
-    
+
     def handle_gametop_get_pdata_request(self, request: Node) -> Node:
         refid = request.child_value("data/player/pass/refid")
         root = self.get_profile_by_refid(refid)
@@ -141,7 +141,7 @@ class JubeatKnitAppend(
             root = Node.void("gametop")
             root.set_attribute("status", str(Status.NO_PROFILE))
         return root
-    
+
     def handle_gametop_get_mdata_request(self, request: Node) -> Node:
         extid = request.child_value("data/player/jid")
         mdata_ver = request.child_value("data/player/mdata_ver")
@@ -150,7 +150,7 @@ class JubeatKnitAppend(
             root = Node.void("gametop")
             root.set_attribute("status", str(Status.NO_PROFILE))
         return root
-    
+
     def handle_gametop_get_collabo_request(self, request: Node) -> Node:
         # APPEND FESTIVAL Event
         refid = request.child_value("data/player/refid")
@@ -158,7 +158,7 @@ class JubeatKnitAppend(
         root = Node.void("gametop")
         data = Node.void("data")
         root.add_child(data)
-        
+
         collabo = Node.void("collabo")
         data.add_child(collabo)
         played = Node.void("played")
@@ -170,7 +170,7 @@ class JubeatKnitAppend(
         played.add_child(Node.s8("gfdm", 0))
 
         return root
-    
+
     def handle_gameend_set_collabo_request(self, request: Node) -> Node:
         refid = request.child_value("data/player/refid")
         collabo = request.child("data/collabo")
@@ -182,11 +182,11 @@ class JubeatKnitAppend(
         gfdm = played.child_value("j_gfdm")
 
         return Node.void("gameend")
-    
+
     def handle_gameend_log_request(self, request: Node) -> Node:
         # Record guest play later
         return Node.void("gameend")
-    
+
     def format_profile(self, userid: UserID, profile: Profile) -> Node:
         root = Node.void("gametop")
         data = Node.void("data")
@@ -211,7 +211,6 @@ class JubeatKnitAppend(
         player.add_child(Node.s32("jid", profile.extid))
         player.add_child(Node.string("name", profile.get_str("name", "PLAYER")))
         player.add_child(Node.string("refid", profile.refid))
-
 
         info = Node.void("info")
         player.add_child(info)
@@ -303,7 +302,7 @@ class JubeatKnitAppend(
         reward = Node.void("reward")
         bingo.add_child(reward)
         reward.add_child(Node.s32("total", profile.get_int("jubingo_total")))
-        reward.add_child(Node.s32("point",  profile.get_int("jubingo_point")))
+        reward.add_child(Node.s32("point", profile.get_int("jubingo_point")))
 
         collabo = Node.void("collabo")
         player.add_child(collabo)
@@ -322,7 +321,7 @@ class JubeatKnitAppend(
         match_hist.set_attribute("count", "0")
 
         return root
-    
+
     def unformat_profile(self, userid: UserID, request: Node, oldprofile: Profile) -> Profile:
         newprofile = oldprofile.clone()
         newprofile.replace_bool("saved", True)
@@ -475,13 +474,13 @@ class JubeatKnitAppend(
         self.update_play_statistics(userid)
 
         return newprofile
-    
+
     def format_scores(self, userid: UserID, profile: Profile, scores: List[Score]) -> Node:
         root = Node.void("gametop")
-        data = Node.void("data")
-        root.add_child(data)
+        datanode = Node.void("data")
+        root.add_child(datanode)
         player = Node.void("player")
-        data.add_child(player)
+        datanode.add_child(player)
 
         playdata = Node.void("playdata")
         player.add_child(playdata)

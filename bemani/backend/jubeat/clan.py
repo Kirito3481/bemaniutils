@@ -79,6 +79,73 @@ class JubeatClan(
     COURSE_HAZARD_FC2: Final[int] = 5
     COURSE_HAZARD_FC3: Final[int] = 6
 
+    DROP_RAINBOW: Final[int] = 1
+    DROP_RED: Final[int] = 2
+    DROP_CYAN: Final[int] = 3
+    DROP_GREEN: Final[int] = 4
+    DROP_PLUM: Final[int] = 5
+
+    DROP_GRADE_NORMAL: Final[int] = 1
+    DROP_GRADE_SILVER: Final[int] = 2
+    DROP_GRADE_GOLD: Final[int] = 3
+    DROP_GRADE_RAINBOW: Final[int] = 4
+
+    REWARD_MUSIC: Final[int] = 1
+    REWARD_TITLE: Final[int] = 2
+    REWARD_MARKER: Final[int] = 3
+    REWARD_BACKGROUND: Final[int] = 4
+    REWARD_JUBIBELL: Final[int] = 5
+    REWARD_OMIYAGE: Final[int] = 6
+    REWARD_OMIYAGE_LEVEL: Final[int] = 7
+    REWARD_ETC: Final[int] = 8
+    REWARD_JBOX_PIECE: Final[int] = 9
+    REWARD_OMIYAGE_SET: Final[int] = 10
+    REWARD_BONUS_TUNE_GAUGE: Final[int] = 11
+    REWARD_TITLE_PARTS: Final[int] = 12
+
+    # drop id  rainbow: 1, red: 2, cyan: 3, green: 4, purple: 5
+    # drop grade  normal: 1, silver: 2, gold: 3, rainbow: 4
+
+    # Reward Type 1 music
+    # value: music id
+
+    # Reward Type 2 title
+    # value: title id
+
+    # Reward Type 3 marker
+    # value: marker id
+
+    # Reward Type 4 background
+    # value: background id
+
+    # Reward Type 5 jubibell
+    # value: bell id
+
+    # Reward Type 6 OMIYAGE
+    # value: 갯수 뒤에 두자리는 OMIYAGE 종류 그뒤 4자리는 OMIYAGE 등급
+    # ex) 50040001 -> 50: 갯수, 04: OMIYAGE 종류, 0001: OMIYAGE 등급
+
+    # Reward Type 7 OMIYAGE LEVEL
+    # value: 갯수 뒤에 4자리는 모르겠음
+    # ex) 2000001 -> 200: Exp, 0001: 모름
+
+    # Reward Type 8 기타 아이템
+    # value: 갯수 뒤에 4자리는 모르겠음
+    # ex) 104 -> 1: Exp, 04: 모름
+
+    # Reward Type 9 jbox piece
+    # value: pieces
+
+    # Reward Type 10 OMIYAGE SET
+    # value: 갯수 뒤에 두자리는 OMIYAGE 등급 그뒤 4자리는 0으로 고정
+    # ex) 50040000 -> 50: 갯수, 04: OMIYAGE 등급, 0000: 0000 고정
+
+    # Reward Type 11 BONUS TUNE GAUGE
+    # value: tens
+
+    # Reward Type 12 title parts
+    # value: parts id
+
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatQubell(self.data, self.config, self.model)
 
@@ -142,6 +209,18 @@ class JubeatClan(
                     "tip": "Forces all songs to be available by default",
                     "category": "game_config",
                     "setting": "force_song_unlock",
+                },
+            ],
+            "ints": [
+                {
+                    "name": "Union Battle",
+                    "tip": "jubeat clan street fight event",
+                    "category": "game_config",
+                    "setting": "union_battle",
+                    "values": {
+                        0: "No Event",
+                        1: "1st",
+                    },
                 },
             ],
         }
@@ -674,11 +753,11 @@ class JubeatClan(
         # Event info.
         event_info = Node.void("event_info")
         info.add_child(event_info)
-        for event in self.EVENTS:
-            evt = Node.void("event")
-            event_info.add_child(evt)
-            evt.set_attribute("type", str(event))
-            evt.add_child(Node.u8("state", 1 if self.EVENTS[event]["enabled"] else 0))
+        # for event in self.EVENTS:
+        #     evt = Node.void("event")
+        #     event_info.add_child(evt)
+        #     evt.set_attribute("type", str(event))
+        #     evt.add_child(Node.u8("state", 1 if self.EVENTS[event]["enabled"] else 0))
 
         # Each of the following two sections should have zero or more child nodes (no
         # particular name) which look like the following:
@@ -694,342 +773,34 @@ class JubeatClan(
         genre_def_music = Node.void("genre_def_music")
         info.add_child(genre_def_music)
 
-        info.add_child(
-            Node.s32_array(
-                "black_jacket_list",
-                [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                ],
-            )
-        )
+        info.add_child(Node.s32_array("black_jacket_list", [0] * 64))
 
         # Some sort of music DB whitelist
-        info.add_child(
-            Node.s32_array(
-                "white_music_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
-            )
-        )
+        info.add_child(Node.s32_array("white_music_list", [-1] * 64))
 
         info.add_child(
             Node.s32_array(
                 "white_marker_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
+                [-1, 8191] + [0] * 14
             )
         )
 
         info.add_child(
             Node.s32_array(
                 "white_theme_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
+                [2047] + [0] * 15
             )
         )
 
         info.add_child(
             Node.s32_array(
                 "open_music_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
+                [-2013265951, -102760493, 1711275733, -1579088899, -108536, -227069, -33554401, 16383, 0, -1377473, -402653185, -2097153, -1231036417, -786433, -444727297, -1, 980541439, -33357824, 1077928957, 133988323, 1075838048, -32706, -234907777, -196609, 33138687, -2097152, -907557381, -2, -201326705, -34734081, -524293, -2147042049, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             )
         )
 
-        info.add_child(
-            Node.s32_array(
-                "shareable_music_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
-            )
-        )
+        # A list of songs you can share with others
+        info.add_child(Node.s32_array("shareable_music_list", [0] * 64))
 
         jbox = Node.void("jbox")
         info.add_child(jbox)
@@ -1040,14 +811,17 @@ class JubeatClan(
         emblem.add_child(normal)
         premium = Node.void("premium")
         emblem.add_child(premium)
-        normal.add_child(Node.s16("index", 2))
-        premium.add_child(Node.s16("index", 1))
+        normal.add_child(Node.s16("index", 0))
+        premium.add_child(Node.s16("index", 18))
 
         born = Node.void("born")
         info.add_child(born)
         born.add_child(Node.s8("status", 0))
         born.add_child(Node.s16("year", 0))
 
+        # S Collection event
+        # You can earn additional dig points by achieving a rank of S or higher.
+        #
         # Collection list values should look like:
         #     <rating>
         #         <id __type="s32">songid</id>
@@ -1065,7 +839,6 @@ class JubeatClan(
         all_music_matching = Node.void("all_music_matching")
         info.add_child(all_music_matching)
         all_music_matching.add_child(Node.bool("is_available", True))
-
         team = Node.void("team")
         all_music_matching.add_child(team)
         team.add_child(Node.s32("default_flag", 0))
@@ -1074,111 +847,541 @@ class JubeatClan(
         team.add_child(Node.s32("greenesia_flag", 0))
         team.add_child(Node.s32("plumpark_flag", 0))
 
+        # Question list ? Maybe for surveys?
         question_list = Node.void("question_list")
         info.add_child(question_list)
 
+        # question = Node.void("question")
+        # question_list.add_child(question)
+        # question.set_attribute("release_code", "2018081401")
+        # question.set_attribute("data_version", "0")
+        # question.set_attribute("id", "1")
+        # question.add_child(Node.s32("type", 1))
+        # question.add_child(Node.u8("dest", 1))  # dest 1: japan, 2: asia, 3: korea
+        # text_line_list = Node.void("text_line_list")
+        # question.add_child(text_line_list)
+        # text_line_list.add_child(Node.string("text_line", "Hello"))
+        # text_line_list.add_child(Node.string("text_line", "Hello2"))
+        # text_line_list.add_child(Node.string("text_line", "Hello3"))
+        # # Maybe bottom selection buttons?
+        # query_list = Node.void("query_list")
+        # question.add_child(query_list)
+        # query = Node.void("query")
+        # query_list.add_child(query)
+        # query.set_attribute("id", "1")
+        # query.add_child(Node.s32("priority", 1))
+        # query.add_child(Node.s64("stime", 0))
+        # query.add_child(Node.s64("etime", 0))
+        # query_text_line_list = Node.void("text_line_list")
+        # query.add_child(query_text_line_list)
+        # query_text_line_list.add_child(Node.string("text_line", "Hello"))
+        # query_text_line_list.add_child(Node.string("text_line", "Hello2"))
+        # query_text_line_list.add_child(Node.string("text_line", "Hello3"))
+        # query.add_child(Node.s32("target", 1))
+
+        # Drop ID
+        # 1: rainbow, 2: red, 3: cyan, 4: green, 5: purple
+        # 6: event drop
+        # Maximum 10
         drop_list = Node.void("drop_list")
         info.add_child(drop_list)
+
+        drops = [1, 2, 3, 4, 5, 6]
+        for drop in drops:
+            dropnode = Node.void("drop")
+            drop_list.add_child(dropnode)
+            dropnode.set_attribute("release_code", "2017072604")
+            dropnode.set_attribute("data_version", "0")
+            dropnode.set_attribute("id", str(drop))
+            dropnode.add_child(Node.s32("rate", 4))
 
         daily_bonus_list = Node.void("daily_bonus_list")
         info.add_child(daily_bonus_list)
 
+        # daily_bonus = Node.void("daily_bonus")
+        # daily_bonus_list.add_child(daily_bonus)
+        # daily_bonus.set_attribute("release_code", "2018081401")
+        # daily_bonus.set_attribute("data_version", "0")
+        # daily_bonus.set_attribute("id", "1")
+        # daily_bonus.set_attribute("tex_number", "1")
+        # daily_bonus.add_child(Node.string("stime", "2024-09-01Z00:00"))
+        # daily_bonus.add_child(Node.string("etime", "2024-09-30Z23:59"))
+
+        # day_list = Node.void("day_list")
+        # daily_bonus.add_child(day_list)
+
+        # for i in range(1, 30):
+        #     day = Node.void("day")
+        #     day_list.add_child(day)
+        #     day.set_attribute("day", str(i))
+        #     day.set_attribute("type", "9")  # Reward Type: Music
+        #     day.add_child(Node.s32("value", 200))
+
+        shop_list = [
+            {
+                "id": 1,
+                "name": "PACKAGE 01",
+                "priority": "1",
+                "items": [
+                    {
+                        "name": "みたらしプラトニック (feat. nicamoq)",
+                        "type": "1",
+                        "priority": "5",
+                        "value": 80000027,
+                        "is_secret": False,
+                        "drops": [
+                            {
+                                "id": "1",
+                                "grade": "1",
+                                "num": 10,
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Welcome!!",
+                        "type": "1",
+                        "priority": "4",
+                        "value": 80000026,
+                        "is_secret": False,
+                        "drops": [
+                            {
+                                "id": "1",
+                                "grade": "1",
+                                "num": 10,
+                            }
+                        ]
+                    },
+                    {
+                        "name": "アドレナリン",
+                        "type": "1",
+                        "priority": "3",
+                        "value": 80000024,
+                        "is_secret": False,
+                        "drops": [
+                            {
+                                "id": "1",
+                                "grade": "1",
+                                "num": 10,
+                            }
+                        ]
+                    },
+                    {
+                        "name": "CandyPop★Showcase",
+                        "type": "1",
+                        "priority": "2",
+                        "value": 80000038,
+                        "is_secret": False,
+                        "drops": [
+                            {
+                                "id": "1",
+                                "grade": "1",
+                                "num": 10,
+                            }
+                        ]
+                    },
+                    {
+                        "name": "レゾンデートル、前線より",
+                        "type": "1",
+                        "priority": "1",
+                        "value": 80000008,
+                        "is_secret": False,
+                        "drops": [
+                            {
+                                "id": "1",
+                                "grade": "1",
+                                "num": 10,
+                            }
+                        ]
+                    },
+                ],
+            },
+            {
+                "id": 2,
+                "name": "jubeat SHOP",
+                "priority": "2",
+                "conditions": [],
+                "items": [],
+            },
+            {
+                "id": 3,
+                "name": "OMIYAGE CENTER",
+                "priority": "3",
+                "conditions": [],
+                "items": [
+                    {
+                        "name": "TEST",
+                        "type": "2",
+                        "priority": "6",
+                        "value": 11933,
+                        "is_secret": False,
+                        "drops": [
+                            {
+                                "id": "1",
+                                "grade": "1",
+                                "num": 10,
+                            }
+                        ]
+                    },
+                ],
+            },
+            # {
+            #     "id": 5,
+            #     "name": "PACKAGE 02",
+            #     "release_code": "2018081401",
+            #     "data_version": "0",
+            #     "priority": "2",
+            #     "conditions": [],
+            #     "items": [],
+            # },
+        ]
+
         department = Node.void("department")
         info.add_child(department)
-        department.add_child(Node.void("pack_list"))
+        pack_list = Node.void("pack_list")
+        department.add_child(pack_list)
+
+        for shop in shop_list:
+            shopnode = Node.void("shop")
+            pack_list.add_child(shopnode)
+            shopnode.set_attribute("id", str(shop["id"]))
+            shopnode.set_attribute("release_code", "2017072604")
+            shopnode.set_attribute("data_version", "0")
+            shopnode.set_attribute("priority", str(shop["priority"]))
+            if shop.get("stime"):
+                shopnode.add_child(Node.string("stime", shop["stime"]))
+            if shop.get("etime"):
+                shopnode.add_child(Node.string("etime", shop["etime"]))
+            if shop.get("formatted_time"):
+                shopnode.add_child(Node.string("formatted_time", shop["formatted_time"]))
+            if shop.get("conditions"):
+                condition_list = Node.void("condition_list")
+                shopnode.add_child(condition_list)
+            item_list = Node.void("item_list")
+            shopnode.add_child(item_list)
+            for order, item in enumerate(shop["items"]):
+                itemnode = Node.void("item")
+                item_list.add_child(itemnode)
+                itemnode.set_attribute("id", str(order + 1))
+                itemnode.set_attribute("type", str(item["type"]))
+                itemnode.set_attribute("priority", str(item["priority"]))
+                itemnode.add_child(Node.s32("value", item["value"]))
+                itemnode.add_child(Node.bool("is_secret", item["is_secret"]))
+                if item.get("conditions"):
+                    condition_list = Node.void("condition_list")
+                    itemnode.add_child(condition_list)
+                drop_list = Node.void("drop_list")
+                itemnode.add_child(drop_list)
+                for drop in item["drops"]:
+                    dropnode = Node.void("drop")
+                    drop_list.add_child(dropnode)
+                    dropnode.set_attribute("id", drop["id"])
+                    dropnode.set_attribute("grade", drop["grade"])
+                    dropnode.add_child(Node.s32("num", drop["num"]))
+
+            # package_1 = [80000027, 80000026, 80000024, 80000038, 80000008]
+            # drop id  rainbow: 1, red: 2, cyan: 3, green: 4, purple: 5
+            # drop grade  normal: 1, silver: 2, gold: 3, rainbow: 4
+
+        # Package 01
+        # package = Node.void("package")
+        # pack_list.add_child(package)
+        # package.set_attribute("id", "1")
+        # package.set_attribute("release_code", "2018081401")
+        # package.set_attribute("data_version", "0")
+        # package.set_attribute("priority", "1")
+        # package.add_child(Node.string("stime", "2024-09-01Z00:00"))
+        # package.add_child(Node.string("etime", "2024-09-30Z23:59"))
+        # package.add_child(Node.string("formatted_time", ""))
+        # condition_list = Node.void("condition_list")
+        # package.add_child(condition_list)
+        # item_list = Node.void("item_list")
+        # package.add_child(item_list)
+
+        game_config = self.get_game_config()
+        # current_union_battle = game_config.get_int("union_battle")
+        current_union_battle = 1
+
+        union_battles: List[Dict[str, Any]] = [
+            {
+                "id": 1,
+                "state": 1,
+                "end_time": Time.end_of_this_month(),
+                "unions": [
+                    {
+                        "id": 1,
+                        "name": "Redbelk , Greenesia",
+                        "teams": [1, 3]
+                    },
+                    {
+                        "id": 2,
+                        "name": "Cyanttle , Plumpark",
+                        "teams": [2, 4]
+                    },
+                ],
+                "player_rewards": [
+                    # type, power, value, is_special
+                    [self.REWARD_OMIYAGE_SET, 50, 3020000, False],
+                    [self.REWARD_OMIYAGE, 50, 5020001, True],
+                    [self.REWARD_BONUS_TUNE_GAUGE, 50, 150, False],
+                    [self.REWARD_OMIYAGE_SET, 50, 15010000, False],
+                    [self.REWARD_JBOX_PIECE, 50, 100, False],
+                    [self.REWARD_MUSIC, 50, 80001014, True],
+                    [self.REWARD_BONUS_TUNE_GAUGE, 50, 200, False],
+                    [self.REWARD_OMIYAGE_SET, 50, 15010000, False],
+                    [self.REWARD_JBOX_PIECE, 50, 100, False],
+                    [self.REWARD_OMIYAGE, 50, 1030001, True],
+                    [self.REWARD_OMIYAGE, 100, 2030002, False],
+                    [self.REWARD_OMIYAGE, 100, 2030003, False],
+                    [self.REWARD_OMIYAGE, 100, 2030004, False],
+                    [self.REWARD_OMIYAGE, 100, 2030005, False],
+                    [self.REWARD_MUSIC, 100, 80000022, True],
+                    [self.REWARD_BONUS_TUNE_GAUGE, 100, 200, False],
+                    [self.REWARD_OMIYAGE_SET, 100, 5020000, False],
+                    [self.REWARD_JBOX_PIECE, 100, 100, False],
+                    [self.REWARD_OMIYAGE_SET, 100, 5020000, False],
+                    [self.REWARD_OMIYAGE_SET, 100, 1040000, True],
+
+                    # Repeat
+                    [self.REWARD_OMIYAGE, 300, 3020002, False],
+                    [self.REWARD_OMIYAGE, 300, 3020003, False],
+                    [self.REWARD_OMIYAGE, 300, 3020004, False],
+                    [self.REWARD_OMIYAGE, 300, 3020005, False],
+                    [self.REWARD_OMIYAGE_SET, 300, 1020000, False],
+                    [self.REWARD_OMIYAGE, 300, 1020001, False],
+                ],
+                "basic_rewards": [
+                    [self.REWARD_OMIYAGE_SET, 1030000, False],
+                    [self.REWARD_OMIYAGE_SET, 10020000, False],
+                    [self.REWARD_OMIYAGE_SET, 20010000, False],
+                ],
+                "win_rewards": [
+                    [self.REWARD_OMIYAGE_SET, 1030000, False],
+                    [self.REWARD_OMIYAGE_SET, 10020000, False],
+                    [self.REWARD_OMIYAGE_SET, 20010000, False],
+                ],
+                "themes": [
+                    {
+                        "id": 1,
+                        "name": "キュート",
+                        "musics": [50000122, 80000061, 70000106, 50000265, 70000125, 90001019, 70000052, 50000214, 20000049, 70000028, 10000067, 50000011, 60000066, 50000038, 70000163, 70000039, 60000096, 70000174, 50000150, 50000247, 50000349, 60000047, 60000012, 50000387, 50000049],
+                    },
+                    {
+                        "id": 2,
+                        "name": "クール",
+                        "musics": [10000039, 20000040, 60000064, 50000089, 70000055, 70000111, 20000109, 30000123, 80000033, 60000088, 50000156, 70000119, 60000014, 70000160, 50000200, 50000118, 70000026, 50000024, 50000097, 50000064, 50000059, 50000251, 50000050, 40000015, 70000053],
+                    },
+                ],
+            }
+        ]
+
+        if current_union_battle > 0:
+            battle = union_battles[current_union_battle - 1]
+            union_battle = Node.void("union_battle")
+            info.add_child(union_battle)
+            union_battle.set_attribute("release_code", "2017072604")
+            union_battle.set_attribute("data_version", "0")
+            union_battle.set_attribute("id", "1")
+            union_battle.add_child(Node.u8("state", battle["state"]))  # 1 - enable, 2 - end
+            union_battle.add_child(Node.u64("etime", battle["end_time"] * 1000))
+            union_list = Node.void("union_list")
+            union_battle.add_child(union_list)
+            union_list.add_child(Node.u64("time", Time.now()))
+            union_list.add_child(Node.bool("is_display", True))
+
+            for union in battle["unions"]:
+                unionnode = Node.void("union")
+                union_list.add_child(unionnode)
+                unionnode.set_attribute("id", str(union["id"]))
+                unionnode.add_child(Node.s32("power", 0))
+                team_list = Node.void("team_list")
+                unionnode.add_child(team_list)
+                for team in union["teams"]:
+                    teamnode = Node.void("team")
+                    team_list.add_child(teamnode)
+                    teamnode.set_attribute("id", str(team))
+
+            player_reward = Node.void("player_reward")
+            union_battle.add_child(player_reward)
+            player_reward_list = Node.void("reward_list")
+            player_reward.add_child(player_reward_list)
+
+            for reward in battle["player_rewards"]:
+                rewardnode = Node.void("reward")
+                player_reward_list.add_child(rewardnode)
+                rewardnode.set_attribute("type", str(reward[0]))
+                rewardnode.set_attribute("power", str(reward[1]))
+                rewardnode.add_child(Node.s32("value", reward[2]))
+                rewardnode.add_child(Node.bool("is_special", reward[3]))
+
+            win_reward = Node.void("win_reward")
+            union_battle.add_child(win_reward)
+            win_reward_list = Node.void("reward_list")
+            win_reward.add_child(win_reward_list)
+            for reward in battle["win_rewards"]:
+                rewardnode = Node.void("reward")
+                win_reward_list.add_child(rewardnode)
+                rewardnode.set_attribute("type", str(reward[0]))
+                rewardnode.add_child(Node.s32("value", reward[1]))
+                rewardnode.add_child(Node.bool("is_special", reward[2]))
+            basic_reward = Node.void("basic_reward")
+            union_battle.add_child(basic_reward)
+            basic_reward_list = Node.void("reward_list")
+            basic_reward.add_child(basic_reward_list)
+            for reward in battle["basic_rewards"]:
+                rewardnode = Node.void("reward")
+                basic_reward_list.add_child(rewardnode)
+                rewardnode.set_attribute("type", str(reward[0]))
+                rewardnode.add_child(Node.s32("value", reward[1]))
+                rewardnode.add_child(Node.bool("is_special", reward[2]))
+
+            theme_list = Node.void("theme_list")
+            union_battle.add_child(theme_list)
+            for theme in battle["themes"]:
+                themenode = Node.void("theme")
+                theme_list.add_child(themenode)
+                themenode.set_attribute("id", str(theme["id"]))
+                themenode.add_child(Node.string("name", theme["name"]))
+                bonus_music_list = Node.void("bonus_music_list")
+                themenode.add_child(bonus_music_list)
+                for music in theme["musics"]:
+                    bonus_music = Node.void("bonus_music")
+                    bonus_music_list.add_child(bonus_music)
+                    bonus_music.set_attribute("id", str(music))
+
+        if current_union_battle > 0:
+            battle = union_battles[current_union_battle - 1]
+            if battle["state"] >= 2:
+                union_battle_reward = Node.void("union_battle_reward")
+                info.add_child(union_battle_reward)
+                union_battle_reward.set_attribute("release_code", "2017072604")
+                union_battle_reward.set_attribute("data_version", "0")
+                union_battle_reward.set_attribute("id", "1")
+                union_list = Node.void("union_list")
+                union_battle_reward.add_child(union_list)
+                for union in battle["unions"]:
+                    unionnode = Node.void("union")
+                    union_list.add_child(unionnode)
+                    unionnode.set_attribute("id", str(union["id"]))
+                    unionnode.add_child(Node.s32("power", 100 if union["id"] == 1 else 0))
+                    team_list = Node.void("team_list")
+                    unionnode.add_child(team_list)
+                    for team in union["teams"]:
+                        teamnode = Node.void("team")
+                        team_list.add_child(teamnode)
+                        teamnode.set_attribute("id", str(team))
+                win_reward = Node.void("win_reward")
+                union_battle_reward.add_child(win_reward)
+                win_reward_list = Node.void("reward_list")
+                win_reward.add_child(win_reward_list)
+                for reward in battle["win_rewards"]:
+                    rewardnode = Node.void("reward")
+                    win_reward_list.add_child(rewardnode)
+                    rewardnode.set_attribute("type", str(reward[0]))
+                    rewardnode.add_child(Node.s32("value", reward[1]))
+                    rewardnode.add_child(Node.bool("is_special", reward[2]))
+                basic_reward = Node.void("basic_reward")
+                union_battle_reward.add_child(basic_reward)
+                basic_reward_list = Node.void("reward_list")
+                basic_reward.add_child(basic_reward_list)
+                for reward in battle["basic_rewards"]:
+                    rewardnode = Node.void("reward")
+                    basic_reward_list.add_child(rewardnode)
+                    rewardnode.set_attribute("type", str(reward[0]))
+                    rewardnode.add_child(Node.s32("value", reward[1]))
+                    rewardnode.add_child(Node.bool("is_special", reward[2]))
 
         # Set up NOBOLOT course requirements
         clan_course_list = Node.void("clan_course_list")
         info.add_child(clan_course_list)
 
-        valid_courses: Set[int] = set()
-        for course in self.__get_course_list():
-            if course["id"] < 1:
-                raise Exception(f"Invalid course ID {course['id']} found in course list!")
-            if course["id"] in valid_courses:
-                raise Exception(f"Duplicate ID {course['id']} found in course list!")
-            if course["clear_type"] == self.COURSE_CLEAR_HAZARD and "hazard_type" not in course:
-                raise Exception(f"Need 'hazard_type' set in course {course['id']}!")
-            if course["course_type"] == self.COURSE_TYPE_TIME_BASED and "end_time" not in course:
-                raise Exception(f"Need 'end_time' set in course {course['id']}!")
-            if (
-                course["clear_type"] in [self.COURSE_CLEAR_SCORE, self.COURSE_CLEAR_COMBINED_SCORE]
-                and "score" not in course
-            ):
-                raise Exception(f"Need 'score' set in course {course['id']}!")
-            if course["clear_type"] == self.COURSE_CLEAR_SCORE and course["score"] > 1000000:
-                raise Exception(f"Invalid per-coure score in course {course['id']}!")
-            if course["clear_type"] == self.COURSE_CLEAR_COMBINED_SCORE and course["score"] <= 1000000:
-                raise Exception(f"Invalid combined score in course {course['id']}!")
-            valid_courses.add(course["id"])
+        # valid_courses: Set[int] = set()
+        # for course in self.__get_course_list():
+        #     if course["id"] < 1:
+        #         raise Exception(f"Invalid course ID {course['id']} found in course list!")
+        #     if course["id"] in valid_courses:
+        #         raise Exception(f"Duplicate ID {course['id']} found in course list!")
+        #     if course["clear_type"] == self.COURSE_CLEAR_HAZARD and "hazard_type" not in course:
+        #         raise Exception(f"Need 'hazard_type' set in course {course['id']}!")
+        #     if course["course_type"] == self.COURSE_TYPE_TIME_BASED and "end_time" not in course:
+        #         raise Exception(f"Need 'end_time' set in course {course['id']}!")
+        #     if (
+        #         course["clear_type"] in [self.COURSE_CLEAR_SCORE, self.COURSE_CLEAR_COMBINED_SCORE]
+        #         and "score" not in course
+        #     ):
+        #         raise Exception(f"Need 'score' set in course {course['id']}!")
+        #     if course["clear_type"] == self.COURSE_CLEAR_SCORE and course["score"] > 1000000:
+        #         raise Exception(f"Invalid per-coure score in course {course['id']}!")
+        #     if course["clear_type"] == self.COURSE_CLEAR_COMBINED_SCORE and course["score"] <= 1000000:
+        #         raise Exception(f"Invalid combined score in course {course['id']}!")
+        #     valid_courses.add(course["id"])
 
-            # Basics
-            clan_course = Node.void("clan_course")
-            clan_course_list.add_child(clan_course)
-            clan_course.set_attribute("release_code", "2017062600")
-            clan_course.set_attribute("version_id", "0")
-            clan_course.set_attribute("id", str(course["id"]))
-            clan_course.set_attribute("course_type", str(course["course_type"]))
-            clan_course.add_child(Node.s32("difficulty", course["difficulty"]))
-            clan_course.add_child(Node.u64("etime", (course["end_time"] if "end_time" in course else 0) * 1000))
-            clan_course.add_child(Node.string("name", course["name"]))
+        #     # Basics
+        #     clan_course = Node.void("clan_course")
+        #     clan_course_list.add_child(clan_course)
+        #     clan_course.set_attribute("release_code", "2017062600")
+        #     clan_course.set_attribute("version_id", "0")
+        #     clan_course.set_attribute("id", str(course["id"]))
+        #     clan_course.set_attribute("course_type", str(course["course_type"]))
+        #     clan_course.add_child(Node.s32("difficulty", course["difficulty"]))
+        #     clan_course.add_child(Node.u64("etime", (course["end_time"] if "end_time" in course else 0) * 1000))
+        #     clan_course.add_child(Node.string("name", course["name"]))
 
-            # List of included songs
-            tune_list = Node.void("tune_list")
-            clan_course.add_child(tune_list)
-            for order, charts in enumerate(course["music"]):
-                tune = Node.void("tune")
-                tune_list.add_child(tune)
-                tune.set_attribute("no", str(order + 1))
+        #     # List of included songs
+        #     tune_list = Node.void("tune_list")
+        #     clan_course.add_child(tune_list)
+        #     for order, charts in enumerate(course["music"]):
+        #         tune = Node.void("tune")
+        #         tune_list.add_child(tune)
+        #         tune.set_attribute("no", str(order + 1))
 
-                seq_list = Node.void("seq_list")
-                tune.add_child(seq_list)
+        #         seq_list = Node.void("seq_list")
+        #         tune.add_child(seq_list)
 
-                for songid, chart in charts:
-                    seq = Node.void("seq")
-                    seq_list.add_child(seq)
-                    seq.add_child(Node.s32("music_id", songid))
-                    seq.add_child(Node.s32("difficulty", chart))
-                    seq.add_child(Node.bool("is_secret", False))
+        #         for songid, chart in charts:
+        #             seq = Node.void("seq")
+        #             seq_list.add_child(seq)
+        #             seq.add_child(Node.s32("music_id", songid))
+        #             seq.add_child(Node.s32("difficulty", chart))
+        #             seq.add_child(Node.bool("is_secret", False))
 
-            # Clear criteria
-            clear = Node.void("clear")
-            clan_course.add_child(clear)
-            ex_option = Node.void("ex_option")
-            clear.add_child(ex_option)
-            ex_option.add_child(Node.bool("is_hard", course["hard"] if "hard" in course else False))
-            ex_option.add_child(
-                Node.s32(
-                    "hazard_type",
-                    course["hazard_type"] if "hazard_type" in course else 0,
-                )
-            )
-            clear.set_attribute("type", str(course["clear_type"]))
-            clear.add_child(Node.s32("score", course["score"] if "score" in course else 0))
+        #     # Clear criteria
+        #     clear = Node.void("clear")
+        #     clan_course.add_child(clear)
+        #     ex_option = Node.void("ex_option")
+        #     clear.add_child(ex_option)
+        #     ex_option.add_child(Node.bool("is_hard", course["hard"] if "hard" in course else False))
+        #     ex_option.add_child(
+        #         Node.s32(
+        #             "hazard_type",
+        #             course["hazard_type"] if "hazard_type" in course else 0,
+        #         )
+        #     )
+        #     clear.set_attribute("type", str(course["clear_type"]))
+        #     clear.add_child(Node.s32("score", course["score"] if "score" in course else 0))
 
-            reward_list = Node.void("reward_list")
-            clear.add_child(reward_list)
+        #     reward_list = Node.void("reward_list")
+        #     clear.add_child(reward_list)
 
         # Set up NOBOLOT category display
         category_list = Node.void("category_list")
         clan_course_list.add_child(category_list)
 
         # Each category has one of the following nodes
-        categories: List[Tuple[int, int]] = [
-            (1, 3),
-            (4, 6),
-            (7, 9),
-            (10, 12),
-            (13, 14),
-            (15, 16),
-        ]
-        for categoryid, (min_level, max_level) in enumerate(categories):
-            category = Node.void("category")
-            category_list.add_child(category)
-            category.set_attribute("id", str(categoryid + 1))
-            category.add_child(Node.bool("is_secret", False))
-            category.add_child(Node.s32("level_min", min_level))
-            category.add_child(Node.s32("level_max", max_level))
+        # categories: List[Tuple[int, int]] = [
+        #     (1, 3),
+        #     (4, 6),
+        #     (7, 9),
+        #     (10, 12),
+        #     (13, 14),
+        #     (15, 16),
+        # ]
+        # for categoryid, (min_level, max_level) in enumerate(categories):
+        #     category = Node.void("category")
+        #     category_list.add_child(category)
+        #     category.set_attribute("id", str(categoryid + 1))
+        #     category.add_child(Node.bool("is_secret", False))
+        #     category.add_child(Node.s32("level_min", min_level))
+        #     category.add_child(Node.s32("level_max", max_level))
 
         return info
 
@@ -1206,82 +1409,9 @@ class JubeatClan(
         root = Node.void("demodata")
         data = Node.void("data")
         root.add_child(data)
-
         info = Node.void("info")
         data.add_child(info)
-
-        info.add_child(
-            Node.s32_array(
-                "black_jacket_list",
-                [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                ],
-            )
-        )
-
+        info.add_child(Node.s32_array("black_jacket_list", [0] * 64))
         return root
 
     def handle_demodata_get_jbox_list_request(self, request: Node) -> Node:
@@ -1329,17 +1459,13 @@ class JubeatClan(
         return root
 
     def handle_gametop_regist_request(self, request: Node) -> Node:
-        data = request.child("data")
-        player = data.child("player")
-        refid = player.child_value("refid")
-        name = player.child_value("name")
+        refid = request.child_value("data/player/refid")
+        name = request.child_value("data/player/name")
         root = self.new_profile_by_refid(refid, name)
         return root
 
     def handle_gametop_get_pdata_request(self, request: Node) -> Node:
-        data = request.child("data")
-        player = data.child("player")
-        refid = player.child_value("refid")
+        refid = request.child_value("data/player/refid")
         root = self.get_profile_by_refid(refid)
         if root is None:
             root = Node.void("gametop")
@@ -1347,10 +1473,8 @@ class JubeatClan(
         return root
 
     def handle_gametop_get_mdata_request(self, request: Node) -> Node:
-        data = request.child("data")
-        player = data.child("player")
-        extid = player.child_value("jid")
-        mdata_ver = player.child_value("mdata_ver")
+        extid = request.child_value("data/player/jid")
+        mdata_ver = request.child_value("data/player/mdata_ver")
         root = self.get_scores_by_extid(extid, mdata_ver, 3)
         if root is None:
             root = Node.void("gametop")
@@ -1358,8 +1482,7 @@ class JubeatClan(
         return root
 
     def handle_gameend_final_request(self, request: Node) -> Node:
-        data = request.child("data")
-        player = data.child("player")
+        player = request.child("data/player")
 
         if player is not None:
             refid = player.child_value("refid")
@@ -1614,30 +1737,35 @@ class JubeatClan(
         # Secret unlocks
         item = Node.void("item")
         player.add_child(item)
-        item.add_child(Node.s32_array("music_list", profile.get_int_array("music_list", 64, [-1] * 64)))
+        item.add_child(
+            Node.s32_array(
+                "music_list",
+                [-2013265951, -102760493, 1711275733, -1579088899, -108536, -227069, -33554401, 16383, 0, -1377473, -402653185, -2097153, -1231036417, -786433, -444727297, -1, 980541439, -33357824, 1077928957, 133988323, 1075838048, -32706, -234907777, -196609, 33138687, -2097152, -907557381, -2, -201326705, -34734081, -524293, -2147042049, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            )
+        )
         item.add_child(
             Node.s32_array(
                 "secret_list",
-                ([-1] * 64) if force_unlock else self.create_owned_items(owned_songs, 64),
+                [0] * 64,
             )
         )
-        item.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list", 16, [-1] * 16)))
-        item.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list", 16, [-1] * 16)))
-        item.add_child(Node.s32_array("title_list", profile.get_int_array("title_list", 160, [-1] * 160)))
-        item.add_child(Node.s32_array("parts_list", profile.get_int_array("parts_list", 160, [-1] * 160)))
-        item.add_child(Node.s32_array("emblem_list", self.create_owned_items(owned_emblems, 96)))
-        item.add_child(Node.s32_array("commu_list", profile.get_int_array("commu_list", 16, [-1] * 16)))
+        item.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list", 16, [0] * 16)))
+        item.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list", 16, [0] * 16)))
+        item.add_child(Node.s32_array("title_list", profile.get_int_array("title_list", 160, [0] * 160)))
+        item.add_child(Node.s32_array("parts_list", profile.get_int_array("parts_list", 160, [0] * 160)))
+        item.add_child(Node.s32_array("emblem_list", [0] * 96))
+        item.add_child(Node.s32_array("commu_list", profile.get_int_array("commu_list", 16, [0] * 16)))
 
         new = Node.void("new")
         item.add_child(new)
         new.add_child(
             Node.s32_array(
                 "secret_list",
-                ([-1] * 64) if force_unlock else self.create_owned_items(owned_secrets, 64),
+                ([0] * 64) if force_unlock else self.create_owned_items(owned_secrets, 64),
             )
         )
-        new.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list_new", 16, [-1] * 16)))
-        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list_new", 16, [-1] * 16)))
+        new.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list_new", 16, [0] * 16)))
+        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list_new", 16, [0] * 16)))
 
         # Add rivals to profile.
         rivallist = Node.void("rivallist")
@@ -1771,6 +1899,11 @@ class JubeatClan(
         #     <gift reason="??" kind="??">
         #         <id __type="s32">??</id>
         #     </gift>
+        # gift = Node.void("gift")
+        # gift_list.add_child(gift)
+        # gift.set_attribute("kind", "1")  # only 1
+        # gift.set_attribute("reason", "1")  # doesn't matter
+        # gift.add_child(Node.s32("id", 80000027))
 
         # Birthday event?
         born = Node.void("born")
@@ -1844,8 +1977,8 @@ class JubeatClan(
         # Union Battle
         union_battle = Node.void("union_battle")
         player.add_child(union_battle)
-        union_battle.set_attribute("id", "-1")
-        union_battle.add_child(Node.s32("power", 0))
+        union_battle.set_attribute("id", "1")
+        union_battle.add_child(Node.s32("power", -1))
 
         # Some server node
         server = Node.void("server")
@@ -1854,6 +1987,19 @@ class JubeatClan(
         # Another unknown gift list?
         eamuse_gift_list = Node.void("eamuse_gift_list")
         player.add_child(eamuse_gift_list)
+
+        gift = Node.void("gift")
+        eamuse_gift_list.add_child(gift)
+        gift.add_child(Node.string("content_id", "1"))
+        detail = Node.void("detail")
+        gift.add_child(detail)
+        detail.set_attribute("type", "6")
+        detail.add_child(Node.s32("value", 6))
+        detail.add_child(Node.bool("is_special", False))
+        # reward = Node.void("reward")
+        # gift.add_child(reward)
+        # reward.set_attribute("type", "6")  # 6, 7, 8, 10
+        # reward.add_child(Node.s32("value", 1))
 
         # Clan Course List Progress
         clan_course_list = Node.void("clan_course_list")
@@ -1910,7 +2056,7 @@ class JubeatClan(
                 item = Node.void("item")
                 item_list.add_child(item)
                 item.set_attribute("id", str(itemid))
-                item.add_child(Node.s32("num", dropdata.get_int(f"item_{itemid}")))
+                item.add_child(Node.s32("num", 99))  # dropdata.get_int(f"item_{itemid}")
 
         # Fill in category
         fill_in_category = Node.void("fill_in_category")
@@ -1943,6 +2089,12 @@ class JubeatClan(
         # Daily Bonus
         daily_bonus_list = Node.void("daily_bonus_list")
         player.add_child(daily_bonus_list)
+
+        # daily_bonus = Node.void("daily_bonus")
+        # daily_bonus_list.add_child(daily_bonus)
+        # daily_bonus.set_attribute("id", "1")
+        # daily_bonus.add_child(Node.s32("accepted_day", 0))
+        # daily_bonus.add_child(Node.s32("now_day", 1))
 
         # Tickets
         ticket_list = Node.void("ticket_list")

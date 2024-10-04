@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Set
+from typing import List, Optional, Set
 
 from bemani.backend.base import Status
 from bemani.backend.jubeat.base import JubeatBase
@@ -15,7 +15,7 @@ class JubeatRipplesAppend(JubeatGamendRegisterHandler, JubeatBase):
 
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatRipples(self.data, self.config, self.model)
-    
+
     def handle_shopinfo_regist_request(self, request: Node) -> Node:
         testmode = request.child("testmode")
         is_send = None
@@ -85,13 +85,13 @@ class JubeatRipplesAppend(JubeatGamendRegisterHandler, JubeatBase):
         root.add_child(data)
         data.add_child(Node.s16("refresh_intr", 5))
         return root
-    
+
     def handle_gametop_regist_request(self, request: Node) -> Node:
         refid = request.child_value("data/player/pass/refid")
         name = request.child_value("data/player/name")
         root = self.new_profile_by_refid(refid, name)
         return root
-    
+
     def handle_gametop_get_request(self, request: Node) -> Node:
         refid = request.child_value("data/player/pass/refid")
         root = self.get_profile_by_refid(refid)
@@ -116,7 +116,7 @@ class JubeatRipplesAppend(JubeatGamendRegisterHandler, JubeatBase):
         reward.add_child(Node.s32("point", 0))
 
         return root
-    
+
     def format_profile(self, userid: UserID, profile: Profile) -> Node:
         root = Node.void("gametop")
         data = Node.void("data")

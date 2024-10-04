@@ -33,6 +33,14 @@ class JubeatSaucerFulfill(
     name: str = "Jubeat Saucer Fulfill"
     version: int = VersionConstants.JUBEAT_SAUCER_FULFILL
 
+    EVENT_STATUS_OPEN: Final[int] = 0x1
+
+    COLLABOS: Dict[int, bool] = {
+        5: False,
+        6: False,
+        9: False,
+    }
+
     GAME_COURSE_REQUIREMENT_SCORE: Final[int] = 1
     GAME_COURSE_REQUIREMENT_FULL_COMBO: Final[int] = 2
     GAME_COURSE_REQUIREMENT_PERFECT_PERCENT: Final[int] = 3
@@ -99,6 +107,155 @@ class JubeatSaucerFulfill(
             ],
         }
 
+    def __get_macchiato_music_list(self) -> List[Dict[str, Any]]:
+        season = 2
+
+        if season == 2:
+            return [
+                {
+                    "music_id": 50000351,
+                    "needed_bean": 2,
+                    "needed_milk": 0,
+                },
+                {
+                    "music_id": 50000339,
+                    "needed_bean": 8,
+                    "needed_milk": 4600,
+                },
+                {
+                    "music_id": 50000338,
+                    "needed_bean": 15,
+                    "needed_milk": 5200,
+                },
+                {
+                    "music_id": 50000324,
+                    "needed_bean": 25,
+                    "needed_milk": 6700,
+                },
+                {
+                    "music_id": 50000293,
+                    "needed_bean": 30,
+                    "needed_milk": 10000,
+                },
+                {
+                    "music_id": 50000276,
+                    "needed_bean": 35,
+                    "needed_milk": 12000,
+                },
+                {
+                    "music_id": 50000330,
+                    "needed_bean": 40,
+                    "needed_milk": 16000,
+                },
+                {
+                    "music_id": 50000323,
+                    "needed_bean": 50,
+                    "needed_milk": 24000,
+                },
+            ]
+
+        return [
+            {
+                "music_id": 50000277,
+                "needed_bean": 2,
+                "needed_milk": 0,
+            },
+            {
+                "music_id": 50000281,
+                "needed_bean": 6,
+                "needed_milk": 990,
+            },
+            {
+                "music_id": 50000160,
+                "needed_bean": 12,
+                "needed_milk": 3300,
+            },
+            {
+                "music_id": 50000242,
+                "needed_bean": 20,
+                "needed_milk": 8250,
+            },
+            {
+                "music_id": 50000287,
+                "needed_bean": 20,
+                "needed_milk": 10560,
+            },
+            {
+                "music_id": 50000244,
+                "needed_bean": 20,
+                "needed_milk": 13200,
+            },
+            {
+                "music_id": 50000286,
+                "needed_bean": 20,
+                "needed_milk": 16500,
+            },
+            {
+                "music_id": 50000252,
+                "needed_bean": 20,
+                "needed_milk": 19800,
+            },
+            {
+                "music_id": 50000288,
+                "needed_bean": 20,
+                "needed_milk": 24750,
+            },
+            {
+                "music_id": 50000251,
+                "needed_bean": 20,
+                "needed_milk": 28050,
+            },
+            {
+                "music_id": 50000203,
+                "needed_bean": 40,
+                "needed_milk": 33000,
+            },
+        ]
+
+    def __get_global_info(self, root: Node) -> Node:
+        # Server Season?
+        root.add_child(Node.u8("termver", 0))
+        root.add_child(Node.u32("season_etime", 0))
+
+        root.add_child(
+            Node.s32_array(
+                "white_music_list",
+                [
+                    -1, -45, 1744830207, -40961,
+                    -19, -9, -16777217, 16383,
+                    0, -1, -1, -1,
+                    -1, -524289, -1, -1,
+                    -12289, -16777217, -83886083, 33308643,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0
+                ]
+            )
+        )
+        root.add_child(
+            Node.s32_array(
+                "open_music_list",
+                [
+                    -66977761, 132120595, 1728053502, -41981,
+                    131053, 262132, 16777184, 0,
+                    0, 67045312, 1007026176, 6291456,
+                    2145434648, 26542080, 1006339712, 15041,
+                    -175177728, 285212671, -88065024, 262179,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0,
+                    0, 0, 0, 0
+                ]
+            )
+        )
+
+        collabo_info = Node.void("collabo_info")
+        root.add_child(collabo_info)
+
+        policy_break = Node.void("policy_break")
+        collabo_info.add_child(policy_break)
+        policy_break.add_child(Node.bool("is_report_end", False))
+        return root
+
     def handle_shopinfo_regist_request(self, request: Node) -> Node:
         # Update the name of this cab for admin purposes
         self.update_machine_name(request.child_value("shop/name"))
@@ -110,47 +267,14 @@ class JubeatSaucerFulfill(
         data.add_child(Node.u32("cabid", 1))
         data.add_child(Node.string("locationid", "nowhere"))
         data.add_child(Node.u8("is_send", 1))
-        data.add_child(
-            Node.s32_array(
-                "white_music_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
-            )
-        )
         data.add_child(Node.u8("tax_phase", 1))
+        facility = Node.void("facility")
+        data.add_child(facility)
+        facility.add_child(Node.u32("exist", 1))
 
+        data.add_child(Node.s32_array("white_music_list", [-1] * 32))
+
+        # jubeat Lab
         lab = Node.void("lab")
         data.add_child(lab)
         lab.add_child(Node.bool("is_open", False))
@@ -165,10 +289,10 @@ class JubeatSaucerFulfill(
         vocaloid_event2.add_child(Node.u8("state", 0))
         vocaloid_event2.add_child(Node.s32("music_id", 0))
 
-        # No obnoxious 30 second wait to play.
+        # Turn off Online/Local Matching
         matching_off = Node.void("matching_off")
         data.add_child(matching_off)
-        matching_off.add_child(Node.bool("is_open", True))
+        matching_off.add_child(Node.bool("is_open", False))
 
         tenka = Node.void("tenka")
         data.add_child(tenka)
@@ -328,45 +452,116 @@ class JubeatSaucerFulfill(
         return root
 
     def format_profile(self, userid: UserID, profile: Profile) -> Node:
+        # Status Code
+        # gametop.get_pdata
+        # 1 - New Profile?
+        # 12 - 이 e-AMUSEMENT PASS는 사용할 수 없습니다.
+        # 13 - 이 e-AMUSEMENT PASS로는 플레이할 수 없는 버전입니다.
+        # gametop.regist
+        # 11 - Force Guest Play?
+
         root = Node.void("gametop")
         data = Node.void("data")
         root.add_child(data)
-        player = Node.void("player")
-        data.add_child(player)
+
+        # Server Season?
+        data.add_child(Node.u8("termver", 2))
+        data.add_child(Node.u32("season_etime", 0))
+
+        data.add_child(Node.s32_array("white_music_list", [-1] * 32))
+        data.add_child(Node.s32_array("open_music_list", [
+            -66977761, 132120595, 1728053502, -41981,
+            131053, 262132, 16777184, 0,
+            0, 67045312, 1007026176, 6291456,
+            2145434648, 26542080, 1006339712, 15041,
+            -175177728, 285212671, -88065024, 262179,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0
+        ]))
+
+        collabo_info = Node.void("collabo_info")
+        data.add_child(collabo_info)
+        for collabo in self.COLLABOS:
+            clb = Node.void("collabo")
+            collabo_info.add_child(clb)
+            clb.set_attribute("type", str(collabo))
+            clb.add_child(Node.u8("state", 1 if self.COLLABOS[collabo] else 0))
+
+        policy_break = Node.void("policy_break")
+        collabo_info.add_child(policy_break)
+        policy_break.add_child(Node.bool("is_report_end", False))
+        vocaloid_event = Node.void("vocaloid_event")
+        collabo_info.add_child(vocaloid_event)
+        vocaloid_event.add_child(Node.u8("state", 0))
+        vocaloid_event.add_child(Node.s32("music_id", 0))
+        vocaloid_event2 = Node.void("vocaloid_event2")
+        collabo_info.add_child(vocaloid_event2)
+        vocaloid_event2.add_child(Node.u8("state", 0))
+        vocaloid_event2.add_child(Node.s32("music_id", 0))
+
+        # jubeat Lab
+        lab = Node.void("lab")
+        data.add_child(lab)
+        lab.add_child(Node.bool("is_open", False))
+
+        # Turn off Online/Local Matching
+        matching_off = Node.void("matching_off")
+        data.add_child(matching_off)
+        matching_off.add_child(Node.bool("is_open", False))
+
+        # Shareable songs
+        share_music = Node.void("share_music")
+        data.add_child(share_music)
+        share_music.set_attribute("count", "0")
+
+        # Bonus Tune only songs
+        bonus_music = Node.void("bonus_music")
+        data.add_child(bonus_music)
+        bonus_music.set_attribute("count", "0")
 
         # Figure out if we're force-unlocking songs.
         game_config = self.get_game_config()
         force_unlock = game_config.get_bool("force_song_unlock")
 
-        # Allow figuring out owned songs.
-        achievements = self.data.local.user.get_achievements(self.game, self.version, userid)
-        owned_songs: Set[int] = set()
-        owned_secrets: Set[int] = set()
-        for achievement in achievements:
-            if achievement.type == "song":
-                owned_songs.add(achievement.id)
-            elif achievement.type == "secret":
-                owned_secrets.add(achievement.id)
+        # Status Code
+        # gametop.get_pdata
+        # 1 - New Profile?
+        # 12 - 이 e-AMUSEMENT PASS는 사용할 수 없습니다.
+        # 13 - 이 e-AMUSEMENT PASS로는 플레이할 수 없는 버전입니다.
+        # gametop.regist
+        # 11 - Force Guest Play?
 
+        player = Node.void("player")
+        data.add_child(player)
+
+        self.data.local.lobby.put_play_session_info(self.game, self.version, userid, {})
+
+        session = self.data.local.lobby.get_play_session_info(self.game, self.version, userid)
+
+        if session is None:
+            root = Node.void("gametop")
+            root.set_attribute("status", "10")
+            return root
+
+        player.add_child(Node.string("name", profile.get_str("name", "PLAYER")))
+        player.add_child(Node.s32("jid", profile.extid))
+        player.add_child(Node.s32("session_id", session.get_int("id")))
+        player.add_child(Node.u64("event_flag", 0))
+
+        # # Allow figuring out owned songs.
+        # achievements = self.data.local.user.get_achievements(self.game, self.version, userid)
+        # owned_songs: Set[int] = set()
+        # owned_secrets: Set[int] = set()
+        # for achievement in achievements:
+        #     if achievement.type == "song":
+        #         owned_songs.add(achievement.id)
+        #     elif achievement.type == "secret":
+        #         owned_secrets.add(achievement.id)
+        #
         # Player info and statistics
         info = Node.void("info")
         player.add_child(info)
-        info.add_child(Node.s16("jubility", profile.get_int("jubility")))
-        info.add_child(Node.s16("jubility_yday", profile.get_int("jubility_yday")))
-        info.add_child(Node.s32("tune_cnt", profile.get_int("tune_cnt")))
-        info.add_child(Node.s32("save_cnt", profile.get_int("save_cnt")))
-        info.add_child(Node.s32("saved_cnt", profile.get_int("saved_cnt")))
-        info.add_child(Node.s32("fc_cnt", profile.get_int("fc_cnt")))
-        info.add_child(Node.s32("ex_cnt", profile.get_int("ex_cnt")))
-        info.add_child(Node.s32("pf_cnt", profile.get_int("pf_cnt")))
-        info.add_child(Node.s32("clear_cnt", profile.get_int("clear_cnt")))
-        info.add_child(Node.s32("match_cnt", profile.get_int("match_cnt")))
-        info.add_child(Node.s32("beat_cnt", profile.get_int("beat_cnt")))
-        info.add_child(Node.s32("mynews_cnt", profile.get_int("mynews_cnt")))
-        info.add_child(Node.s32("extra_point", profile.get_int("extra_point")))
-        info.add_child(Node.bool("is_extra_played", profile.get_bool("is_extra_played")))
-        if "total_best_score" in profile:
-            info.add_child(Node.s32("total_best_score", profile.get_int("total_best_score")))
 
         # Looks to be set to true when there's an old profile, stops tutorial from
         # happening on first load.
@@ -377,356 +572,402 @@ class JubeatSaucerFulfill(
             )
         )
 
-        # Not saved, but loaded
-        info.add_child(Node.s32("mtg_entry_cnt", 123))
-        info.add_child(Node.s32("mtg_hold_cnt", 456))
-        info.add_child(Node.u8("mtg_result", 10))
+        info.add_child(Node.s16("jubility", profile.get_int("jubility")))
+        info.add_child(Node.s16("jubility_yday", profile.get_int("jubility_yday")))
+        info.add_child(Node.s32("tune_cnt", profile.get_int("tune_cnt")))
+        info.add_child(Node.s32("save_cnt", profile.get_int("save_cnt")))
+        info.add_child(Node.s32("saved_cnt", profile.get_int("saved_cnt")))
+        info.add_child(Node.s32("fc_cnt", profile.get_int("fc_cnt")))
+        info.add_child(Node.s32("ex_cnt", profile.get_int("ex_cnt")))
+        info.add_child(Node.s32("clear_cnt", profile.get_int("clear_cnt")))
+        info.add_child(Node.s32("pf_cnt", profile.get_int("pf_cnt")))
+        info.add_child(Node.s32("match_cnt", profile.get_int("match_cnt")))
+        info.add_child(Node.s32("beat_cnt", profile.get_int("beat_cnt")))
+        info.add_child(Node.s32("mynews_cnt", profile.get_int("mynews_cnt")))
+        info.add_child(Node.s32("mtg_entry_cnt", 0))
+        info.add_child(Node.s32("mtg_hold_cnt", 0))
+        info.add_child(Node.u8("mtg_result", 0))
+        info.add_child(Node.s32("extra_point", profile.get_int("extra_point")))
+        info.add_child(Node.bool("is_extra_played", profile.get_bool("is_extra_played")))
 
-        # First play stuff we don't support
+        lastdict = profile.get_dict("last")
+        last = Node.void("last")
+        player.add_child(last)
+        last.add_child(Node.s64("play_time", lastdict.get_int("play_time")))
+        last.add_child(Node.string("shopname", lastdict.get_str("shopname")))
+        last.add_child(Node.string("areaname", lastdict.get_str("areaname")))
+        last.add_child(Node.s16("title", lastdict.get_int("title")))
+        last.add_child(Node.s16("parts", lastdict.get_int("parts")))
+        last.add_child(Node.s8("theme", lastdict.get_int("theme")))
+        last.add_child(Node.s8("marker", lastdict.get_int("marker")))
+        last.add_child(Node.s8("rank_sort", lastdict.get_int("rank_sort")))
+        last.add_child(Node.s8("combo_disp", lastdict.get_int("combo_disp")))
+        last.add_child(Node.s32("music_id", lastdict.get_int("music_id")))
+        last.add_child(Node.s8("seq_id", lastdict.get_int("seq_id")))
+        # last.add_child(Node.string("seq_edit_id", ""))
+        last.add_child(Node.s8("sort", lastdict.get_int("sort")))
+        last.add_child(Node.s8("category", lastdict.get_int("category")))
+        last.add_child(Node.s8("expert_option", lastdict.get_int("expert_option")))
+        last.add_child(Node.s8("matching", lastdict.get_int("matching")))
+        last.add_child(Node.s8("hazard", lastdict.get_int("hazard")))
+        last.add_child(Node.s8("hard", lastdict.get_int("hard")))
+
+        item = Node.void("item")
+        player.add_child(item)
+        item.add_child(Node.s32_array("secret_list", [0] * 32))
+        item.add_child(Node.s16("theme_list", 0))
+        item.add_child(Node.s32_array("marker_list", [0, 0]))
+        item.add_child(Node.s32_array("title_list", [0] * 96))
+        item.add_child(Node.s32_array("parts_list", [0] * 96))
+
+        new = Node.void("new")
+        item.add_child(new)
+        new.add_child(Node.s32_array("secret_list", [0] * 32))
+        new.add_child(Node.s16("theme_list", 0))
+        new.add_child(Node.s32_array("marker_list", [0, 0]))
+        new.add_child(Node.s32_array("title_list", [0] * 96))
+
+        history = Node.void("history")
+        player.add_child(history)
+        history.set_attribute("count", "0")
+
+        challenge = Node.void("challenge")
+        player.add_child(challenge)
+        today = Node.void("today")
+        challenge.add_child(today)
+        today.add_child(Node.s32("music_id", 0))
+        today.add_child(Node.u8("state", 0))
+        # Daily Fullcombo Challenge
+        whim = Node.void("whim")
+        challenge.add_child(whim)
+        whim.add_child(Node.s32("music_id", 0))
+        whim.add_child(Node.u8("state", 0))
+
+        news = Node.void("news")
+        player.add_child(news)
+        news.add_child(Node.s16("checked", 0))
+
+        # region macchiato event
+
+        macchiato = Node.void("macchiato")
+        player.add_child(macchiato)
+        macchiato.add_child(Node.s32("pack_id", 2))
+        macchiato.add_child(Node.u16("bean_num", 0))
+        macchiato.add_child(Node.s32("daily_milk_num", 1200))
+        macchiato.add_child(Node.bool("is_received_daily_milk", False))
+        macchiato.add_child(Node.s32("today_tune_cnt", 0))
+        # Daily milk bonus
+        # 1~2 tune - 100ml
+        # 3 tune - 1000ml
+        # 4~8 tune - 200ml
+        # 9 tune - 1000ml
+        macchiato.add_child(Node.s32_array("daily_milk_bonus", [100, 100, 1000, 200, 200, 200, 200, 200, 1000]))
+        macchiato.add_child(Node.s32("daily_play_burst", 300))
+        macchiato.add_child(Node.bool("sub_menu_is_completed", False))
+        # Bonus milk?
+        macchiato.add_child(Node.s32("compensation_milk", 0))
+
+        fulfill_music_list = self.__get_macchiato_music_list()
+        macchiato_music_list = Node.void("macchiato_music_list")
+        macchiato.add_child(macchiato_music_list)
+        macchiato_music_list.set_attribute("count", str(len(fulfill_music_list)))
+
+        for index in range(len(fulfill_music_list)):
+            music = Node.void("music")
+            macchiato_music_list.add_child(music)
+            music.set_attribute("index", str(index + 1))
+            music.add_child(Node.s32("music_id", fulfill_music_list[index]["music_id"]))
+            music.add_child(Node.s32("needed_bean", fulfill_music_list[index]["needed_bean"]))
+            music.add_child(Node.s32("used_bean", 0))
+            music.add_child(Node.s32("needed_milk", fulfill_music_list[index]["needed_milk"]))
+            music.add_child(Node.s32("used_milk", 0))
+
+        macchiato.add_child(Node.s32("sub_pack_id", 0))
+
+        sub_macchiato_music_list = Node.void("sub_macchiato_music_list")
+        macchiato.add_child(sub_macchiato_music_list)
+        sub_macchiato_music_list.set_attribute("count", "0")
+
+        season_music_list = Node.void("season_music_list")
+        macchiato.add_child(season_music_list)
+        season_music_list.set_attribute("count", "0")
+
+        macchiato.add_child(Node.s32("match_cnt", 0))
+
+        achievement_list = Node.void("achievement_list")
+        macchiato.add_child(achievement_list)
+        achievement_list.set_attribute("count", "0")
+
+        # e-AMUSEMENT site cow purchase (add milk)
+        cow_list = Node.void("cow_list")
+        macchiato.add_child(cow_list)
+        cow_list.set_attribute("count", "0")
+
+        # endregion
+
         free_first_play = Node.void("free_first_play")
         player.add_child(free_first_play)
         free_first_play.add_child(Node.bool("is_available", False))
         free_first_play.add_child(Node.s32("point", 0))
         free_first_play.add_child(Node.s32("point_used", 0))
 
-        # Secret unlocks
-        item = Node.void("item")
-        player.add_child(item)
-        item.add_child(
-            Node.s32_array(
-                "secret_list",
-                ([-1] * 32) if force_unlock else self.create_owned_items(owned_songs, 32),
-            )
-        )
-        item.add_child(
-            Node.s32_array(
-                "title_list",
-                profile.get_int_array(
-                    "title_list",
-                    96,
-                    [-1] * 96,
-                ),
-            )
-        )
-        item.add_child(Node.s16("theme_list", profile.get_int("theme_list", -1)))
-        item.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list", 2, [-1] * 2)))
-        item.add_child(Node.s32_array("parts_list", profile.get_int_array("parts_list", 96, [-1] * 96)))
-
-        new = Node.void("new")
-        item.add_child(new)
-        new.add_child(
-            Node.s32_array(
-                "secret_list",
-                ([-1] * 32) if force_unlock else self.create_owned_items(owned_secrets, 32),
-            )
-        )
-        new.add_child(
-            Node.s32_array(
-                "title_list",
-                profile.get_int_array(
-                    "title_list_new",
-                    96,
-                    [-1] * 96,
-                ),
-            )
-        )
-        new.add_child(Node.s16("theme_list", profile.get_int("theme_list_new", -1)))
-        new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list_new", 2, [-1] * 2)))
-
-        # Last played data, for showing cursor and such
-        lastdict = profile.get_dict("last")
-        last = Node.void("last")
-        player.add_child(last)
-        last.add_child(Node.s32("music_id", lastdict.get_int("music_id")))
-        last.add_child(Node.s8("marker", lastdict.get_int("marker")))
-        last.add_child(Node.s16("title", lastdict.get_int("title")))
-        last.add_child(Node.s8("theme", lastdict.get_int("theme")))
-        last.add_child(Node.s8("sort", lastdict.get_int("sort")))
-        last.add_child(Node.s8("rank_sort", lastdict.get_int("rank_sort")))
-        last.add_child(Node.s8("combo_disp", lastdict.get_int("combo_disp")))
-        last.add_child(Node.s8("seq_id", lastdict.get_int("seq_id")))
-        last.add_child(Node.s16("parts", lastdict.get_int("parts")))
-        last.add_child(Node.s8("category", lastdict.get_int("category")))
-        last.add_child(Node.s64("play_time", lastdict.get_int("play_time")))
-        last.add_child(Node.string("shopname", lastdict.get_str("shopname")))
-        last.add_child(Node.string("areaname", lastdict.get_str("areaname")))
-        last.add_child(Node.s8("expert_option", lastdict.get_int("expert_option")))
-        last.add_child(Node.s8("matching", lastdict.get_int("matching")))
-        last.add_child(Node.s8("hazard", lastdict.get_int("hazard")))
-        last.add_child(Node.s8("hard", lastdict.get_int("hard")))
-
-        # Miscelaneous crap
-        player.add_child(Node.s32("session_id", 1))
-        player.add_child(Node.u64("event_flag", 0))
-
-        # Macchiato event
-        macchiatodict = profile.get_dict("macchiato")
-        macchiato = Node.void("macchiato")
-        player.add_child(macchiato)
-        macchiato.add_child(Node.s32("pack_id", macchiatodict.get_int("pack_id")))
-        macchiato.add_child(Node.u16("bean_num", macchiatodict.get_int("bean_num")))
-        macchiato.add_child(Node.s32("daily_milk_num", macchiatodict.get_int("daily_milk_num")))
-        macchiato.add_child(
-            Node.bool(
-                "is_received_daily_milk",
-                macchiatodict.get_bool("is_received_daily_milk"),
-            )
-        )
-        macchiato.add_child(Node.s32("today_tune_cnt", macchiatodict.get_int("today_tune_cnt")))
-        macchiato.add_child(
-            Node.s32_array(
-                "daily_milk_bonus",
-                macchiatodict.get_int_array("daily_milk_bonus", 9, [-1, -1, -1, -1, -1, -1, -1, -1, -1]),
-            )
-        )
-        macchiato.add_child(Node.s32("daily_play_burst", macchiatodict.get_int("daily_play_burst")))
-        macchiato.add_child(Node.bool("sub_menu_is_completed", macchiatodict.get_bool("sub_menu_is_completed")))
-        macchiato.add_child(Node.s32("compensation_milk", macchiatodict.get_int("compensation_milk")))
-        macchiato.add_child(Node.s32("match_cnt", macchiatodict.get_int("match_cnt")))
-
-        # Probably never will support this
-        macchiato_music_list = Node.void("macchiato_music_list")
-        macchiato.add_child(macchiato_music_list)
-        macchiato_music_list.set_attribute("count", "0")
-
-        # Same with this comment
-        macchiato.add_child(Node.s32("sub_pack_id", 0))
-        sub_macchiato_music_list = Node.void("sub_macchiato_music_list")
-        macchiato.add_child(sub_macchiato_music_list)
-        sub_macchiato_music_list.set_attribute("count", "0")
-
-        # And this
-        season_music_list = Node.void("season_music_list")
-        macchiato.add_child(season_music_list)
-        season_music_list.set_attribute("count", "0")
-
-        # Weird, this is sent as a void with a bunch of subnodes, but returned as an int array.
-        achievement_list = Node.void("achievement_list")
-        macchiato.add_child(achievement_list)
-        achievement_list.set_attribute("count", "0")
-
-        # Also probably never supporting this either
-        cow_list = Node.void("cow_list")
-        macchiato.add_child(cow_list)
-        cow_list.set_attribute("count", "0")
-
-        # No news, ever.
-        news = Node.void("news")
-        player.add_child(news)
-        news.add_child(Node.s16("checked", 0))
-
-        # Add rivals to profile.
         rivallist = Node.void("rivallist")
         player.add_child(rivallist)
+        rivallist.set_attribute("count", "0")
 
-        links = self.data.local.user.get_links(self.game, self.version, userid)
-        rivalcount = 0
-        for link in links:
-            if link.type != "rival":
-                continue
-
-            rprofile = self.get_profile(link.other_userid)
-            if rprofile is None:
-                continue
-
-            rival = Node.void("rival")
-            rivallist.add_child(rival)
-            rival.add_child(Node.s32("jid", rprofile.extid))
-            rival.add_child(Node.string("name", rprofile.get_str("name")))
-
-            # Lazy way of keeping track of rivals, since we can only have 4
-            # or the game with throw up. At least, I think Fulfill can have
-            # 4 instead of the 3 found in newer versions, given the size of
-            # the array that it loads the values in. However, to keep things
-            # simple, I only supported three here.
-            rivalcount += 1
-            if rivalcount >= 3:
-                break
-
-        rivallist.set_attribute("count", str(rivalcount))
-
-        # Full combo daily challenge.
-        entry = self.data.local.game.get_time_sensitive_settings(self.game, self.version, "fc_challenge")
-        if entry is None:
-            entry = ValidatedDict()
-
-        # Figure out if we've played these songs
-        start_time, end_time = self.data.local.network.get_schedule_duration("daily")
-        today_attempts = self.data.local.music.get_all_attempts(
-            self.game,
-            self.music_version,
-            userid,
-            entry.get_int("today", -1),
-            timelimit=start_time,
-        )
-        whim_attempts = self.data.local.music.get_all_attempts(
-            self.game,
-            self.music_version,
-            userid,
-            entry.get_int("whim", -1),
-            timelimit=start_time,
-        )
-
-        challenge = Node.void("challenge")
-        player.add_child(challenge)
-        today = Node.void("today")
-        challenge.add_child(today)
-        today.add_child(Node.s32("music_id", entry.get_int("today", -1)))
-        today.add_child(Node.u8("state", 0x40 if len(today_attempts) > 0 else 0x0))
-        whim = Node.void("whim")
-        challenge.add_child(whim)
-        whim.add_child(Node.s32("music_id", entry.get_int("whim", -1)))
-        whim.add_child(Node.u8("state", 0x40 if len(whim_attempts) > 0 else 0x0))
-
-        # Sane defaults for unknown nodes
-        only_now_music = Node.void("only_now_music")
-        player.add_child(only_now_music)
-        only_now_music.set_attribute("count", "0")
-        lab_edit_seq = Node.void("lab_edit_seq")
-        player.add_child(lab_edit_seq)
-        lab_edit_seq.set_attribute("count", "0")
-        kac_music = Node.void("kac_music")
-        player.add_child(kac_music)
-        kac_music.set_attribute("count", "0")
-        history = Node.void("history")
-        player.add_child(history)
-        history.set_attribute("count", "0")
-        share_music = Node.void("share_music")
-        player.add_child(share_music)
-        share_music.set_attribute("count", "0")
-        bonus_music = Node.void("bonus_music")
-        player.add_child(bonus_music)
-        bonus_music.set_attribute("count", "0")
-
-        bingo = Node.void("bingo")
-        player.add_child(bingo)
-        reward = Node.void("reward")
-        bingo.add_child(reward)
-        reward.add_child(Node.s32("total", 0))
-        reward.add_child(Node.s32("point", 0))
         group = Node.void("group")
         player.add_child(group)
         group.add_child(Node.s32("group_id", 0))
 
-        # Basic profile info
-        player.add_child(Node.string("name", profile.get_str("name", "なし")))
-        player.add_child(Node.s32("jid", profile.extid))
-        player.add_child(Node.string("refid", profile.refid))
+        bingo = Node.void("bingo")
+        player.add_child(bingo)
+        bingo_reward = Node.void("reward")
+        bingo.add_child(bingo_reward)
+        bingo_reward.add_child(Node.s32("total", 0))
+        bingo_reward.add_child(Node.s32("point", 0))
 
-        # Miscelaneous history stuff
-        data.add_child(Node.u8("termver", 16))
-        data.add_child(Node.u32("season_etime", 0))
-        data.add_child(
-            Node.s32_array(
-                "white_music_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
-            )
-        )
-        data.add_child(
-            Node.s32_array(
-                "open_music_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
-            )
-        )
+        only_now_musics = [50000327, 50000328]
+        only_now_music = Node.void("only_now_music")
+        player.add_child(only_now_music)
+        only_now_music.set_attribute("count", str(len(only_now_musics)))
+        for index in range(len(only_now_musics)):
+            music = Node.void("music")
+            only_now_music.add_child(music)
+            music.add_child(Node.s32("id", only_now_musics[index]))
+            music.add_child(Node.string("etime", "ETIME"))
 
-        # Unsupported collaboration events with other games
-        collabo_info = Node.void("collabo_info")
-        data.add_child(collabo_info)
+        lab_edit_seq = Node.void("lab_edit_seq")
+        player.add_child(lab_edit_seq)
+        lab_edit_seq.set_attribute("count", "0")
 
-        # Unsupported policy break stuff
-        policy_break = Node.void("policy_break")
-        collabo_info.add_child(policy_break)
-        policy_break.set_attribute("type", "1")
-        policy_break.add_child(Node.u8("state", 1))
-        policy_break.add_child(Node.bool("is_report_end", False))
+        # KAC 예선전 음악
+        kac_musics = [50000206, 50000023, 50000078, 50000203, 50000323]
+        kac_music = Node.void("kac_music")
+        player.add_child(kac_music)
+        kac_music.set_attribute("count", str(len(kac_musics)))
+        for index in range(len(kac_musics)):
+            music = Node.void("music")
+            kac_music.add_child(music)
+            music.add_child(Node.s32("id", kac_musics[index]))
+            music.add_child(Node.s8("seq", self.CHART_TYPE_EXTREME))
 
-        # Unsupported vocaloid stuff
-        vocaloid_event = Node.void("vocaloid_event")
-        collabo_info.add_child(vocaloid_event)
-        vocaloid_event.set_attribute("type", "1")
-        vocaloid_event.add_child(Node.u8("state", 0))
-        vocaloid_event.add_child(Node.s32("music_id", 0))
-
-        # Unsupported vocaloid stuff
-        vocaloid_event2 = Node.void("vocaloid_event2")
-        collabo_info.add_child(vocaloid_event2)
-        vocaloid_event2.set_attribute("type", "1")
-        vocaloid_event2.add_child(Node.u8("state", 0))
-        vocaloid_event2.add_child(Node.s32("music_id", 0))
-
-        # Maybe it is possible to turn off internet matching here?
-        lab = Node.void("lab")
-        data.add_child(lab)
-        lab.add_child(Node.bool("is_open", False))
-        matching_off = Node.void("matching_off")
-        data.add_child(matching_off)
-        matching_off.add_child(Node.bool("is_open", True))
+        # # Secret unlocks
+        # item = Node.void("item")
+        # player.add_child(item)
+        # item.add_child(
+        #     Node.s32_array(
+        #         "secret_list",
+        #         ([-1] * 32) if force_unlock else self.create_owned_items(owned_songs, 32),
+        #     )
+        # )
+        # item.add_child(
+        #     Node.s32_array(
+        #         "title_list",
+        #         profile.get_int_array(
+        #             "title_list",
+        #             96,
+        #             [-1] * 96,
+        #         ),
+        #     )
+        # )
+        # item.add_child(Node.s16("theme_list", profile.get_int("theme_list", -1)))
+        # item.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list", 2, [-1] * 2)))
+        # item.add_child(Node.s32_array("parts_list", profile.get_int_array("parts_list", 96, [-1] * 96)))
+        #
+        # new = Node.void("new")
+        # item.add_child(new)
+        # new.add_child(
+        #     Node.s32_array(
+        #         "secret_list",
+        #         ([-1] * 32) if force_unlock else self.create_owned_items(owned_secrets, 32),
+        #     )
+        # )
+        # new.add_child(
+        #     Node.s32_array(
+        #         "title_list",
+        #         profile.get_int_array(
+        #             "title_list_new",
+        #             96,
+        #             [-1] * 96,
+        #         ),
+        #     )
+        # )
+        # new.add_child(Node.s16("theme_list", profile.get_int("theme_list_new", -1)))
+        # new.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list_new", 2, [-1] * 2)))
+        #
+        # # Last played data, for showing cursor and such
+        # lastdict = profile.get_dict("last")
+        # last = Node.void("last")
+        # player.add_child(last)
+        # last.add_child(Node.s32("music_id", lastdict.get_int("music_id")))
+        # last.add_child(Node.s8("marker", lastdict.get_int("marker")))
+        # last.add_child(Node.s16("title", lastdict.get_int("title")))
+        # last.add_child(Node.s8("theme", lastdict.get_int("theme")))
+        # last.add_child(Node.s8("sort", lastdict.get_int("sort")))
+        # last.add_child(Node.s8("rank_sort", lastdict.get_int("rank_sort")))
+        # last.add_child(Node.s8("combo_disp", lastdict.get_int("combo_disp")))
+        # last.add_child(Node.s8("seq_id", lastdict.get_int("seq_id")))
+        # last.add_child(Node.s16("parts", lastdict.get_int("parts")))
+        # last.add_child(Node.s8("category", lastdict.get_int("category")))
+        # last.add_child(Node.s64("play_time", lastdict.get_int("play_time")))
+        # last.add_child(Node.string("shopname", lastdict.get_str("shopname")))
+        # last.add_child(Node.string("areaname", lastdict.get_str("areaname")))
+        # last.add_child(Node.s8("expert_option", lastdict.get_int("expert_option")))
+        # last.add_child(Node.s8("matching", lastdict.get_int("matching")))
+        # last.add_child(Node.s8("hazard", lastdict.get_int("hazard")))
+        # last.add_child(Node.s8("hard", lastdict.get_int("hard")))
+        #
+        # # Miscelaneous crap
+        # player.add_child(Node.s32("session_id", 1))
+        # player.add_child(Node.u64("event_flag", 0))
+        #
+        # # Macchiato event
+        # macchiatodict = profile.get_dict("macchiato")
+        # macchiato = Node.void("macchiato")
+        # player.add_child(macchiato)
+        # macchiato.add_child(Node.s32("pack_id", macchiatodict.get_int("pack_id")))
+        # macchiato.add_child(Node.u16("bean_num", macchiatodict.get_int("bean_num")))
+        # macchiato.add_child(Node.s32("daily_milk_num", macchiatodict.get_int("daily_milk_num")))
+        # macchiato.add_child(
+        #     Node.bool(
+        #         "is_received_daily_milk",
+        #         macchiatodict.get_bool("is_received_daily_milk"),
+        #     )
+        # )
+        # macchiato.add_child(Node.s32("today_tune_cnt", macchiatodict.get_int("today_tune_cnt")))
+        # macchiato.add_child(
+        #     Node.s32_array(
+        #         "daily_milk_bonus",
+        #         macchiatodict.get_int_array("daily_milk_bonus", 9, [-1, -1, -1, -1, -1, -1, -1, -1, -1]),
+        #     )
+        # )
+        # macchiato.add_child(Node.s32("daily_play_burst", macchiatodict.get_int("daily_play_burst")))
+        # macchiato.add_child(Node.bool("sub_menu_is_completed", macchiatodict.get_bool("sub_menu_is_completed")))
+        # macchiato.add_child(Node.s32("compensation_milk", macchiatodict.get_int("compensation_milk")))
+        # macchiato.add_child(Node.s32("match_cnt", macchiatodict.get_int("match_cnt")))
+        #
+        # # Probably never will support this
+        # macchiato_music_list = Node.void("macchiato_music_list")
+        # macchiato.add_child(macchiato_music_list)
+        # macchiato_music_list.set_attribute("count", "0")
+        #
+        # # Same with this comment
+        # macchiato.add_child(Node.s32("sub_pack_id", 0))
+        # sub_macchiato_music_list = Node.void("sub_macchiato_music_list")
+        # macchiato.add_child(sub_macchiato_music_list)
+        # sub_macchiato_music_list.set_attribute("count", "0")
+        #
+        # # And this
+        # season_music_list = Node.void("season_music_list")
+        # macchiato.add_child(season_music_list)
+        # season_music_list.set_attribute("count", "0")
+        #
+        # # Weird, this is sent as a void with a bunch of subnodes, but returned as an int array.
+        # achievement_list = Node.void("achievement_list")
+        # macchiato.add_child(achievement_list)
+        # achievement_list.set_attribute("count", "0")
+        #
+        # # Also probably never supporting this either
+        # cow_list = Node.void("cow_list")
+        # macchiato.add_child(cow_list)
+        # cow_list.set_attribute("count", "0")
+        #
+        # # No news, ever.
+        # news = Node.void("news")
+        # player.add_child(news)
+        # news.add_child(Node.s16("checked", 0))
+        #
+        # # Add rivals to profile.
+        # rivallist = Node.void("rivallist")
+        # player.add_child(rivallist)
+        #
+        # links = self.data.local.user.get_links(self.game, self.version, userid)
+        # rivalcount = 0
+        # for link in links:
+        #     if link.type != "rival":
+        #         continue
+        #
+        #     rprofile = self.get_profile(link.other_userid)
+        #     if rprofile is None:
+        #         continue
+        #
+        #     rival = Node.void("rival")
+        #     rivallist.add_child(rival)
+        #     rival.add_child(Node.s32("jid", rprofile.extid))
+        #     rival.add_child(Node.string("name", rprofile.get_str("name")))
+        #
+        #     # Lazy way of keeping track of rivals, since we can only have 4
+        #     # or the game with throw up. At least, I think Fulfill can have
+        #     # 4 instead of the 3 found in newer versions, given the size of
+        #     # the array that it loads the values in. However, to keep things
+        #     # simple, I only supported three here.
+        #     rivalcount += 1
+        #     if rivalcount >= 3:
+        #         break
+        #
+        # rivallist.set_attribute("count", str(rivalcount))
+        #
+        # # Full combo daily challenge.
+        # entry = self.data.local.game.get_time_sensitive_settings(self.game, self.version, "fc_challenge")
+        # if entry is None:
+        #     entry = ValidatedDict()
+        #
+        # # Figure out if we've played these songs
+        # start_time, end_time = self.data.local.network.get_schedule_duration("daily")
+        # today_attempts = self.data.local.music.get_all_attempts(
+        #     self.game,
+        #     self.music_version,
+        #     userid,
+        #     entry.get_int("today", -1),
+        #     timelimit=start_time,
+        # )
+        # whim_attempts = self.data.local.music.get_all_attempts(
+        #     self.game,
+        #     self.music_version,
+        #     userid,
+        #     entry.get_int("whim", -1),
+        #     timelimit=start_time,
+        # )
+        #
+        # challenge = Node.void("challenge")
+        # player.add_child(challenge)
+        # today = Node.void("today")
+        # challenge.add_child(today)
+        # today.add_child(Node.s32("music_id", entry.get_int("today", -1)))
+        # today.add_child(Node.u8("state", 0x40 if len(today_attempts) > 0 else 0x0))
+        # whim = Node.void("whim")
+        # challenge.add_child(whim)
+        # whim.add_child(Node.s32("music_id", entry.get_int("whim", -1)))
+        # whim.add_child(Node.u8("state", 0x40 if len(whim_attempts) > 0 else 0x0))
+        #
+        # # Sane defaults for unknown nodes
+        # only_now_music = Node.void("only_now_music")
+        # player.add_child(only_now_music)
+        # only_now_music.set_attribute("count", "0")
+        # lab_edit_seq = Node.void("lab_edit_seq")
+        # player.add_child(lab_edit_seq)
+        # lab_edit_seq.set_attribute("count", "0")
+        # kac_music = Node.void("kac_music")
+        # player.add_child(kac_music)
+        # kac_music.set_attribute("count", "0")
+        # history = Node.void("history")
+        # player.add_child(history)
+        # history.set_attribute("count", "0")
+        #
+        # bingo = Node.void("bingo")
+        # player.add_child(bingo)
+        # reward = Node.void("reward")
+        # bingo.add_child(reward)
+        # reward.add_child(Node.s32("total", 0))
+        # reward.add_child(Node.s32("point", 0))
+        # group = Node.void("group")
+        # player.add_child(group)
+        # group.add_child(Node.s32("group_id", 0))
+        #
+        # # Basic profile info
+        # player.add_child(Node.string("name", profile.get_str("name", "なし")))
+        # player.add_child(Node.s32("jid", profile.extid))
+        # player.add_child(Node.string("refid", profile.refid))
 
         return root
 

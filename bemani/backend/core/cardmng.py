@@ -45,6 +45,9 @@ class CardManagerHandler(Base):
         paseli_enabled = self.supports_paseli and self.config.paseli.enabled
         newflag = self.data.remote.user.get_any_profile(self.game, self.version, userid) is None
 
+        # status code
+        # 109, 110 - e-AMUSEMENT PASS를 확인할 수 없습니다.
+
         root = Node.void("cardmng")
         root.set_attribute("refid", refid)
         root.set_attribute("dataid", refid)
@@ -104,6 +107,7 @@ class CardManagerHandler(Base):
         userid = self.data.local.user.from_refid(self.game, self.version, refid)
         self.bind_profile(userid)
         root = Node.void("cardmng")
+        # 124 - also success? i don't know
         root.set_attribute("dataid", refid)
         return root
 

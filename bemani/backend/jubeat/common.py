@@ -62,7 +62,7 @@ class JubeatLobbyCheckHandler(JubeatBase):
         root.add_child(data)
 
         data.add_child(Node.s16("interval", 0))
-        data.add_child(Node.s16("entry_timeout", 0))
+        data.add_child(Node.s16("entry_timeout", 30))
         entrant_nr = Node.u32("entrant_nr", 0)
         entrant_nr.set_attribute("time", "0")
         data.add_child(entrant_nr)
@@ -95,6 +95,7 @@ class JubeatGamendRegisterHandler(JubeatBase):
             self.put_profile(userid, newprofile)
 
         gameend = Node.void("gameend")
+        # gameend.set_attribute("status", "2")
         data = Node.void("data")
         gameend.add_child(data)
         player = Node.void("player")

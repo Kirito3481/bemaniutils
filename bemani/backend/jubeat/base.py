@@ -158,8 +158,9 @@ class JubeatBase(CoreHandler, CardManagerHandler, PASELIHandler, Base):
         desire to partition scores into separate fetches to ensure that we
         don't make any one request too long. We handle the logic for that here.
         """
-        if extid is None:
-            return None
+        if extid is None or extid == 0:
+            profile = Profile(self.game, self.version, "", 0)
+            return self.format_scores(0, profile, [])
 
         userid = self.data.remote.user.from_extid(self.game, self.version, extid)
         profile = self.get_profile(userid)
@@ -167,7 +168,7 @@ class JubeatBase(CoreHandler, CardManagerHandler, PASELIHandler, Base):
             return None
 
         cache_key = f"get_scores_by_extid-{extid}"
-        score: Optional[List[Score]]
+        scores: Optional[List[Score]]
 
         if partition == 1:
             # We fetch all scores on the first partition and then divy up

@@ -81,6 +81,7 @@ def receive_request(path: str) -> Response:
         )
 
         response = make_response(data)
+        response.content_type = "application/xml"
 
         # Some old clients are case-sensitive, even though http spec says these
         # shouldn't matter, so capitalize correctly.
