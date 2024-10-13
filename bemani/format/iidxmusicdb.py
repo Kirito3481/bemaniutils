@@ -74,7 +74,7 @@ class IIDXMusicDB:
                 string = string[:i]
                 break
 
-        return string.decode("shift-jis")
+        return string.decode("shift-jis", errors="replace")
 
     def __parse_db(self, data: bytes) -> int:
         # Verify the signature
@@ -98,6 +98,7 @@ class IIDXMusicDB:
             26: 0x344,
             27: 0x52C,
             28: 0x52C,
+            30: 0x52C,
         }.get(gameversion)
         if leap is None:
             raise Exception(f"Unsupported game version {gameversion} found!")
