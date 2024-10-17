@@ -2660,8 +2660,9 @@ class ImportIIDX(ImportBase):
         no_combine: bool,
         update: bool,
     ) -> None:
-        if version in ["20", "21", "22", "23", "24", "25", "26"]:
+        if version in ["19", "20", "21", "22", "23", "24", "25", "26"]:
             actual_version = {
+                "19": VersionConstants.IIDX_LINCLE,
                 "20": VersionConstants.IIDX_TRICORO,
                 "21": VersionConstants.IIDX_SPADA,
                 "22": VersionConstants.IIDX_PENDUAL,
