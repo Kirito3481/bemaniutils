@@ -20,8 +20,8 @@ from bemani.backend.iidx.stubs import (
     IIDXEmpress,
     IIDXSirius,
     IIDXResortAnthem,
-    IIDXLincle,
 )
+from bemani.backend.iidx.lincle import IIDXLincle
 from bemani.backend.iidx.tricoro import IIDXTricoro
 from bemani.backend.iidx.spada import IIDXSpada
 from bemani.backend.iidx.pendual import IIDXPendual

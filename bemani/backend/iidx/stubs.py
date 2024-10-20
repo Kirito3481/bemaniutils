@@ -144,11 +144,3 @@ class IIDXResortAnthem(IIDXBase):
 
     def previous_version(self) -> Optional[IIDXBase]:
         return IIDXSirius(self.data, self.config, self.model)
-
-
-class IIDXLincle(IIDXBase):
-    name: str = "Beatmania IIDX Lincle"
-    version: int = VersionConstants.IIDX_LINCLE
-
-    def previous_version(self) -> Optional[IIDXBase]:
-        return IIDXResortAnthem(self.data, self.config, self.model)

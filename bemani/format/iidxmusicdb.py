@@ -118,7 +118,7 @@ class IIDXMusicDB:
                 song = IIDXSong(
                     songid=songdata[12],
                     title=self.__parse_string(songdata[0]),
-                    english_title=self.__parse_string(songdata[2]),
+                    english_title=self.__parse_string(songdata[0]),
                     genre=self.__parse_string(songdata[3]),
                     artist=self.__parse_string(songdata[4]),
                     difficulties=[
