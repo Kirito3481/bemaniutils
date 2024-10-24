@@ -69,7 +69,7 @@ class IIDXFactory(Factory):
 
     @classmethod
     def register_all(cls) -> None:
-        for gamecode in ["JDJ", "JDZ", "KDZ", "LDJ"]:
+        for gamecode in ["C02", "D01", "E11", "ECO", "FDD", "GLD", "HDD", "I00", "JDJ", "JDZ", "KDZ", "LDJ"]:
             Base.register(gamecode, IIDXFactory)
 
     @classmethod
@@ -101,6 +101,22 @@ class IIDXFactory(Factory):
                 return VersionConstants.IIDX_BISTROVER
             return None
 
+        if model.gamecode == "C02":
+            return IIDX9thStyle(data, config, model)
+        if model.gamecode == "D01":
+            return IIDX10thStyle(data, config, model)
+        if model.gamecode == "E11":
+            return IIDXRed(data, config, model)
+        if model.gamecode == "ECO":
+            return IIDXHappySky(data, config, model)
+        if model.gamecode == "FDD":
+            return IIDXDistorted(data, config, model)
+        if model.gamecode == "GLD":
+            return IIDXGold(data, config, model)
+        if model.gamecode == "HDD":
+            return IIDXDJTroopers(data, config, model)
+        if model.gamecode == "I00":
+            return IIDXEmpress(data, config, model)
         if model.gamecode == "JDJ":
             return IIDXSirius(data, config, model)
         if model.gamecode == "JDZ":
@@ -114,7 +130,7 @@ class IIDXFactory(Factory):
 
                 # We have no way to tell apart newer versions. However, we can make
                 # an educated guess if we happen to be summoned for old profile lookup.
-                if parentmodel.gamecode not in ["JDJ", "JDZ", "KDZ", "LDJ"]:
+                if parentmodel.gamecode not in ["C02", "D01", "E11", "ECO", "FDD", "GLD", "HDD", "I00", "JDJ", "JDZ", "KDZ", "LDJ"]:
                     return None
                 parentversion = version_from_date(parentmodel.version)
                 if parentversion == VersionConstants.IIDX_SPADA:
