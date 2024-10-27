@@ -2660,7 +2660,7 @@ class ImportIIDX(ImportBase):
         no_combine: bool,
         update: bool,
     ) -> None:
-        if version in ["20", "21", "22", "23", "24", "25", "26"]:
+        if version in ["20", "21", "22", "23", "24", "25", "26", "27"]:
             actual_version = {
                 "20": VersionConstants.IIDX_TRICORO,
                 "21": VersionConstants.IIDX_SPADA,
@@ -2669,6 +2669,7 @@ class ImportIIDX(ImportBase):
                 "24": VersionConstants.IIDX_SINOBUZ,
                 "25": VersionConstants.IIDX_CANNON_BALLERS,
                 "26": VersionConstants.IIDX_ROOTAGE,
+                "27": VersionConstants.IIDX_HEROIC_VERSE,
             }[version]
             self.charts = [0, 1, 2, 3, 4, 5, 6]
         elif version in [
