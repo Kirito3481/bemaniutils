@@ -80,6 +80,7 @@ class VersionConstants:
     IIDX_BISTROVER: Final[int] = 28
     IIDX_CASTHOUR: Final[int] = 29
     IIDX_RESIDENT: Final[int] = 30
+    IIDX_EPOLIS: Final[int] = 31
 
     JUBEAT: Final[int] = 1
     JUBEAT_RIPPLES: Final[int] = 2
