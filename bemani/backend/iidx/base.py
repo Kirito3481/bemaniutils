@@ -48,6 +48,9 @@ class IIDXBase(CoreHandler, CardManagerHandler, PASELIHandler, Base):
     CHART_TYPE_A14: Final[int] = 5
     # Beginner charts only save status
     CHART_TYPE_B7: Final[int] = 6
+    CHART_TYPE_L7: Final[int] = 7
+    CHART_TYPE_B14: Final[int] = 8
+    CHART_TYPE_L14: Final[int] = 9
 
     DAN_RANK_7_KYU: Final[int] = DBConstants.IIDX_DAN_RANK_7_KYU
     DAN_RANK_6_KYU: Final[int] = DBConstants.IIDX_DAN_RANK_6_KYU
