@@ -23,6 +23,15 @@ class CardManagerHandler(Base):
         modelstring = request.attribute("model")
         userid = self.data.local.user.from_cardid(cardid)
 
+        BANNDED_CARDIDS = [
+            "0000000000000000",
+        ]
+        if cardid in BANNDED_CARDIDS:
+            # This card is banned, don't allow it to be used
+            root = Node.void("cardmng")
+            root.set_attribute("status", "109")
+            return root
+
         if userid is None:
             # This user doesn't exist, force system to create new account
             root = Node.void("cardmng")
