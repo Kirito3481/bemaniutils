@@ -46,7 +46,7 @@ class JubeatClan(
             "enabled": False,
         },
         15: {
-            "enabled": True,
+            "enabled": True,  # For jubeat Labs?
         },
         22: {
             "enabled": False,
@@ -78,6 +78,30 @@ class JubeatClan(
     COURSE_HAZARD_FC1: Final[int] = 4
     COURSE_HAZARD_FC2: Final[int] = 5
     COURSE_HAZARD_FC3: Final[int] = 6
+
+    COURSE_REWARD_TYPE_MUSIC: Final[int] = 1
+    COURSE_REWARD_TYPE_TITLE: Final[int] = 2
+    COURSE_REWARD_TYPE_OMIYAGE: Final[int] = 6
+    COURSE_REWARD_TYPE_OMIYAGE_SET: Final[int] = 10
+
+    # OMIYAGE
+    # ex) 50020002
+    # 50: amount
+    # 02: item type
+    # 0002: drop id
+
+    # OMIYAGE SET
+    # ex) 10010000
+    # 10: amount
+    # 01: item type
+    # 0000: nothing
+
+    SHOP_ITEM_TYPE_MUSIC: Final[int] = 1
+    SHOP_ITEM_TYPE_TITLE: Final[int] = 2
+    SHOP_ITEM_TYPE_MARKER: Final[int] = 3
+    SHOP_ITEM_TYPE_BACKGROUND: Final[int] = 4
+    SHOP_ITEM_TYPE_JUBIBELL: Final[int] = 5
+    SHOP_ITEM_TYPE_OMIYAGE: Final[int] = 7
 
     def previous_version(self) -> Optional[JubeatBase]:
         return JubeatQubell(self.data, self.config, self.model)
@@ -143,8 +167,48 @@ class JubeatClan(
                     "category": "game_config",
                     "setting": "force_song_unlock",
                 },
+                {
+                    "name": "PASELI Charge Machine Available",
+                    "tip": "Whether PASELI charging machine is available on this facility",
+                    "category": "game_config",
+                    "setting": "paseli_charge_machine_available",
+                },
+                {
+                    "name": "Enable Expert Mode",
+                    "tip": "Whether to enable expert mode",
+                    "category": "game_config",
+                    "setting": "expert_mode_is_available",
+                },
+                {
+                    "name": "Enable All Music Matching",
+                    "tip": "Allows matching with different songs, not just the same song",
+                    "category": "game_config",
+                    "setting": "all_music_matching_is_available",
+                },
+            ],
+            "ints": [
+                {
+                    "name": "Tax Phase",
+                    "tip": "Set whether PASELI tax applies",
+                    "category": "game_config",
+                    "setting": "tax_phase",
+                    "values": {
+                        1: "No Tax",
+                        2: "Tax Applied",
+                    },
+                },
             ],
         }
+
+    def __get_course_category_list(self) -> List[Tuple[int, int]]:
+        return [
+            (1, 3),
+            (4, 6),
+            (7, 9),
+            (10, 12),
+            (13, 14),
+            (15, 16),
+        ]
 
     def __get_course_list(self) -> List[Dict[str, Any]]:
         return [
@@ -158,9 +222,14 @@ class JubeatClan(
                 "difficulty": 3,
                 "score": 700000,
                 "music": [
-                    [(50000077, 0), (50000077, 1), (50000077, 2)],
-                    [(80000080, 0), (80000080, 1), (80000080, 2)],
-                    [(50000278, 0), (50000278, 1), (50000278, 2)],
+                    [(50000077, 0, False), (50000077, 1, False), (50000077, 2, False)],
+                    [(80000080, 0, False), (80000080, 1, False), (80000080, 2, False)],
+                    [(50000278, 0, False), (50000278, 1, False), (50000278, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 24010002, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 25010004, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 1030001, False),
                 ],
             },
             {
@@ -171,9 +240,12 @@ class JubeatClan(
                 "difficulty": 1,
                 "score": 700000,
                 "music": [
-                    [(20000002, 0), (20000022, 0), (30000108, 0)],
-                    [(70000035, 0), (70000069, 0), (80000020, 0)],
-                    [(50000116, 0), (50000120, 0), (50000383, 0)],
+                    [(20000002, 0, False), (20000022, 0, False), (30000108, 0, False)],
+                    [(70000035, 0, False), (70000069, 0, False), (80000020, 0, False)],
+                    [(50000116, 0, False), (50000120, 0, False), (50000383, 0, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 10010000, False),
                 ],
             },
             {
@@ -184,9 +256,12 @@ class JubeatClan(
                 "difficulty": 1,
                 "score": 700000,
                 "music": [
-                    [(20000109, 0), (50000218, 0), (60000100, 0)],
-                    [(50000228, 0), (70000125, 0)],
-                    [(70000109, 0)],
+                    [(20000109, 0, False), (50000218, 0, False), (60000100, 0, False)],
+                    [(50000228, 0, False), (70000125, 0, False)],
+                    [(70000109, 0, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7893, False)
                 ],
             },
             {
@@ -197,22 +272,29 @@ class JubeatClan(
                 "difficulty": 2,
                 "score": 750000,
                 "music": [
-                    [(70000028, 0)],
-                    [(70000030, 0)],
-                    [(80001009, 0)],
+                    [(70000028, 0, False)],
+                    [(70000030, 0, False)],
+                    [(80001009, 0, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_MUSIC, 80001009, True),
                 ],
             },
             {
                 "id": 5,
                 "name": "しりとり山",
+                "release_code": 2017122100,
                 "course_type": self.COURSE_TYPE_PERMANENT,
                 "clear_type": self.COURSE_CLEAR_SCORE,
                 "difficulty": 3,
                 "score": 750000,
                 "music": [
-                    [(10000068, 0), (50000089, 0), (60000078, 0)],
-                    [(50000059, 0), (50000147, 0), (50000367, 0)],
-                    [(50000202, 0), (70000144, 0), (70000156, 0)],
+                    [(10000068, 0, False), (50000089, 0, False), (60000078, 0, False)],
+                    [(50000059, 0, False), (50000147, 0, False), (50000367, 0, False)],
+                    [(50000202, 0, False), (70000144, 0, False), (70000156, 0, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 10010000, True),
                 ],
             },
             {
@@ -223,9 +305,12 @@ class JubeatClan(
                 "difficulty": 3,
                 "score": 800000,
                 "music": [
-                    [(50000268, 0), (70000039, 0), (70000160, 0)],
-                    [(60000080, 1), (80000014, 0)],
-                    [(60000053, 0)],
+                    [(50000268, 0, False), (70000039, 0, False), (70000160, 0, False)],
+                    [(60000080, 1, False), (80000014, 0, False)],
+                    [(60000053, 0, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7894, False),
                 ],
             },
             # Harapenya-na courses
@@ -238,9 +323,13 @@ class JubeatClan(
                 "difficulty": 4,
                 "score": 700000,
                 "music": [
-                    [(50000207, 0), (50000207, 1), (50000207, 2)],
-                    [(50000111, 0), (50000111, 1), (50000111, 2)],
-                    [(60000009, 0), (60000009, 1), (60000009, 2)],
+                    [(50000207, 0, False), (50000207, 1, False), (50000207, 2, False)],
+                    [(50000111, 0, False), (50000111, 1, False), (50000111, 2, False)],
+                    [(60000009, 0, False), (60000009, 1, False), (60000009, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 10020000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 15010000, False),
                 ],
             },
             {
@@ -251,10 +340,13 @@ class JubeatClan(
                 "difficulty": 4,
                 "score": 850000,
                 "music": [
-                    [(40000110, 1), (70000059, 1), (70000131, 1)],
-                    [(30000004, 1), (80000035, 1)],
-                    [(40000051, 1)],
+                    [(40000110, 1, False), (70000059, 1, False), (70000131, 1, False)],
+                    [(30000004, 1, False), (80000035, 1, False)],
+                    [(40000051, 1, False)],
                 ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7895, False),
+                ]
             },
             {
                 "id": 13,
@@ -264,9 +356,12 @@ class JubeatClan(
                 "difficulty": 5,
                 "score": 850000,
                 "music": [
-                    [(50000245, 1)],
-                    [(60000051, 1)],
-                    [(80001011, 1)],
+                    [(50000245, 1, False)],
+                    [(60000051, 1, False)],
+                    [(80001011, 1, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_MUSIC, 80001011, True),
                 ],
             },
             {
@@ -277,9 +372,12 @@ class JubeatClan(
                 "difficulty": 5,
                 "score": 850000,
                 "music": [
-                    [(10000053, 1), (80000038, 1)],
-                    [(30000123, 1), (50000086, 1), (70000119, 1)],
-                    [(50000196, 1), (60000006, 1), (70000153, 1)],
+                    [(10000053, 1, False), (80000038, 1, False)],
+                    [(30000123, 1, False), (50000086, 1, False), (70000119, 1, False)],
+                    [(50000196, 1, False), (60000006, 1, False), (70000153, 1, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 5020001, False),
                 ],
             },
             {
@@ -290,9 +388,12 @@ class JubeatClan(
                 "difficulty": 6,
                 "score": 2600000,
                 "music": [
-                    [(50000071, 1)],
-                    [(40000053, 1)],
-                    [(70000107, 1)],
+                    [(50000071, 1, False)],
+                    [(40000053, 1, False)],
+                    [(70000107, 1, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 5020001, False),
                 ],
             },
             {
@@ -303,9 +404,12 @@ class JubeatClan(
                 "difficulty": 6,
                 "score": 2650000,
                 "music": [
-                    [(50000085, 2), (50000176, 2), (70000055, 2)],
-                    [(50000157, 2), (60001008, 2)],
-                    [(10000068, 2)],
+                    [(50000085, 2, False), (50000176, 2, False), (70000055, 2, False)],
+                    [(50000157, 2, False), (60001008, 2, False)],
+                    [(10000068, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7896, False),
                 ],
             },
             # Tillhorn courses
@@ -317,9 +421,13 @@ class JubeatClan(
                 "difficulty": 7,
                 "score": 870000,
                 "music": [
-                    [(70000099, 2)],
-                    [(50000282, 2), (60000106, 2), (80000041, 2)],
-                    [(50000234, 2)],
+                    [(70000099, 2, False)],
+                    [(50000282, 2, False), (60000106, 2, False), (80000041, 2, False)],
+                    [(50000234, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5020000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 10010000, False),
                 ],
             },
             {
@@ -330,9 +438,12 @@ class JubeatClan(
                 "difficulty": 7,
                 "score": 2650000,
                 "music": [
-                    [(50000233, 2), (50000242, 1), (80000032, 2)],
-                    [(60000027, 2), (60000045, 2)],
-                    [(20000038, 2)],
+                    [(50000233, 2, False), (50000242, 1, False), (80000032, 2, False)],
+                    [(60000027, 2, False), (60000045, 2, False)],
+                    [(20000038, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7897, False),
                 ],
             },
             {
@@ -344,9 +455,13 @@ class JubeatClan(
                 "difficulty": 8,
                 "score": 835000,
                 "music": [
-                    [(50000247, 2)],
-                    [(70000071, 2)],
-                    [(20000042, 2)],
+                    [(50000247, 2, False)],
+                    [(70000071, 2, False)],
+                    [(20000042, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 1030001, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 3020001, False),
                 ],
             },
             {
@@ -357,9 +472,12 @@ class JubeatClan(
                 "difficulty": 8,
                 "score": 2700000,
                 "music": [
-                    [(50000101, 2)],
-                    [(50000119, 2), (50000174, 2), (60000009, 2)],
-                    [(80001010, 2)],
+                    [(50000101, 2, False)],
+                    [(50000119, 2, False), (50000174, 2, False), (60000009, 2, False)],
+                    [(80001010, 2, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_MUSIC, 80001010, True),
                 ],
             },
             {
@@ -370,9 +488,13 @@ class JubeatClan(
                 "difficulty": 9,
                 "score": 2800000,
                 "music": [
-                    [(70000170, 2), (80000013, 2)],
-                    [(70000161, 2), (80000057, 2)],
-                    [(80000043, 2)],
+                    [(70000170, 2, False), (80000013, 2, False)],
+                    [(70000161, 2, False), (80000057, 2, False)],
+                    [(80000043, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 1030001, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 3020001, False),
                 ],
             },
             {
@@ -383,9 +505,12 @@ class JubeatClan(
                 "difficulty": 9,
                 "score": 2750000,
                 "music": [
-                    [(50000034, 2), (50000252, 2), (50000347, 2)],
-                    [(70000117, 2), (70000138, 2)],
-                    [(50000078, 2)],
+                    [(50000034, 2, False), (50000252, 2, False), (50000347, 2, False)],
+                    [(70000117, 2, False), (70000138, 2, False)],
+                    [(50000078, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7898, False),
                 ],
             },
             # Bahaneroy courses
@@ -398,9 +523,13 @@ class JubeatClan(
                 "difficulty": 12,
                 "score": 2823829,
                 "music": [
-                    [(50000207, 2)],
-                    [(50000111, 2)],
-                    [(60001006, 2)],
+                    [(50000207, 2, False)],
+                    [(50000111, 2, False)],
+                    [(60001006, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5020000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5010000, False),
                 ],
             },
             {
@@ -411,9 +540,12 @@ class JubeatClan(
                 "difficulty": 10,
                 "score": 920000,
                 "music": [
-                    [(50000210, 2)],
-                    [(50000122, 2)],
-                    [(70000022, 2)],
+                    [(50000210, 2, False)],
+                    [(50000122, 2, False)],
+                    [(70000022, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 1030000, False),
                 ],
             },
             {
@@ -424,9 +556,12 @@ class JubeatClan(
                 "difficulty": 10,
                 "score": 2800000,
                 "music": [
-                    [(60000059, 2), (60000079, 2), (70000006, 2)],
-                    [(50000060, 2), (50000127, 2)],
-                    [(60000073, 2)],
+                    [(60000059, 2, False), (60000079, 2, False), (70000006, 2, False)],
+                    [(50000060, 2, False), (50000127, 2, False)],
+                    [(60000073, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7899, False),
                 ],
             },
             {
@@ -437,9 +572,14 @@ class JubeatClan(
                 "hazard_type": self.COURSE_HAZARD_FC3,
                 "difficulty": 11,
                 "music": [
-                    [(10000036, 2), (30000049, 2), (50000172, 2)],
-                    [(30000044, 2), (40000044, 2), (60000028, 2)],
-                    [(60000074, 2)],
+                    [(10000036, 2, False), (30000049, 2, False), (50000172, 2, False)],
+                    [(30000044, 2, False), (40000044, 2, False), (60000028, 2, False)],
+                    [(60000074, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 2030000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5020000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 1030001, False),
                 ],
             },
             {
@@ -450,9 +590,12 @@ class JubeatClan(
                 "difficulty": 11,
                 "score": 2800000,
                 "music": [
-                    [(60001003, 2)],
-                    [(70000097, 2)],
-                    [(80001013, 2)],
+                    [(60001003, 2, False)],
+                    [(70000097, 2, False)],
+                    [(80001013, 2, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_MUSIC, 80001013, True),
                 ],
             },
             {
@@ -464,9 +607,14 @@ class JubeatClan(
                 "difficulty": 12,
                 "score": 2800000,
                 "music": [
-                    [(70000174, 2)],
-                    [(60000081, 2)],
-                    [(30000048, 2)],
+                    [(70000174, 2, False)],
+                    [(60000081, 2, False)],
+                    [(30000048, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 2030000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5020000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 10010000, False),
                 ],
             },
             {
@@ -477,9 +625,12 @@ class JubeatClan(
                 "difficulty": 12,
                 "score": 2820000,
                 "music": [
-                    [(50000124, 2)],
-                    [(50000291, 2)],
-                    [(60000065, 2)],
+                    [(50000124, 2, False)],
+                    [(50000291, 2, False)],
+                    [(60000065, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7900, False),
                 ],
             },
             # Jolokili courses
@@ -493,10 +644,11 @@ class JubeatClan(
                 "difficulty": 13,
                 "score": 700000,
                 "music": [
-                    [(80000076, 2)],
-                    [(80000025, 2)],
-                    [(60000073, 2)],
+                    [(80000076, 2, False)],
+                    [(80000025, 2, False)],
+                    [(60000073, 2, False)],
                 ],
+                "reward": [],
             },
             {
                 "id": 42,
@@ -508,10 +660,11 @@ class JubeatClan(
                 "difficulty": 13,
                 "score": 700000,
                 "music": [
-                    [(80000081, 2)],
-                    [(70000145, 2)],
-                    [(80001013, 2)],
+                    [(80000081, 2, False)],
+                    [(70000145, 2, False)],
+                    [(80001013, 2, False)],
                 ],
+                "reward": [],
             },
             {
                 "id": 43,
@@ -523,10 +676,11 @@ class JubeatClan(
                 "difficulty": 13,
                 "score": 700000,
                 "music": [
-                    [(70000162, 2)],
-                    [(70000134, 2)],
-                    [(70000173, 1)],
+                    [(70000162, 2, False)],
+                    [(70000134, 2, False)],
+                    [(70000173, 1, False)],
                 ],
+                "reward": [],
             },
             {
                 "id": 44,
@@ -537,9 +691,14 @@ class JubeatClan(
                 "difficulty": 13,
                 "score": 2750000,
                 "music": [
-                    [(50000259, 2)],
-                    [(50000255, 2)],
-                    [(50000266, 2)],
+                    [(50000259, 2, False)],
+                    [(50000255, 2, False)],
+                    [(50000266, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 2030000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5020000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 5020001, False),
                 ],
             },
             {
@@ -550,9 +709,12 @@ class JubeatClan(
                 "difficulty": 13,
                 "score": 2830000,
                 "music": [
-                    [(50000022, 2)],
-                    [(50000023, 2)],
-                    [(50000323, 2)],
+                    [(50000022, 2, False)],
+                    [(50000023, 2, False)],
+                    [(50000323, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7901, False),
                 ],
             },
             {
@@ -563,9 +725,14 @@ class JubeatClan(
                 "hazard_type": self.COURSE_HAZARD_EXC3,
                 "difficulty": 14,
                 "music": [
-                    [(50000024, 2), (50000160, 2), (70000065, 2)],
-                    [(30000122, 2), (50000178, 2), (50000383, 2)],
-                    [(50000122, 2), (50000261, 2), (80000010, 2)],
+                    [(50000024, 2, False), (50000160, 2, False), (70000065, 2, False)],
+                    [(30000122, 2, False), (50000178, 2, False), (50000383, 2, False)],
+                    [(50000122, 2, False), (50000261, 2, False), (80000010, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 2030000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5020000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE, 5020001, False),
                 ],
             },
             {
@@ -577,9 +744,12 @@ class JubeatClan(
                 "difficulty": 14,
                 "score": 920000,
                 "music": [
-                    [(60001009, 2)],
-                    [(80001006, 2)],
-                    [(80001015, 2)],
+                    [(60001009, 2, False)],
+                    [(80001006, 2, False)],
+                    [(80001015, 2, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_MUSIC, 80001015, True),
                 ],
             },
             {
@@ -591,9 +761,12 @@ class JubeatClan(
                 "difficulty": 14,
                 "score": 2820000,
                 "music": [
-                    [(50000202, 2), (50000203, 2), (70000108, 2)],
-                    [(40000046, 2), (40000057, 2)],
-                    [(50000134, 2)],
+                    [(50000202, 2, False), (50000203, 2, False), (70000108, 2, False)],
+                    [(40000046, 2, False), (40000057, 2, False)],
+                    [(50000134, 2, False)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7902, False),
                 ],
             },
             # Calorest courses
@@ -606,9 +779,13 @@ class JubeatClan(
                 "difficulty": 15,
                 "score": 2850000,
                 "music": [
-                    [(60000001, 2)],
-                    [(80000022, 2)],
-                    [(50000108, 2)],
+                    [(60000001, 2, True)],
+                    [(80000022, 2, True)],
+                    [(50000108, 2, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 2030000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5020000, False),
                 ],
             },
             {
@@ -620,9 +797,12 @@ class JubeatClan(
                 "difficulty": 15,
                 "score": 2850000,
                 "music": [
-                    [(40000057, 2)],
-                    [(60000076, 2)],
-                    [(50000102, 2)],
+                    [(40000057, 2, True)],
+                    [(60000076, 2, True)],
+                    [(50000102, 2, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7903, False),
                 ],
             },
             {
@@ -634,9 +814,13 @@ class JubeatClan(
                 "difficulty": 16,
                 "score": 2960000,
                 "music": [
-                    [(80000028, 2)],
-                    [(80000023, 2)],
-                    [(80000087, 2)],
+                    [(80000028, 2, True)],
+                    [(80000023, 2, True)],
+                    [(80000087, 2, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_MUSIC, 80000087, True),
+                    (self.COURSE_REWARD_TYPE_TITLE, 7905, False),
                 ],
             },
             {
@@ -647,9 +831,13 @@ class JubeatClan(
                 "hazard_type": self.COURSE_HAZARD_EXC1,
                 "difficulty": 16,
                 "music": [
-                    [(20000125, 2), (50000330, 2), (40000060, 2)],
-                    [(30000127, 2), (50000206, 2), (50000253, 2)],
-                    [(70000011, 2)],
+                    [(20000125, 2, True), (50000330, 2, True), (40000060, 2, True)],
+                    [(30000127, 2, True), (50000206, 2, True), (50000253, 2, True)],
+                    [(70000011, 2, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 2030000, False),
+                    (self.COURSE_REWARD_TYPE_OMIYAGE_SET, 5020000, False),
                 ],
             },
             {
@@ -661,14 +849,159 @@ class JubeatClan(
                 "difficulty": 16,
                 "score": 2980000,
                 "music": [
-                    [(50000100, 2)],
-                    [(70000110, 2)],
-                    [(50000208, 2)],
+                    [(50000100, 2, True)],
+                    [(70000110, 2, True)],
+                    [(50000208, 2, True)],
+                ],
+                "reward": [
+                    (self.COURSE_REWARD_TYPE_TITLE, 7904, False),
+                ],
+            },
+        ]
+
+    def __get_drop_list(self) -> List[Dict[str, Any]]:
+        return [
+            {
+                "name": "RAINBOW Drop",
+                "id": 1,
+                "release_code": "2017072604",
+                "drop_rate": 10,
+                "item": [
+                    {
+                        "id": 1,
+                        "name": "Normal Item",
+                    },
+                    {
+                        "id": 2,
+                        "name": "Good Item",
+                    },
+                    {
+                        "id": 3,
+                        "name": "Better Item",
+                    },
+                    {
+                        "id": 4,
+                        "name": "Very Good Item",
+                    },
+                ],
+            },
+            {
+                "name": "RED Drop",
+                "id": 2,
+                "release_code": "2017072604",
+                "drop_rate": 10,
+                "item": [
+                    {
+                        "id": 1,
+                        "name": "Normal Item",
+                    },
+                    {
+                        "id": 2,
+                        "name": "Good Item",
+                    },
+                    {
+                        "id": 3,
+                        "name": "Better Item",
+                    },
+                    {
+                        "id": 4,
+                        "name": "Very Good Item",
+                    },
+                ],
+            },
+            {
+                "name": "CYAN Drop",
+                "id": 3,
+                "release_code": "2017072604",
+                "drop_rate": 10,
+                "item": [
+                    {
+                        "id": 1,
+                        "name": "Normal Item",
+                    },
+                    {
+                        "id": 2,
+                        "name": "Good Item",
+                    },
+                    {
+                        "id": 3,
+                        "name": "Better Item",
+                    },
+                    {
+                        "id": 4,
+                        "name": "Very Good Item",
+                    },
+                ],
+            },
+            {
+                "name": "GREEN Drop",
+                "id": 4,
+                "release_code": "2017072604",
+                "drop_rate": 10,
+                "item": [
+                    {
+                        "id": 1,
+                        "name": "Normal Item",
+                    },
+                    {
+                        "id": 2,
+                        "name": "Good Item",
+                    },
+                    {
+                        "id": 3,
+                        "name": "Better Item",
+                    },
+                    {
+                        "id": 4,
+                        "name": "Very Good Item",
+                    },
+                ],
+            },
+            {
+                "name": "PLUM Drop",
+                "id": 5,
+                "release_code": "2017072604",
+                "drop_rate": 10,
+                "item": [
+                    {
+                        "id": 1,
+                        "name": "Normal Item",
+                    },
+                    {
+                        "id": 2,
+                        "name": "Good Item",
+                    },
+                    {
+                        "id": 3,
+                        "name": "Better Item",
+                    },
+                    {
+                        "id": 4,
+                        "name": "Very Good Item",
+                    },
+                ],
+            },
+            {
+                "name": "SWEET SMILE HEROES Drop",
+                "id": 6,
+                "release_code": "2017092800",
+                "drop_rate": 10,
+                "item": [
+                    {
+                        "id": 1,
+                        "name": "Silver Item",
+                    },
+                    {
+                        "id": 2,
+                        "name": "Gold Item",
+                    },
                 ],
             },
         ]
 
     def __get_global_info(self) -> Node:
+        game_config = self.get_game_config()
+
         info = Node.void("info")
 
         # Event info.
@@ -694,150 +1027,17 @@ class JubeatClan(
         genre_def_music = Node.void("genre_def_music")
         info.add_child(genre_def_music)
 
+        black_jacket_list = list(set([song.data.get_int("pos_index") for song in self.data.local.music.get_all_songs(self.game, self.version) if song.data.get_bool("is_block_jacket")]))
         info.add_child(
             Node.s32_array(
                 "black_jacket_list",
-                [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                ],
+                self.create_owned_items(black_jacket_list, 64),
             )
         )
 
         # Some sort of music DB whitelist
-        info.add_child(
-            Node.s32_array(
-                "white_music_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
-            )
-        )
+        white_music_list = list(set([song.data.get_int("pos_index") for song in self.data.local.music.get_all_songs(self.game, self.version)]))
+        info.add_child(Node.s32_array("white_music_list", self.create_owned_items(white_music_list, 64)))
 
         info.add_child(
             Node.s32_array(
@@ -887,77 +1087,8 @@ class JubeatClan(
             )
         )
 
-        info.add_child(
-            Node.s32_array(
-                "open_music_list",
-                [
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                    -1,
-                ],
-            )
-        )
+        open_music_list = list(set([song.data.get_int("pos_index") for song in self.data.local.music.get_all_songs(self.game, self.version) if not song.data.get_bool("is_secret")]))
+        info.add_child(Node.s32_array("open_music_list", self.create_owned_items(open_music_list, 64)))
 
         info.add_child(
             Node.s32_array(
@@ -1046,7 +1177,6 @@ class JubeatClan(
         born = Node.void("born")
         info.add_child(born)
         born.add_child(Node.s8("status", 0))
-        born.add_child(Node.s16("year", 0))
 
         # Collection list values should look like:
         #     <rating>
@@ -1060,19 +1190,19 @@ class JubeatClan(
 
         expert_option = Node.void("expert_option")
         info.add_child(expert_option)
-        expert_option.add_child(Node.bool("is_available", True))
+        expert_option.add_child(Node.bool("is_available", game_config.get_bool("expert_mode_is_available")))
 
         all_music_matching = Node.void("all_music_matching")
         info.add_child(all_music_matching)
-        all_music_matching.add_child(Node.bool("is_available", True))
+        all_music_matching.add_child(Node.bool("is_available", game_config.get_bool("all_music_matching_is_available")))
 
         team = Node.void("team")
         all_music_matching.add_child(team)
         team.add_child(Node.s32("default_flag", 0))
-        team.add_child(Node.s32("redbelk_flag", 0))
-        team.add_child(Node.s32("cyanttle_flag", 0))
-        team.add_child(Node.s32("greenesia_flag", 0))
-        team.add_child(Node.s32("plumpark_flag", 0))
+        team.add_child(Node.s32("redbelk_flag", 1))
+        team.add_child(Node.s32("cyanttle_flag", 2))
+        team.add_child(Node.s32("greenesia_flag", 3))
+        team.add_child(Node.s32("plumpark_flag", 4))
 
         question_list = Node.void("question_list")
         info.add_child(question_list)
@@ -1080,12 +1210,1529 @@ class JubeatClan(
         drop_list = Node.void("drop_list")
         info.add_child(drop_list)
 
+        for drop in self.__get_drop_list():
+            drop_node = Node.void("drop")
+            drop_list.add_child(drop_node)
+            drop_node.set_attribute("release_code", drop["release_code"])
+            drop_node.set_attribute("id", str(drop["id"]))
+            drop_node.add_child(Node.s32("rate", drop["drop_rate"]))
+
         daily_bonus_list = Node.void("daily_bonus_list")
         info.add_child(daily_bonus_list)
 
         department = Node.void("department")
         info.add_child(department)
-        department.add_child(Node.void("pack_list"))
+        pack_list = Node.void("pack_list")
+        department.add_child(pack_list)
+
+        def ShopItem(id: int, type: int, value: int, priority: int = 0, is_secret: bool = False, condition: List[Tuple[int, int, int]] = [], drop: List[Tuple[int, int, int]] = []) -> Dict[str, Any]:
+            return {
+                "id": id,
+                "type": type,
+                "priority": priority,
+                "is_secret": is_secret,
+                "value": value,
+                "condition": condition,
+                "drop": drop,
+            }
+
+        packages: List[Dict[str, Any]] = [
+            {
+                "id": 1,
+                "name": "clan RECORDS PACKAGE 01",
+                "priority": 1,
+                "condition": [],
+                "item": [
+                    ShopItem(
+                        id=1,
+                        type=self.SHOP_ITEM_TYPE_MUSIC,
+                        value=80000027,
+                        drop=[
+                            (2, 1, 10),
+                        ],
+                    ),
+                    ShopItem(
+                        id=2,
+                        type=self.SHOP_ITEM_TYPE_MUSIC,
+                        value=80000026,
+                        drop=[
+                            (3, 1, 10),
+                        ],
+                    ),
+                    ShopItem(
+                        id=3,
+                        type=self.SHOP_ITEM_TYPE_MUSIC,
+                        value=80000024,
+                        drop=[
+                            (4, 1, 10),
+                        ],
+                    ),
+                    ShopItem(
+                        id=4,
+                        type=self.SHOP_ITEM_TYPE_MUSIC,
+                        value=80000038,
+                        drop=[
+                            (5, 1, 10),
+                        ],
+                    ),
+                    ShopItem(
+                        id=5,
+                        type=self.SHOP_ITEM_TYPE_MUSIC,
+                        value=80000008,
+                        drop=[
+                            (1, 1, 1),
+                        ],
+                    ),
+                ],
+            },
+            {
+                "id": 2,
+                "name": "jubeat SHOP",
+                "priority": 3,
+                "condition": [],
+                "item": [
+                    # Marker
+                    {
+                        "type": self.SHOP_ITEM_TYPE_MARKER,
+                        "value": 41,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_MARKER,
+                        "value": 42,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    # Background
+                    {
+                        "type": self.SHOP_ITEM_TYPE_BACKGROUND,
+                        "value": 8,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_BACKGROUND,
+                        "value": 9,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    # jubibell
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 2,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 1),
+                            (3, 1, 1),
+                            (4, 1, 1),
+                            (5, 1, 1),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 3,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 3),
+                            (3, 1, 3),
+                            (4, 1, 3),
+                            (5, 1, 3),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 4,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (4, 1, 7),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 5,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (5, 1, 7),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 6,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (3, 1, 5),
+                            (5, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 7,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (5, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 8,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (3, 1, 5),
+                            (4, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 9,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 15),
+                            (4, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 10,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 2),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 11,
+                        "is_secret": False,
+                        "condition": [
+
+                        ],
+                        "drop": [
+                            (2, 1, 7),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 12,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (3, 2, 2),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 13,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (4, 2, 2),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 14,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (5, 2, 2),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 15,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 17,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (1, 2, 1),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 26,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (3, 2, 5),
+                            (3, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 22,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (1, 2, 3),
+                            (1, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 25,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 5),
+                            (2, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 27,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (4, 2, 5),
+                            (4, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 28,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (5, 2, 5),
+                            (5, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 29,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 10),
+                            (3, 1, 10),
+                            (4, 1, 10),
+                            (5, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 23,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 10),
+                            (3, 1, 10),
+                            (4, 1, 10),
+                            (5, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 24,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 10),
+                            (3, 1, 10),
+                            (4, 1, 10),
+                            (5, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_JUBIBELL,
+                        "value": 30,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 10),
+                            (3, 1, 10),
+                            (4, 1, 10),
+                            (5, 1, 10),
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 3,
+                "name": "OMIYAGE CENTER",
+                # "priority": 7,
+                "condition": [],
+                "item": [
+                    {
+                        "type": 7,
+                        "value": 0x20002,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 50),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x20003,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 25),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x20004,
+                        "condition": [],
+                        "drop": [
+                            (3, 3, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30002,
+                        "condition": [],
+                        "drop": [
+                            (3, 1, 50),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30003,
+                        "condition": [],
+                        "drop": [
+                            (3, 2, 25),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30004,
+                        "condition": [],
+                        "drop": [
+                            (3, 3, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40002,
+                        "condition": [],
+                        "drop": [
+                            (4, 1, 50),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40003,
+                        "condition": [],
+                        "drop": [
+                            (4, 2, 25),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40004,
+                        "condition": [],
+                        "drop": [
+                            (4, 3, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50002,
+                        "condition": [],
+                        "drop": [
+                            (5, 1, 50),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50003,
+                        "condition": [],
+                        "drop": [
+                            (5, 2, 25),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50004,
+                        "condition": [],
+                        "drop": [
+                            (5, 3, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10001,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 20),
+                            (3, 1, 20),
+                            (4, 1, 20),
+                            (5, 1, 20),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10002,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 10),
+                            (3, 2, 10),
+                            (4, 2, 10),
+                            (5, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10003,
+                        "condition": [],
+                        "drop": [
+                            (2, 3, 5),
+                            (3, 3, 5),
+                            (4, 3, 5),
+                            (5, 3, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10004,
+                        "condition": [],
+                        "drop": [
+                            (2, 4, 3),
+                            (3, 4, 3),
+                            (4, 4, 3),
+                            (5, 4, 3),
+                        ],
+                    },
+                ] if self.model.version <= 2018032100 else
+                # OMIYAGE CENTER (after 2018/03/21)
+                [
+                    {
+                        "type": 7,
+                        "value": 0x20002,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 25),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x20002,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 15),
+                            (1, 1, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x20003,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x20003,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 5),
+                            (1, 2, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x20004,
+                        "condition": [],
+                        "drop": [
+                            (2, 3, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x20004,
+                        "condition": [],
+                        "drop": [
+                            (2, 3, 3),
+                            (1, 3, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30002,
+                        "condition": [],
+                        "drop": [
+                            (3, 1, 25),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30002,
+                        "condition": [],
+                        "drop": [
+                            (3, 1, 15),
+                            (1, 1, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30003,
+                        "condition": [],
+                        "drop": [
+                            (3, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30003,
+                        "condition": [],
+                        "drop": [
+                            (3, 2, 5),
+                            (1, 2, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30004,
+                        "condition": [],
+                        "drop": [
+                            (3, 3, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30004,
+                        "condition": [],
+                        "drop": [
+                            (3, 3, 3),
+                            (1, 3, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40002,
+                        "condition": [],
+                        "drop": [
+                            (4, 1, 25),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40002,
+                        "condition": [],
+                        "drop": [
+                            (4, 1, 15),
+                            (1, 1, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40002,
+                        "condition": [],
+                        "drop": [
+                            (4, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40003,
+                        "condition": [],
+                        "drop": [
+                            (4, 2, 5),
+                            (1, 2, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40004,
+                        "condition": [],
+                        "drop": [
+                            (4, 3, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40004,
+                        "condition": [],
+                        "drop": [
+                            (4, 3, 3),
+                            (1, 3, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50002,
+                        "condition": [],
+                        "drop": [
+                            (5, 1, 25),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50002,
+                        "condition": [],
+                        "drop": [
+                            (5, 1, 15),
+                            (1, 1, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50003,
+                        "condition": [],
+                        "drop": [
+                            (5, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50003,
+                        "condition": [],
+                        "drop": [
+                            (5, 2, 5),
+                            (1, 2, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50004,
+                        "condition": [],
+                        "drop": [
+                            (5, 3, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50004,
+                        "condition": [],
+                        "drop": [
+                            (5, 3, 3),
+                            (1, 3, 2),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10001,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 20),
+                            (3, 1, 20),
+                            (4, 1, 20),
+                            (5, 1, 20),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10002,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 10),
+                            (3, 2, 10),
+                            (4, 2, 10),
+                            (5, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10002,
+                        "condition": [],
+                        "drop": [
+                            (1, 1, 20),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10003,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 3, 5),
+                            (3, 3, 5),
+                            (4, 3, 5),
+                            (5, 3, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10003,
+                        "condition": [],
+                        "drop": [
+                            (1, 1, 15),
+                            (1, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x10004,
+                        "condition": [],
+                        "drop": [
+                            (2, 4, 3),
+                            (3, 4, 3),
+                            (4, 4, 3),
+                            (5, 4, 3),
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 5,
+                "name": "clan RECORDS PACKAGE 02",
+                "priority": 1,
+                "condition": [
+                    (1, 1),
+                ],
+                "item": [
+                    {
+                        "type": self.SHOP_ITEM_TYPE_MUSIC,
+                        "value": 80001003,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 3),
+                            (2, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_MUSIC,
+                        "value": 80001005,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (3, 2, 3),
+                            (3, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_MUSIC,
+                        "value": 80001002,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (4, 2, 3),
+                            (4, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_MUSIC,
+                        "value": 80001004,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (5, 2, 3),
+                            (5, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": self.SHOP_ITEM_TYPE_MUSIC,
+                        "value": 80001006,
+                        "is_secret": False,
+                        "condition": [
+                            (1, 1),
+                            (1, 2),
+                            (1, 3),
+                            (1, 4),
+                        ],
+                        "drop": [
+                            (1, 2, 2),
+                            (1, 1, 1),
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 6,
+                "name": "clan RECORDS PACKAGE 03",
+                "priority": 1,
+                "condition": [
+                    (1, 5),
+                ],
+                "item": [
+                    {
+                        "type": 1,
+                        "value": 80000025,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 3, 2),
+                            (2, 2, 2),
+                            (2, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000007,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (3, 3, 2),
+                            (3, 2, 2),
+                            (3, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000010,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (4, 3, 2),
+                            (4, 2, 2),
+                            (4, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000009,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (5, 3, 2),
+                            (5, 2, 2),
+                            (5, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000028,
+                        "is_secret": False,
+                        "condition": [
+                            (1, 1),
+                            (1, 2),
+                            (1, 3),
+                            (1, 4),
+                        ],
+                        "drop": [
+                            (1, 3, 1),
+                            (1, 2, 1),
+                            (1, 1, 1),
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 7,
+                "name": "clan RECORDS PACKAGE 04",
+                "priority": 1,
+                "condition": [
+                    (1, 6),
+                ],
+                "item": [
+
+                    {
+                        "type": 1,
+                        "value": 80000023,
+                        "is_secret": True,
+                        "condition": [],
+                        "drop": [
+                            (1, 4, 1),
+                            (1, 3, 1),
+                            (1, 2, 3),
+                            (1, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000023,
+                        "is_secret": True,
+                        "condition": [],
+                        "drop": [
+                            (1, 4, 1),
+                            (1, 3, 1),
+                            (1, 2, 3),
+                            (1, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000023,
+                        "is_secret": True,
+                        "condition": [],
+                        "drop": [
+                            (1, 4, 1),
+                            (1, 3, 1),
+                            (1, 2, 3),
+                            (1, 1, 5),
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 8,
+                "name": "TORIDORI by clan RECORDS",
+                "release_code": 2017090600,
+                "priority": 2,
+                "condition": [
+                    (1, 1),
+                ],
+                "item": [
+                    ShopItem(id=1, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000054, drop=[(2, 1, 15), (3, 1, 15), (4, 1, 15), (5, 1, 15)]),
+                    ShopItem(id=2, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000056, drop=[(2, 1, 15), (3, 1, 15), (4, 1, 15), (5, 1, 15)]),
+                    ShopItem(id=3, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000057, drop=[(2, 1, 15), (3, 1, 15), (4, 1, 15), (5, 1, 15)]),
+                    ShopItem(id=4, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000053, drop=[(2, 2, 5), (3, 2, 5)]),
+                    ShopItem(id=5, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000055, drop=[(4, 2, 5), (5, 2, 5)]),
+                    ShopItem(id=6, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000069, drop=[(2, 3, 3), (2, 2, 15)]),
+                    ShopItem(id=7, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000070, drop=[(3, 3, 3), (3, 2, 15)]),
+                    ShopItem(id=8, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000071, drop=[(4, 3, 3), (4, 2, 15)]),
+                    ShopItem(id=9, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000072, drop=[(5, 3, 3), (5, 2, 15)]),
+                    ShopItem(id=10, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000073, drop=[(1, 3, 2), (1, 2, 10)]),
+                    ShopItem(id=11, type=self.SHOP_ITEM_TYPE_MUSIC, value=80001009, drop=[(2, 1, 5), (3, 1, 5), (4, 1, 5), (5, 1, 5)]),
+                    ShopItem(id=12, type=self.SHOP_ITEM_TYPE_MUSIC, value=80001011, drop=[(2, 1, 15), (3, 1, 15), (4, 1, 15), (5, 1, 15)]),
+                    ShopItem(id=13, type=self.SHOP_ITEM_TYPE_MUSIC, value=80001010, drop=[(2, 2, 10), (3, 2, 10), (4, 2, 10), (5, 2, 10)]),
+                    ShopItem(id=14, type=self.SHOP_ITEM_TYPE_MUSIC, value=80001013, drop=[(1, 3, 1), (1, 2, 5), (1, 1, 10)]),
+                    ShopItem(id=15, type=self.SHOP_ITEM_TYPE_MUSIC, value=80001015, drop=[(1, 4, 1), (1, 3, 5), (1, 2, 10)]),
+                    ShopItem(id=16, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000022, drop=[(1, 3, 3), (4, 3, 5)]),
+                    ShopItem(id=17, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000082, drop=[(1, 4, 1), (1, 3, 3), (1, 2, 5)]),
+                    ShopItem(id=18, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000084, drop=[(1, 2, 10), (3, 1, 15)]),
+                    ShopItem(id=19, type=self.SHOP_ITEM_TYPE_MUSIC, value=80001014, drop=[(2, 2, 5), (3, 2, 5), (4, 2, 5), (5, 2, 5)]),
+                    ShopItem(id=20, type=self.SHOP_ITEM_TYPE_MUSIC, value=80001008, drop=[(2, 2, 5), (3, 2, 5), (4, 2, 5), (5, 2, 5)]),
+                    ShopItem(id=21, type=self.SHOP_ITEM_TYPE_MUSIC, value=80001007, drop=[(2, 2, 5), (3, 2, 5), (4, 2, 5), (5, 2, 5)]),
+                ],
+            },
+            {
+                "id": 9,
+                "name": "SWEET SMILE HEROES ビターでスイートな七人の勇者 イベント限定SHOP",
+                "release_code": 2017092800,
+                "priority": 4,
+                "end_time": Time.timestamp_from_datetime(2024, 11, 19, 23, 59),
+                "condition": [],
+                "item": [
+                    # Songs
+                    {
+                        "type": 1,
+                        "value": 80000041,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 15),
+                            (6, 2, 4),
+                            (2, 2, 3),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000042,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 15),
+                            (6, 2, 4),
+                            (3, 2, 3),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000043,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 15),
+                            (6, 2, 4),
+                            (4, 2, 3),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000045,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 15),
+                            (6, 2, 4),
+                            (5, 2, 3),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000044,
+                        "is_secret": False,
+                        "priority": 1,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                            (6, 2, 1),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000047,
+                        "is_secret": False,
+                        "priority": 1,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 15),
+                            (6, 2, 4),
+                            (3, 2, 3),
+                            (5, 2, 3),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000046,
+                        "is_secret": False,
+                        "priority": 1,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 15),
+                            (6, 2, 4),
+                            (2, 2, 3),
+                            (4, 2, 3),
+                        ],
+                    },
+                    # Titles
+                    {
+                        "type": 2,
+                        "value": 7871,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7872,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7873,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7874,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7875,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7876,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7877,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7885,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                            (6, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7886,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                            (6, 2, 10),
+                        ],
+                    },
+                    # OMIYAGE
+                    {
+                        "type": 7,
+                        "value": 0x20002,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x20003,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 2, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30002,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x30003,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 2, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40002,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x40003,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 2, 5),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50002,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 1, 10),
+                        ],
+                    },
+                    {
+                        "type": 7,
+                        "value": 0x50003,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (6, 2, 5),
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 10,
+                "name": "import SHOP Tic-Tac",
+                "release_code": 2017102600,
+                "priority": 4,
+                "end_time": Time.timestamp_from_datetime(2024, 11, 19, 23, 59),
+                "condition": [],
+                "item": [
+                    {
+                        "type": 1,
+                        "value": 80000062,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 15),
+                            (3, 1, 15),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000063,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 7),
+                            (5, 2, 7),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000065,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (3, 2, 7),
+                            (4, 2, 7),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000064,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (1, 3, 1),
+                            (1, 2, 5),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7887,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7888,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7889,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7914,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 3),
+                            (3, 2, 3),
+                            (4, 2, 3),
+                            (5, 2, 3),
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 11,
+                "name": "import SHOP Nuli-Nuli",
+                "release_code": 2017121400,
+                "priority": 4,
+                "end_time": Time.timestamp_from_datetime(2024, 11, 19, 23, 59),
+                "condition": [],
+                "item": [
+                    {
+                        "type": 1,
+                        "value": 80000066,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 25),
+                            (3, 1, 25),
+                            (4, 1, 25),
+                            (5, 1, 25),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000068,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 2, 10),
+                            (3, 2, 10),
+                            (4, 2, 10),
+                            (5, 2, 10),
+                        ],
+                    },
+                    {
+                        "type": 1,
+                        "value": 80000067,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (1, 3, 3),
+                            (1, 2, 5),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7890,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7891,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                    {
+                        "type": 2,
+                        "value": 7892,
+                        "is_secret": False,
+                        "condition": [],
+                        "drop": [
+                            (2, 1, 5),
+                            (3, 1, 5),
+                            (4, 1, 5),
+                            (5, 1, 5),
+                        ],
+                    },
+                ],
+            },
+            {
+                "id": 12,
+                "name": "clan RECORDS PACKAGE 05",
+                "priority": 1,
+                "condition": [
+                    (1, 7),
+                ],
+                "item": [
+                    ShopItem(id=1, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000089, is_secret=True, drop=[(2, 4, 2), (2, 3, 5), (2, 2, 20), (1, 2, 10)]),
+                    ShopItem(id=1, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000088, is_secret=True, drop=[(3, 4, 2), (3, 3, 5), (3, 2, 20), (1, 2, 10)]),
+                    ShopItem(id=1, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000085, is_secret=True, drop=[(5, 4, 2), (5, 3, 5), (5, 2, 20), (1, 2, 10)]),
+                ],
+            },
+            {
+                "id": 13,
+                "name": "clan RECORDS PACKAGE 'F'",
+                "priority": 1,
+                "condition": [
+                    (1, 12),
+                ],
+                "item": [
+                    ShopItem(id=1, type=self.SHOP_ITEM_TYPE_MUSIC, value=80000090, is_secret=True, drop=[(1, 4, 3), (1, 3, 5), (1, 2, 10), (1, 1, 20)]),
+                ],
+            },
+        ]
+        for package in packages:
+            pack = Node.void("pack")
+            pack_list.add_child(pack)
+            pack.set_attribute("release_code", str(package["release_code"]) if "release_code" in package else "2017072604")
+            pack.set_attribute("data_version", "0")
+            pack.set_attribute("id", str(package["id"]))
+            pack.set_attribute("priority", str(package["priority"]) if "priority" in package else "0")
+            if "start_time" in package:
+                pack.add_child(Node.string("stime", str(package["start_time"])))
+            if "end_time" in package:
+                pack.add_child(Node.string("etime", str(package["end_time"])))
+                pack.add_child(Node.string("formatted_time", Time.format(package["end_time"], "%m/%d(%a) %H:%M")))
+
+            condition_list = Node.void("condition_list")
+            pack.add_child(condition_list)
+
+            for (conditiontype, conditionvalue) in package["condition"]:
+                condition_node = Node.void("condition")
+                condition_list.add_child(condition_node)
+                condition_node.set_attribute("type", str(conditiontype))
+                condition_node.add_child(Node.s32("value", conditionvalue))
+
+            item_list = Node.void("item_list")
+            pack.add_child(item_list)
+
+            for itemid, item in enumerate(package["item"]):
+                if item is None:
+                    continue
+
+                if "release_code" in item:
+                    if item["release_code"] > self.model.version:
+                        # Item release date is in the future, skip
+                        continue
+
+                item_node = Node.void("item")
+                item_list.add_child(item_node)
+                item_node.set_attribute("id", str(itemid + 1))
+                item_node.set_attribute("type", str(item["type"]))
+                item_node.set_attribute("priority", str(item["priority"]) if "priority" in item else "0")
+                item_node.add_child(Node.s32("value", item["value"]))
+                item_node.add_child(Node.bool("is_secret", item["is_secret"] if "is_secret" in item else False))
+
+                condition_list = Node.void("condition_list")
+                item_node.add_child(condition_list)
+
+                for (conditiontype, conditionvalue) in item["condition"]:
+                    condition_node = Node.void("condition")
+                    condition_list.add_child(condition_node)
+                    condition_node.set_attribute("type", str(conditiontype))
+                    condition_node.add_child(Node.s32("value", conditionvalue))
+
+                drop_list = Node.void("drop_list")
+                item_node.add_child(drop_list)
+
+                for (dropid, grade, amount) in item["drop"]:
+                    drop_node = Node.void("drop")
+                    drop_list.add_child(drop_node)
+                    drop_node.set_attribute("id", str(dropid))
+                    drop_node.set_attribute("grade", str(grade))
+                    drop_node.add_child(Node.s32("num", amount))
 
         # Set up NOBOLOT course requirements
         clan_course_list = Node.void("clan_course_list")
@@ -1095,6 +2742,9 @@ class JubeatClan(
         for course in self.__get_course_list():
             if course["id"] < 1:
                 raise Exception(f"Invalid course ID {course['id']} found in course list!")
+            if "release_code" in course and (course["release_code"] > self.model.version):
+                # Course release date is in the future, skip
+                continue
             if course["id"] in valid_courses:
                 raise Exception(f"Duplicate ID {course['id']} found in course list!")
             if course["clear_type"] == self.COURSE_CLEAR_HAZARD and "hazard_type" not in course:
@@ -1115,12 +2765,13 @@ class JubeatClan(
             # Basics
             clan_course = Node.void("clan_course")
             clan_course_list.add_child(clan_course)
-            clan_course.set_attribute("release_code", "2017062600")
+            clan_course.set_attribute("release_code", str(course["release_code"]) if "release_code" in course else "2017062600")
             clan_course.set_attribute("version_id", "0")
             clan_course.set_attribute("id", str(course["id"]))
             clan_course.set_attribute("course_type", str(course["course_type"]))
             clan_course.add_child(Node.s32("difficulty", course["difficulty"]))
-            clan_course.add_child(Node.u64("etime", (course["end_time"] if "end_time" in course else 0) * 1000))
+            if course["course_type"] == self.COURSE_TYPE_TIME_BASED:
+                clan_course.add_child(Node.u64("etime", (course["end_time"] if "end_time" in course else 0) * 1000))
             clan_course.add_child(Node.string("name", course["name"]))
 
             # List of included songs
@@ -1134,12 +2785,12 @@ class JubeatClan(
                 seq_list = Node.void("seq_list")
                 tune.add_child(seq_list)
 
-                for songid, chart in charts:
+                for songid, chart, isSecret in charts:
                     seq = Node.void("seq")
                     seq_list.add_child(seq)
                     seq.add_child(Node.s32("music_id", songid))
                     seq.add_child(Node.s32("difficulty", chart))
-                    seq.add_child(Node.bool("is_secret", False))
+                    seq.add_child(Node.bool("is_secret", isSecret))
 
             # Clear criteria
             clear = Node.void("clear")
@@ -1158,25 +2809,26 @@ class JubeatClan(
 
             reward_list = Node.void("reward_list")
             clear.add_child(reward_list)
+            for rewardid, (rewardtype, value, issecret) in enumerate(course.get("reward", [])):
+                reward_node = Node.void("reward")
+                reward_list.add_child(reward_node)
+                reward_node.set_attribute("id", str(rewardid + 1))
+                reward_node.set_attribute("type", str(rewardtype))
+                reward_node.add_child(Node.s32("value", value))
+                reward_node.add_child(Node.bool("is_secret", issecret))
 
         # Set up NOBOLOT category display
         category_list = Node.void("category_list")
         clan_course_list.add_child(category_list)
 
         # Each category has one of the following nodes
-        categories: List[Tuple[int, int]] = [
-            (1, 3),
-            (4, 6),
-            (7, 9),
-            (10, 12),
-            (13, 14),
-            (15, 16),
-        ]
+        categories = self.__get_course_category_list()
         for categoryid, (min_level, max_level) in enumerate(categories):
+            categoryid = categoryid + 1
             category = Node.void("category")
             category_list.add_child(category)
-            category.set_attribute("id", str(categoryid + 1))
-            category.add_child(Node.bool("is_secret", False))
+            category.set_attribute("id", str(categoryid))
+            category.add_child(Node.bool("is_secret", True if categoryid == 6 else False))
             category.add_child(Node.s32("level_min", min_level))
             category.add_child(Node.s32("level_max", max_level))
 
@@ -1185,18 +2837,36 @@ class JubeatClan(
     def handle_shopinfo_regist_request(self, request: Node) -> Node:
         # Update the name of this cab for admin purposes
         self.update_machine_name(request.child_value("shop/name"))
+        self.update_machine_data({
+            "pref": request.child_value("shop/pref"),
+            "monitor": request.child_value("shop/monitor"),
+            "attract_volume": request.child_value("shop/testmode/sound/volume_in_attract"),
+            "local_matching_max_member": request.child_value("shop/testmode/game/play_settings/max_member"),
+            "close_set": request.child_value("shop/testmode/game/game_settings/close_set"),
+            "close_time": request.child_value("shop/testmode/game/game_settings/close_time"),
+            "display_type": request.child_value("shop/testmode/game/display_type_settings/display_type"),
+            "free_play": request.child_value("shop/testmode/coin/free_play"),
+            "free_first_play": request.child_value("shop/testmode/coin/free_first_play"),
+            "coin_slot": request.child_value("shop/testmode/coin/coin_slot"),
+            "start_coin": request.child_value("shop/testmode/coin/start"),
+            "cabinet_id": request.child_value("shop/testmode/network/cabinet_id"),
+            "tax_phase": request.child_value("shop/testmode/tax/tax_phase"),
+            "tax_mode": request.child_value("shop/testmode/tax/tax_mode"),
+        })
+
+        game_config = self.get_game_config()
 
         shopinfo = Node.void("shopinfo")
 
         data = Node.void("data")
         shopinfo.add_child(data)
         data.add_child(Node.u32("cabid", 1))
-        data.add_child(Node.string("locationid", "nowhere"))
-        data.add_child(Node.u8("tax_phase", 1))
+        data.add_child(Node.string("locationid", request.child_value("shop/locationid") or "nowhere"))
+        data.add_child(Node.u8("tax_phase", game_config.get_int("tax_phase")))
 
         facility = Node.void("facility")
         data.add_child(facility)
-        facility.add_child(Node.u32("exist", 1))
+        facility.add_child(Node.u32("exist", 1 if game_config.get_bool("paseli_charge_machine_available") else 0))
 
         data.add_child(self.__get_global_info())
 
@@ -1210,75 +2880,11 @@ class JubeatClan(
         info = Node.void("info")
         data.add_child(info)
 
+        black_jacket_list = list(set([song.data.get_int("pos_index") for song in self.data.local.music.get_all_songs(self.game, self.version) if song.data.get_bool("is_block_jacket")]))
         info.add_child(
             Node.s32_array(
                 "black_jacket_list",
-                [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                ],
+                self.create_owned_items(black_jacket_list, 64),
             )
         )
 
@@ -1554,7 +3160,7 @@ class JubeatClan(
         # Player info and statistics
         info = Node.void("info")
         player.add_child(info)
-        info.add_child(Node.s32("tune_cnt", profile.get_int("tune_cnt")))
+        info.add_child(Node.s32("tune_cnt", profile.get_int("tune_cnt", 3)))
         info.add_child(Node.s32("save_cnt", profile.get_int("save_cnt")))
         info.add_child(Node.s32("saved_cnt", profile.get_int("saved_cnt")))
         info.add_child(Node.s32("fc_cnt", profile.get_int("fc_cnt")))
@@ -1568,10 +3174,11 @@ class JubeatClan(
 
         # Looks to be set to true when there's an old profile, stops tutorial from
         # happening on first load.
+        is_succession = profile.get_bool("has_old_version") and not profile.get_bool("saved")
         info.add_child(
             Node.bool(
                 "inherit",
-                profile.get_bool("has_old_version") and not profile.get_bool("saved"),
+                is_succession,
             )
         )
 
@@ -1621,19 +3228,26 @@ class JubeatClan(
                 ([-1] * 64) if force_unlock else self.create_owned_items(owned_songs, 64),
             )
         )
-        item.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list", 16, [-1] * 16)))
-        item.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list", 16, [-1] * 16)))
-        item.add_child(Node.s32_array("title_list", profile.get_int_array("title_list", 160, [-1] * 160)))
-        item.add_child(Node.s32_array("parts_list", profile.get_int_array("parts_list", 160, [-1] * 160)))
+        item.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list", 16, [0] * 16)))
+        item.add_child(Node.s32_array("marker_list", profile.get_int_array("marker_list", 16, [0] * 16)))
+        item.add_child(Node.s32_array("title_list", profile.get_int_array("title_list", 160, [0] * 160)))
+        item.add_child(Node.s32_array("parts_list", profile.get_int_array("parts_list", 160, [0] * 160)))
         item.add_child(Node.s32_array("emblem_list", self.create_owned_items(owned_emblems, 96)))
-        item.add_child(Node.s32_array("commu_list", profile.get_int_array("commu_list", 16, [-1] * 16)))
+        item.add_child(Node.s32_array("commu_list", profile.get_int_array("commu_list", 16, [0] * 16)))
+
+        # new_music_list = profile.get_int_array("secret_list_new", 64, [0] * 64)
+        new_music_list = owned_secrets
+        # new_music_ids = list(set([song.id for song in self.data.local.music.get_all_songs(self.game, self.version) if song.id in self.calculate_owned_items(new_music_list)]))
+        # print(new_music_ids)
+
+        print(owned_secrets)
 
         new = Node.void("new")
         item.add_child(new)
         new.add_child(
             Node.s32_array(
                 "secret_list",
-                ([-1] * 64) if force_unlock else self.create_owned_items(owned_secrets, 64),
+                ([-1] * 64) if force_unlock else [],
             )
         )
         new.add_child(Node.s32_array("theme_list", profile.get_int_array("theme_list_new", 16, [-1] * 16)))
@@ -1721,7 +3335,7 @@ class JubeatClan(
 
         free_first_play = Node.void("free_first_play")
         player.add_child(free_first_play)
-        free_first_play.add_child(Node.bool("is_available", False))
+        free_first_play.add_child(Node.bool("is_available", profile.get_bool("free_first_play_available", False if is_succession else True)))
 
         # Player status for events
         event_info = Node.void("event_info")
@@ -1762,7 +3376,7 @@ class JubeatClan(
 
         navi = Node.void("navi")
         player.add_child(navi)
-        navi.add_child(Node.u64("flag", profile.get_int("navi_flag")))
+        navi.add_child(Node.u64("flag", profile.get_int("navi_flag", 9999999)))
 
         # Gift list, maybe from other players?
         gift_list = Node.void("gift_list")
@@ -1772,11 +3386,12 @@ class JubeatClan(
         #         <id __type="s32">??</id>
         #     </gift>
 
-        # Birthday event?
+        # For collect birth year info
         born = Node.void("born")
         player.add_child(born)
-        born.add_child(Node.s8("status", profile.get_int("born_status")))
-        born.add_child(Node.s16("year", profile.get_int("born_year")))
+        born.add_child(Node.s8("status", profile.get_int("born_status", 1)))
+        if profile.get_int("born_year") > 0:
+            born.add_child(Node.s16("year", profile.get_int("born_year")))
 
         # More crap
         question_list = Node.void("question_list")
@@ -1876,11 +3491,22 @@ class JubeatClan(
         player.add_child(category_list)
 
         # Each category has one of the following nodes
-        for categoryid in range(1, 7):
+        categoryachievements: Dict[int, Achievement] = {}
+        for achievement in achievements:
+            if achievement.type == "course_category":
+                categoryachievements[achievement.id] = achievement
+
+        for categoryid, (_, _) in enumerate(self.__get_course_category_list()):
+            categoryid = categoryid + 1
+            if categoryid in categoryachievements:
+                categorydata = categoryachievements[categoryid].data
+            else:
+                categorydata = ValidatedDict()
+
             category = Node.void("category")
             category_list.add_child(category)
             category.set_attribute("id", str(categoryid))
-            category.add_child(Node.bool("is_display", True))
+            category.add_child(Node.bool("is_display", categorydata.get_bool("is_display", False if categoryid == 6 else True)))
 
         # Drop list
         drop_list = Node.void("drop_list")
@@ -1891,26 +3517,26 @@ class JubeatClan(
             if achievement.type == "drop":
                 dropachievements[achievement.id] = achievement
 
-        for dropid in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
+        for drop in self.__get_drop_list():
+            dropid = drop["id"]
             if dropid in dropachievements:
                 dropdata = dropachievements[dropid].data
             else:
                 dropdata = ValidatedDict()
 
-            drop = Node.void("drop")
-            drop_list.add_child(drop)
-            drop.set_attribute("id", str(dropid))
-            drop.add_child(Node.s32("exp", dropdata.get_int("exp", -1)))
-            drop.add_child(Node.s32("flag", dropdata.get_int("flag", 0)))
+            drop_node = Node.void("drop")
+            drop_list.add_child(drop_node)
+            drop_node.set_attribute("id", str(dropid))
+            drop_node.add_child(Node.s32("exp", dropdata.get_int("exp", 0)))
+            drop_node.add_child(Node.s32("flag", dropdata.get_int("flag", 0)))
 
             item_list = Node.void("item_list")
-            drop.add_child(item_list)
-
-            for itemid in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
-                item = Node.void("item")
-                item_list.add_child(item)
-                item.set_attribute("id", str(itemid))
-                item.add_child(Node.s32("num", dropdata.get_int(f"item_{itemid}")))
+            drop_node.add_child(item_list)
+            for itemid, item in enumerate(drop["item"]):
+                item_node = Node.void("item")
+                item_list.add_child(item_node)
+                item_node.set_attribute("id", str(itemid + 1))
+                item_node.add_child(Node.s32("num", dropdata.get_int(f"item_{itemid + 1}", 0)))
 
         # Fill in category
         fill_in_category = Node.void("fill_in_category")
