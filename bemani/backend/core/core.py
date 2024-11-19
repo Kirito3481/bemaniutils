@@ -137,42 +137,90 @@ class CoreHandler(Base):
 
         if region == RegionConstants.HONG_KONG:
             country = "HK"
+            countrystr = "Hong Kong"
+            countryjstr = "香港"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region == RegionConstants.TAIWAN:
             country = "TW"
+            countrystr = "Taiwan"
+            countryjstr = "台湾"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region == RegionConstants.KOREA:
             country = "KR"
+            countrystr = "Korea"
+            countryjstr = "韓国"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region == RegionConstants.USA:
             country = "US"
+            countrystr = "USA"
+            countryjstr = "米国"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region == RegionConstants.THAILAND:
             country = "TH"
+            countrystr = "Thailand"
+            countryjstr = "タイ"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region == RegionConstants.INDONESIA:
             country = "ID"
+            countrystr = "Indonesia"
+            countryjstr = "インドネシア"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region == RegionConstants.SINGAPORE:
             country = "SG"
+            countrystr = "Singapore"
+            countryjstr = "シンガポール"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region == RegionConstants.PHILLIPINES:
             country = "PH"
+            countrystr = "Philippines"
+            countryjstr = "フィリピン"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region == RegionConstants.MACAO:
             country = "MO"
+            countrystr = "Macao"
+            countryjstr = "マカオ"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         elif region >= RegionConstants.MIN_PREF and region <= RegionConstants.MAX_PREF:
             country = "JP"
+            countrystr = "Japan"
+            countryjstr = "日本"
             regionstr = f"JP-{region}"
+            regionnamestr = RegionConstants.get_region_name(region)
+            regionnamejstr = RegionConstants.get_region_jname(region)
         elif region == RegionConstants.EUROPE:
             # Pick a random country in the "Europe" category.
             country = "GB"
+            countrystr = "United Kingdom"
+            countryjstr = "イギリス"
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
         else:
             # Pick a random nonsensical code.
             country = "XX"
+            countrystr = ""
+            countryjstr = ""
             regionstr = ""
+            regionnamestr = ""
+            regionnamejstr = ""
 
         root = Node.void("facility")
         root.set_attribute("expire", "600")
@@ -182,13 +230,17 @@ class CoreHandler(Base):
         location.add_child(Node.string("region", regionstr))
         location.add_child(Node.string("name", machine.name))
         location.add_child(Node.u8("type", 0))
+        location.add_child(Node.string("countryname", countrystr))
+        location.add_child(Node.string("countryjname", countryjstr))
         if area is not None:
-            location.add_child(Node.string("regionname", area))
-            location.add_child(Node.string("regionjname", area))
+            location.add_child(Node.string("regionname", regionnamestr))
+            location.add_child(Node.string("regionjname", regionnamejstr))
 
         line = Node.void("line")
-        line.add_child(Node.string("id", "."))
-        line.add_child(Node.u8("class", 0))
+        line.add_child(Node.string("id", "1"))
+        line.add_child(Node.u8("class", 8))
+        line.add_child(Node.u8("upclass", 8))
+        line.add_child(Node.u16("rtt", 22))
 
         portfw = Node.void("portfw")
         portfw.add_child(Node.ipv4("globalip", self.config.client.address))
@@ -196,15 +248,15 @@ class CoreHandler(Base):
         portfw.add_child(Node.u16("privateport", machine.port))
 
         public = Node.void("public")
-        public.add_child(Node.u8("flag", 1))
-        public.add_child(Node.string("name", "."))
+        public.add_child(Node.u8("flag", 0))
+        public.add_child(Node.string("name", machine.name))
         public.add_child(Node.string("latitude", "0"))
         public.add_child(Node.string("longitude", "0"))
 
         share = Node.void("share")
         eacoin = Node.void("eacoin")
-        eacoin.add_child(Node.s32("notchamount", 3000))
-        eacoin.add_child(Node.s32("notchcount", 3))
+        eacoin.add_child(Node.s32("notchamount", 0))
+        eacoin.add_child(Node.s32("notchcount", 0))
         eacoin.add_child(Node.s32("supplylimit", 10000))
 
         eapass = Node.void("eapass")
