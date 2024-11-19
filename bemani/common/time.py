@@ -156,6 +156,23 @@ class Time:
         return calendar.timegm(date.timetuple())
 
     @staticmethod
+    def timestamp_from_datetime(year: int, month: int = 1, day: int = 1, hour: int = 0, minute: int = 0, second: int = 0) -> int:
+        """
+        Given a date (either a year, year/month, or year/month/day), returns
+        the unix timestamp from UTC of that date. Supports out of bounds
+        indexing on month.
+        """
+        while month < 1:
+            year = year - 1
+            month = month + 12
+        while month > 12:
+            year = year + 1
+            month = month - 12
+
+        date = datetime.datetime(year, month, day, hour, minute, second, tzinfo=tz.tzutc())
+        return calendar.timegm(date.timetuple())
+
+    @staticmethod
     def date_from_timestamp(timestamp: int) -> List[int]:
         """
         Returns a [year, month, day] given a UTC unix timestamp.
