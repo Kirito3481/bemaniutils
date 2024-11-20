@@ -1,4 +1,6 @@
-# Introduction
+# bemaniutils
+
+## Introduction
 
 A collection of programs for working with various games in the BEMANI series. This
 could be untangled quite a bit into various modules that provide simpler pieces.
