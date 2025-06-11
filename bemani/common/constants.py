@@ -139,6 +139,7 @@ class VersionConstants:
     SDVX_INFINITE_INFECTION: Final[int] = 2
     SDVX_GRAVITY_WARS: Final[int] = 3
     SDVX_HEAVENLY_HAVEN: Final[int] = 4
+    SDVX_VIVID_WAVE: Final[int] = 5
 
 
 class APIConstants(Enum):
