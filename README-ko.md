@@ -1,105 +1,84 @@
 <p align="center">
-    <a href="./README.md" style="font-weight: bold">English</a> |
-    <a href="./README-ko.md">한국어</a>
+    <a href="./README.md">English</a> |
+    <a href="./README-ko.md" style="font-weight: bold">한국어</a>
 </p>
 
-# Introduction
+# 소개
 
-A collection of programs for working with various games in the BEMANI series. This
-could be untangled quite a bit into various modules that provide simpler pieces.
-However, this is how it ended up evolving over time. This repository includes
-utilities for unpacking (and sometimes repacking) various file formats, emulating
-network services for various games, utilities for sniffing, redirecting and
-reconstructing network packets, utilities for gathering information about various
-game music databases and associated tooling that makes developing the previous
-utilities easier. It is meant to be a complete ecosystem for somebody looking to
-provide hobby network services to themselves in order to preserve a particular era
-of gaming that is no longer officially supported.
+BEMANI 시리즈의 다양한 게임 관련 작업을 위한 프로그램 모음입니다. 이것은 더 간단한 부분들을
+제공하는 다양한 모듈로 상당 부분 풀어낼 수 있었지만, 시간이 흐르면서 지금과 같은 모습으로 발전하게
+되었습니다. 이 리포지토리에는 다양한 파일 형식의 압축을 풀고(때로는 다시 압축하고), 다양한 게임의
+네트워크 서비스를 에뮬레이트하며, 네트워크 패킷을 스니핑, 리디렉션 및 재구성하고, 다양한 게임 뮤직
+데이터베이스에 대한 정보를 수집하는 유틸리티들과, 앞서 언급한 유틸리티들의 개발을 더 쉽게 만들어주는
+관련 도구들이 포함되어 있습니다. 이것은 더 이상 공식적으로 지원되지 않는 특정 게임 시대를 보존하기
+위해 스스로에게 취미용 네트워크 서비스를 제공하려는 사람을 위한 완전한 생태계가 되는 것을 목표로 합니다.
 
-Thanks to Tau for the great writeup on the binary network format. Thanks to some
-rando on stack overflow for RC4 code for Python. Thanks to some other rando on
-stack overflow for sample sniffer code for Python. Thanks to Tau again for the
-great logging in easerver to compare my original output to. Thanks to PKGINGO for
-encouragement and well-received excitement about progress. Thanks to Sarah and Alice
-for being good RE partners for several games, and sharing good finds. Thanks to
-helvetica for helping with game RE and retweeting cute anime ladies onto my feed
-every goddamn night.
+바이너리 네트워크 포맷에 대한 훌륭한 설명글을 써주신 Tau님께 감사드립니다.
+파이썬 RC4 코드를 짜주신 스택 오버플로우의 어떤 익명의 이용자분께 감사드립니다.
+파이썬용 샘플 스니퍼 코드를 짜주신 스택 오버플로우의 또 다른 익명의 이용자분께 감사드립니다.
+제 초기 결과물과 비교해볼 수 있도록 easerver에 훌륭한 로그를 남겨주신 Tau님께 다시 한번 감사드립니다.
+격려해주시고 진행 상황에 큰 관심을 보여주신 PKGINGO님께 감사드립니다.
+여러 게임에서 좋은 리버스 엔지니어링(RE) 파트너가 되어주고 좋은 발견들을 공유해준 Sarah와 Alice에게 감사드립니다.
+게임 리버스 엔지니어링을 도와주고 매일 밤 제 피드에 빌어먹을 귀여운 애니메이션 아가씨들을 리트윗해준 helvetica에게 감사드립니다.
 
 ## 2dxutils
 
-A utility for unpacking and repacking `.2dx` audio container files. Can extract
-RIFF WAV audio out of an existing `.2dx` file, update an existing file or create
-a new file from scratch given some WAV files. This isn't the best utility and I
-think there are more complete and more accurate programs out there. However, they
-all lack source as far as I could tell, so I developed this. Run it like
-`./2dxutils --help` to see help output and determine how to use this.
+`.2dx` 오디오 컨테이너 파일의 압축을 풀거나 다시 압축하기 위한 유틸리티입니다. 기존 `.2dx` 파일에서
+RIFF WAV 오디오를 추출하거나, 기존 파일을 업데이트하거나, 주어진 WAV 파일들을 사용하여 처음부터
+새로운 파일을 생성할 수 있습니다. 이 유틸리티가 최고는 아니며, 시중에 더 완전하고 정확한 프로그램들이
+더 있다고 생각합니다. 하지만 제가 알기로는 모두 소스 코드가 공개되어 있지 않아 이 프로그램을 직접 개발했습니다.
+사용법을 확인하려면 `./2dxutils --help`를 실행하여 도움말 출력을 확인하십시오.
 
 ## afputils
 
-Utilities for working with several animation formats found across a vast range
-of games. This includes a TXP2 container parser and repacker, a GE2D shape parser
-and an AFP/BSI parser. Together, they make a set of utilities that attempts to work
-with AFP, the fork of SWF that handles animations in various games. This utility
-is capable of rendering animations out of IFS and TXP2 files as well as providing
-decompiled pseudocode for the flash-like bytecode found in many animation files. It
-is also capable of unpacking and repacking TXP2 containers with new texture files.
-Note that this format is based on SWF and thus very complicated. Therefore, it
-is unlikely that these tools will correctly handle all animations from all games
-that it encounters. Run it like `./afputils --help` to see help output and determine
-how to use it.
+다양한 게임에서 사용되는 여러 애니메이션 포맷을 다루기 위한 유틸리티입니다. 이 유틸리티에는
+TXP2 컨테이너 파서 및 리패커, GE2D 도형 파서, AFP/BSI 파서가 포함되어 있습니다. 이들 도구는
+AFP와 관련된 작업을 지원하며, AFP는 다양한 게임에서 애니메이션을 처리하기 위해 SWF를 기반으로 만들어진 포크입니다.
+이 유틸리티는 IFS 및 TXP2 파일로부터 애니메이션을 렌더링할 수 있으며, 많은 애니메이션 파일에
+포함된 Flash 유사 바이트코드를 디컴파일한 의사코드를 제공할 수도 있습니다. 또한 TXP2 컨테이너를 압축 해제하고
+새로운 텍스처 파일로 다시 패킹하는 기능도 지원합니다. 이 포맷은 SWF 기반이므로 매우 복잡합니다.
+따라서 이 도구들이 모든 게임의 모든 애니메이션을 완벽히 처리할 수 있을 것이라고 기대하긴 어렵습니다.
+사용 방법을 확인하려면 ./afputils --help 명령어를 실행하세요.
 
 ## api
 
-Development version of this repository's BEMAPI implementation. This serves as the
-REST-like API layer for inter-network federation of scores, profiles and rivals.
-Run it like `./api --help` to see help output and determine how to use this. Much
-like "services" and "frontend", this should be pointed at the development version
-of your services config file which holds information about the MySQL database that
-this should connect to as well as what game series are supported. See
-`config/server.yaml` for an example file that you can modify.
-
-Do not use this utility to serve production traffic. Instead, see
-`bemani/wsgi/api.wsgi` for a ready-to-go WSGI file that can be used with a Python
-virtualenv containing this project and its dependencies, uWSGI and nginx. Note that
-if you do not wish to make your network available for federation then this entire
-service can be omitted.
+이 저장소의 BEMAPI 구현의 개발 버전입니다. 이 도구는 점수, 프로필, 라이벌의 네트워크 간 연동을 위한
+REST 유사 API 계층 역할을 합니다. 사용법을 확인하려면 `./api --help` 명령어를 실행하세요.
+"services" 및 "frontend"와 마찬가지로, 이 도구는 MySQL 데이터베이스 연결 정보와 지원되는 게임 시리즈 정보를
+담고 있는 개발용 서비스 설정 파일을 지정해줘야 합니다. 설정 파일 예시는 `config/server.yaml`에서 확인하고
+수정할 수 있습니다. 이 유틸리티는 프로덕션 환경에서 사용해서는 안 됩니다. 대신, `bemani/wsgi/api.wsgi` 파일을
+참고하세요. 이 파일은 Python 가상 환경, 프로젝트 종속성, uWSGI, nginx와 함께 사용할 수 있도록 준비된
+WSGI 파일입니다. 네트워크 연동 기능이 필요 없다면, 이 서비스는 아예 생략해도 괜찮습니다.
 
 ## arcutils
 
-A utility for unpacking `.arc` files. This does not currently repack files. However,
-the format is so trivial that adding such a feature would be fairly easy. Run it
-like `./arcutils --help` to see help output and determine how to use this.
+`.arc` 파일을 압축 해제하기 위한 유틸리티입니다. 현재는 파일을 다시 패킹하는 기능은 제공하지 않지만,
+포맷이 매우 단순하기 때문에 해당 기능을 추가하는 것은 비교적 쉬울 것입니다. 사용 방법을 확인하려면
+`./arcutils --help` 명령어를 실행하세요.
 
 ## assetparse
 
-A utility which takes a particular game's asset directory and converts files for use
-on the frontend. This optionally enables things such as customization previews on the
-frontend. Much like "read", this requires a properly setup config file which points
-the frontend as well as this utility at the correct location to store converted
-assets. See `config/server.yaml` for an example file that you can modify. Unlike "read",
-this utility is entirely optional. However, if you do not convert assets for games that
-you are running, you will miss out on preview graphics on the frontend. Run it like
-`./assetparse --help` to see help output and determine how to use this.
+특정 게임의 에셋 디렉터리를 가져와 프론트엔드에서 사용할 수 있도록 파일을 변환하는 유틸리티입니다.
+이 유틸리티를 사용하면 프론트엔드에서 커스터마이징 미리보기 같은 기능을 활성화할 수 있습니다.
+"read"와 마찬가지로, 변환된 에셋을 저장할 올바른 위치를 지정하는 설정 파일이 필요하며, 프론트엔드와
+이 유틸리티가 해당 경로를 참조하도록 설정되어야 합니다. 설정 파일 예시는 `config/server.yaml`에서
+확인하고 수정할 수 있습니다. "read"와는 달리 이 유틸리티는 필수는 아닙니다. 하지만 실행 중인 게임의
+에셋을 변환하지 않으면 프론트엔드에서 미리보기 그래픽을 볼 수 없습니다. 사용 방법을 확인하려면
+`./assetparse --help` 명령어를 실행하세요.
 
 ## bemanishark
 
-A wire sniffer that can decode eAmuse packets and print them. Run it on a computer
-that can sniff traffic between an eAmusement server and a supported game and it will
-spit out the requests and responses XML-formatted identically to the XML output in
-the logs of "services". This works on both binary and XML traffic. Note that it does
-not have the capability to sniff SSL-encrypted traffic, so don't even bother trying
-to run this at an arcade with official support.
-
-Run it like `sudo ./bemanishark` to invoke. Will run indefinitely until killed
-(Ctrl-C will suffice). Run like `./bemanishark --help` for options. Without options,
-it assumes you want to sniff port 80 for all addresses. Note that it doesn't support
-the Base64 binary blob formats found in SN1 and 2. Note also that over time it will
-start to lose packets. This is a bug that I never figured out, and it appears to be
-the OS failing to send over some packets resulting in a failure to reassemble the
-TCP stream.
-
-This utility might be better if rewritten to be a plugin for Wireshark instead of
-a standalone sniffing utility, but I don't have the time.
+eAmuse 패킷을 디코딩하고 출력할 수 있는 와이어 스니퍼입니다. eAmusement 서버와 지원되는 게임 사이의
+트래픽을 감청할 수 있는 컴퓨터에서 실행하면, 요청과 응답을 "services" 로그에서 볼 수 있는 것과
+동일한 형식의 XML로 출력합니다. 이 도구는 바이너리 및 XML 트래픽 모두에서 작동합니다. 단, SSL로
+암호화된 트래픽은 감청할 수 없기 때문에, 공식 지원이 있는 아케이드에서 이 도구를 실행하려고 해도
+작동하지 않습니다. `sudo ./bemanishark`처럼 실행하면 됩니다. 종료될 때까지 무한히 실행되며,
+Ctrl-C로 종료할 수 있습니다. 옵션을 보려면 `./bemanishark --help`처럼 실행하세요. 옵션 없이
+실행하면 모든 주소에 대해 포트 80을 감청하려고 시도합니다. SN1과 SN2에서 사용되는 Base64 이진
+blob 포맷은 지원하지 않습니다. 또한 시간이 지남에 따라 패킷을 잃기 시작할 수 있습니다.
+이는 해결하지 못한 버그로, 운영체제가 일부 패킷을 전달하지 않아 TCP 스트림을 재조립하는 데
+실패하는 현상으로 보입니다. 이 유틸리티는 독립 실행형 감청 도구보다는 Wireshark용 플러그인으로
+다시 작성하는 것이 더 나을 수 있지만, 그럴 시간이 없습니다.
 
 ## binutils
 
@@ -380,112 +359,93 @@ attemping to play a round only to see that you misused a class or misspelled a v
 When submitting pull requests make sure to run this like `./verifytyping` so you know
 you aren't introducing any type errors into the codebase.
 
-# Installation
+# 설치 방법
 
-## Dependency Setup
+---
 
-The code contained here assumes Python 3.8 as the base although it should work with
-any newer version of python as well. If you don't have or don't want to install Python
-3.8 as your system python, it is recommended to use virtualenv to create a virtual
-environment. The rest of the installation will assume you have Python 3.8 working
-properly (and are in an activated virtual environment if this is the route you've
-chosen to go). If you have a newer version of python available this code should be
-compatible with that as well. This code is designed to run on Linux. However, it has
-been tested successfully on Windows and OSX as it doesn't use any system-specific
-libraries and contains pure Python implementations of all necessary pieces. YMMV in
-this regard, however, since the whole suite is built and tested using a Debian-based
-derivative and several critical pieces of code have much faster Cython implementations.
+## 의존성 설치
 
-To install the required libraries, run the following command out of the root of the
-repository. This should allow all of the programs to at least start, but it still
-requires a MySQL database for many of them to be useful. This step has a dependency
-on an isntalled MySQL server and client as well as MySQL client development libraries.
-It also assumes that you've installed the 'wheel' python package already. In order to
-compile the mysql client libraries, you will need to have libssl and libcrypto on your
-system as well. To satisfy these requirements on a Debian-based install, run the
-following command:
+
+이 코드들은 Python 3.8을 기본으로 가정하고 작성되었지만, 이후 버전의 Python에서도 작동해야 합니다.
+시스템의 기본 Python으로 Python 3.8을 설치하고 싶지 않거나 설치하지 않은 경우, `virtualenv`를 사용하여
+가상 환경을 만드는 것이 권장됩니다. 설치의 나머지 과정은 Python 3.8이 제대로 작동하고 있다고 가정하며
+(가상 환경을 사용하는 경우 해당 환경이 활성화되어 있다고 가정합니다). 더 최신 버전의 Python이 있다면,
+이 코드는 그와도 호환되어야 합니다.
+이 코드는 Linux에서 실행되도록 설계되었습니다. 그러나 시스템 종속적인 라이브러리를 사용하지 않고,
+필요한 모든 요소를 순수 Python으로 구현했기 때문에 Windows와 OSX에서도 성공적으로 테스트되었습니다.
+다만, 이 전체 도구 모음은 Debian 기반 배포판을 사용해 빌드되고 테스트되었으며, 몇몇 핵심적인 코드 조각은
+훨씬 더 빠른 Cython 구현을 포함하고 있기 때문에 이 부분은 사용자의 환경에 따라 결과가 다를 수 있습니다 (YMMV).
+
+필요한 라이브러리를 설치하려면, 저장소의 루트 디렉터리에서 다음 명령어를 실행하세요. 이 명령어를 실행하면
+모든 프로그램이 최소한 시작은 가능해집니다. 그러나 대부분의 프로그램을 유용하게 사용하려면 MySQL 데이터베이스가
+반드시 필요합니다.
+이 단계는 MySQL 서버와 클라이언트, 그리고 MySQL 클라이언트 개발 라이브러리가 설치되어 있어야 수행할 수 있습니다.
+또한, `wheel` Python 패키지가 이미 설치되어 있다고 가정합니다. MySQL 클라이언트 라이브러리를 컴파일하려면
+시스템에 `libssl` 및 `libcrypto`도 있어야 합니다.
+Debian 기반 배포판에서 위 의존성을 충족하려면 아래 명령어를 실행하세요:
 
 ```
 sudo apt install libssl-dev zlib1g-dev mysql-server mysql-client libmysqlclient-dev
 ```
 
-Once you have all of the above present, run the following command:
+위의 모든 요소가 준비되었다면, 다음 명령어를 실행하세요:
 
 ```
 pip install -r requirements.txt
 ```
 
-Installing MySQL is outside the scope of this readme, so it is assumed that you have
-a MySQL database with permission to create a new DB and tables within it. Note that this
-software requires MySQL version 5.7 or greater. This is due to the extensive use of
-the "json" column type added in 5.7. Create a database (the default database with
-this code is 'bemani') accessed by some user and password (the default user/pass for
-this code is 'bemani'/'bemani'). To create all of the required tables for the
-installation, run the following, substituting the config file for one that you've
-customized if you've done so. The config file that you use here should also be used
-with "api", "services", and "frontend" as well as various other utilities documented
-above.
+MySQL 설치는 이 README의 범위를 벗어나므로, 새로운 데이터베이스 및 테이블을 생성할 수 있는 권한이 있는
+MySQL 데이터베이스가 이미 준비되어 있다고 가정합니다. 이 소프트웨어는 MySQL 버전 5.7 이상이 필요합니다.
+이는 5.7에서 추가된 "json" 컬럼 타입을 광범위하게 사용하기 때문입니다. 데이터베이스를 하나 생성하세요
+(이 코드의 기본 데이터베이스 이름은 'bemani'입니다). 해당 데이터베이스는 어떤 사용자와 비밀번호를 통해
+접근됩니다 (이 코드의 기본 사용자/비밀번호는 'bemani'/'bemani'입니다). 설치에 필요한 모든 테이블을
+생성하려면, 아래 명령어를 실행하세요. 단, 설정 파일을 수정한 경우에는 자신이 커스터마이징한 설정 파일로
+대체해야 합니다. 여기서 사용하는 설정 파일은 "api", "services", "frontend" 및 위에서 설명된 다양한
+유틸리티에서도 동일하게 사용해야 합니다.
 
 ```
 ./dbutils --config config/server.yaml create
 ```
 
-In order to run the frontend, Python will need to find a javascript runtime. This
-is so it can precompile react components at render time so there doesn't need to be
-a compile step when developing the front-end. I found it absolutely bonkers that the
-backend could be on-the-fly reloaded but I had to go through an entire build process
-to produce interpreted JS code, so I went the route of self-contained services
-instead. Installing a JS runtime is also outside the scope of this document, but a
-quick way to get started is to install node.js.
+프런트엔드를 실행하려면 Python이 자바스크립트 런타임을 찾아야 합니다. 이는 렌더링 시점에 리액트 컴포넌트를
+미리 컴파일할 수 있으므로 프런트엔드 개발 시 컴파일 단계가 필요 없습니다. 백엔드는 즉시 다시 로드할 수 있지만
+해석된 JS 코드를 생성하기 위해 전체 빌드 프로세스를 거쳐야 한다는 점이 정말 마음에 들지 않아서 대신 독립형
+서비스 방식을 선택했습니다. JS 런타임을 설치하는 것도 이 문서의 범위를 벗어나는 것이지만, 빠르게 시작할 수
+있는 방법은 node.js를 설치하는 것입니다.
 
-The default configuration points the frontend/backend cache at `/tmp`. If you are going
-to run with a filesystem cache in production then it is recommended to change to a
-different directory, as using `/tmp` can cause some items not to be cached. This is
-due to the way `/tmp` on Linux restricts file access to the creator only, so if you share
-your cache with multiple utilities running under different users, it will fail to reuse
-the cache and drastically slow down the frontend. Alternatively, you can set up a
-memcached server and point your production instance at that instead of using a filesystem
-cache.
+기본 구성은 프론트엔드/백엔드 캐시를 `/tmp`로 가리킵니다. 프로덕션 환경에서 파일 시스템 캐시를 사용하여
+실행하려는 경우 `/tmp`를 사용하면 일부 항목이 캐시되지 않을 수 있으므로 다른 디렉토리로 변경하는 것이
+좋습니다. 이는 Linux의 `/tmp`가 파일 액세스를 작성자만 제한하는 방식 때문에 다른 사용자로 실행되는 여러
+유틸리티와 캐시를 공유하면 캐시 재사용에 실패하고 프런트엔드 속도가 크게 느려집니다. 또는 파일 시스템 캐시를
+사용하는 대신 멤캐시드 서버를 설정하고 프로덕션 인스턴스가 이를 가리키도록 할 수 있습니다.
 
-## Database Initialization
+## 데이터베이스 초기화
 
-At this point, games will boot when pointed at the network, but you won't be able
-to save scores. This is due to the missing song/chart -> score mapping. You will find
-default configuration files for the traffic generator and the services backend in
-the config/ directory. If you've customized your database setup, you will want to
-update the hostname/username/password/database in the configs. You will also want to update
-the server address and frontend URL to customize your instance.
+이 시점에서 네트워크를 지정하면 게임이 실행되지만 점수를 저장할 수 없습니다. 이는 노래/차트 -> 점수 매핑이
+없기 때문입니다. 트래픽 생성기와 서비스 백엔드의 기본 구성 파일은 config/ 디렉토리에서 찾을 수 있습니다.
+데이터베이스 설정을 사용자 정의한 경우 구성 파일에서 호스트명/사용자 이름/비밀번호/데이터베이스를 업데이트해야
+합니다. 또한 서버 주소와 프런트엔드 URL도 업데이트하여 인스턴스를 맞춤 설정할 수 있습니다.
 
-To create the song/chart -> score mapping, you will want to run through the following
-section to import data from each game series. Be sure to substitute your own services
-config in place of the default if you've customized it. Note that if there have been updates
-to the files since you initially imported, you can run with the `--update` flag which
-forces the metadata to be overwritten in the DB instead of skipped. This won't normally
-happen, but if you make improvements to music DB parsing, you will want to do this to update
-your database.
-
-Note that you'll see a lot of re-used song entries. That will happen when the import script
-finds an existing set of charts for the same song in a different game version and links
-the two game versions together. This is how scores can be shared across different versions
-of the same game.
-
-If you happen to already be an authorized client of a BEMAPI-compatible server, you can
-fast-track initializing your server by pointing it at the remote server and using its existing
-database to seed your own. If this is the case, run the following command to perform
-a complete initialization. Note that the "bootstrap" script has entries for non-omnimix
-versions only. You can edit it to add omnimix versions as well if you wish to provide
-omnimix support and are pointing at another BEMAPI-compatible instance which also has
-support. If you wish to update your initial setup with newer data, perhaps because a
-new supported game is available, you can run the following script and append the
-`--update` flag to it. Otherwise, run the following command like so:
+곡/차트 -> 점수 매핑을 생성하려면 다음 섹션을 통해 각 게임 시리즈의 데이터를 가져와야 합니다. 사용자 정의한
+경우 기본값 대신 사용자 자신의 서비스 구성을 사용해야 합니다. 처음 가져온 이후 파일에 업데이트가 있었다면,
+`--update` 플래그를 사용하여 실행할 수 있습니다. 이 플래그는 메타데이터가 건너뛰는 대신 DB에 덮어쓰도록
+강제합니다. 일반적으로 이런 일은 발생하지 않지만, 음악 DB 파싱을 개선했다면 데이터베이스를 업데이트하기 위해
+이 작업을 수행해야 합니다. 재사용되는 곡 항목이 많이 보일 것입니다. 이는 가져오기 스크립트가 다른 게임
+버전에서 동일한 곡에 대한 기존 차트 세트를 찾고 두 게임 버전을 연결할 때 발생합니다. 이것이 동일한 게임의
+다른 버전 간에 점수를 공유할 수 있는 방법입니다. 이미 BEMAPI 호환 서버의 승인된 클라이언트인 경우,
+원격 서버를 가리키고 기존 데이터베이스를 사용하여 자신의 서버를 시드함으로써 서버 초기화를 빠르게 진행할 수
+있습니다. 이 경우 다음 명령을 실행하여 완전한 초기화를 수행하십시오. "bootstrap" 스크립트에는 옴니믹스
+버전이 아닌 항목만 있습니다. 옴니믹스 지원을 제공하고 옴니믹스 지원도 있는 다른 BEMAPI 호환 인스턴스를
+가리키는 경우 옴니믹스 버전을 추가하도록 편집할 수 있습니다. 새로운 지원 게임이 출시되어 초기 설정을 최신
+데이터로 업데이트하려는 경우, 다음 스크립트를 실행하고 `--update` 플래그를 추가할 수 있습니다.
+그렇지 않으면 다음과 같이 다음 명령을 실행하십시오.
 
 ```
 ./bootstrap --config config/server.yaml --server http://some-server.here/ --token some-token-here
 ```
 
-If you are not federating with an existing BEMAPI-compatible server, you can initialize
-the server from the game files of the games you wish to run. See the following sections
-for how exactly to do that.
+기존 BEMAPI 호환 서버와 연동하지 않는 경우, 실행하려는 게임의 게임 파일에서 서버를 초기화할 수 있습니다.
+정확히 어떻게 하는지는 다음 섹션을 참조하십시오.
 
 ### Pop'n Music
 
