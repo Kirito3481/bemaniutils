@@ -8,6 +8,7 @@ from bemani.backend.sdvx.gravitywars_s1 import SoundVoltexGravityWarsSeason1
 from bemani.backend.sdvx.gravitywars_s2 import SoundVoltexGravityWarsSeason2
 from bemani.backend.sdvx.heavenlyhaven import SoundVoltexHeavenlyHaven
 from bemani.backend.sdvx.vividwave import SoundVoltexVividWave
+from bemani.backend.sdvx.exceedgear import SoundVoltexExceedGear
 from bemani.common import Model, VersionConstants
 from bemani.data import Config, Data
 
@@ -19,6 +20,7 @@ class SoundVoltexFactory(Factory):
         SoundVoltexGravityWars,
         SoundVoltexHeavenlyHaven,
         SoundVoltexVividWave,
+        SoundVoltexExceedGear,
     ]
 
     @classmethod
@@ -43,8 +45,10 @@ class SoundVoltexFactory(Factory):
                 return VersionConstants.SDVX_GRAVITY_WARS
             elif date >= 2016122100 and date < 2018101200:
                 return VersionConstants.SDVX_HEAVENLY_HAVEN
-            elif date >= 2018101200:
+            elif date >= 2018101200 and date < 2021021700:
                 return VersionConstants.SDVX_VIVID_WAVE
+            elif date >= 2021021700:
+                return VersionConstants.SDVX_EXCEED_GEAR
             return None
 
         if model.gamecode == "KFC":
@@ -65,9 +69,11 @@ class SoundVoltexFactory(Factory):
                 if parentversion == VersionConstants.SDVX_HEAVENLY_HAVEN:
                     return SoundVoltexGravityWars(data, config, model)
                 if parentversion == VersionConstants.SDVX_VIVID_WAVE:
+                    return SoundVoltexHeavenlyHaven(data, config, model)
+                if parentversion == VersionConstants.SDVX_EXCEED_GEAR:
                     # We return the generic here because this is usually for profile
                     # checks, which means we only care about existence.
-                    return SoundVoltexHeavenlyHaven(data, config, model)
+                    return SoundVoltexVividWave(data, config, model)
 
                 # Unknown older version
                 return None
@@ -87,6 +93,8 @@ class SoundVoltexFactory(Factory):
             return SoundVoltexHeavenlyHaven(data, config, model)
         if version == VersionConstants.SDVX_VIVID_WAVE:
             return SoundVoltexVividWave(data, config, model)
+        if version == VersionConstants.SDVX_EXCEED_GEAR:
+            return SoundVoltexExceedGear(data, config, model)
 
         # Unknown game
         return None
