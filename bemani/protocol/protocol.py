@@ -41,7 +41,7 @@ class EAmuseProtocol:
         self.last_text_encoding: Optional[str] = None
         self.last_packet_encoding: Optional[int] = None
 
-    def _rc4_crypt(self, data: bytes, key: bytes) -> bytes:
+    def rc4_crypt(self, data: bytes, key: bytes) -> bytes:
         """
         Given a data blob and a key blob, perform RC4 encryption/decryption.
 
@@ -58,7 +58,10 @@ class EAmuseProtocol:
 
         # KSA Phase
         for i in range(256):
-            j = (j + S[i] + key[i % len(key)]) & 0xFF
+            if key:
+                j = (j + S[i] + key[i % len(key)]) & 0xFF
+            else:
+                j = (j + S[i]) & 0xFF
             S[i], S[j] = S[j], S[i]
 
         # PRGA Phase
@@ -97,7 +100,7 @@ class EAmuseProtocol:
 
         if key:
             # This is an encrypted old-style packet
-            return self._rc4_crypt(data, key)
+            return self.rc4_crypt(data, key)
 
         # No encryption
         return data
