@@ -30,6 +30,12 @@ def main() -> None:
         default=False,
         help="Add null padding on encryption.",
     )
+    parser.add_argument(
+        "--no-reset",
+        action="store_true",
+        default=False,
+        help="Don't reset decryption every 768 bytes.",
+    )
     args = parser.parse_args()
 
     with open(args.file, "rb") as bfp:
@@ -42,7 +48,11 @@ def main() -> None:
 
         assert (len(data) % 768) == 0
 
-    chunks = [data[x:x + 768] for x in range(0, len(data), 768)]
+    if args.no_reset:
+        chunks = [data]
+    else:
+        chunks = [data[x:x + 768] for x in range(0, len(data), 768)]
+
     outputs = []
     proto = EAmuseProtocol()
 
