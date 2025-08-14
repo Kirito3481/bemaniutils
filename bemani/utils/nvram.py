@@ -50,7 +50,7 @@ def main() -> None:
     if args.no_reset:
         chunks = [data]
     else:
-        chunks = [data[x:x + 768] for x in range(0, len(data), 768)]
+        chunks = [data[x : x + 768] for x in range(0, len(data), 768)]
 
     outputs = []
     proto = EAmuseProtocol()
