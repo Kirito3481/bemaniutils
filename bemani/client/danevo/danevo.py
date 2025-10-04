@@ -442,7 +442,7 @@ class DanceEvolutionClient(BaseClient):
         }
 
     def verify_scores_send(self, ref_id: str, name: str, scores: List[Dict[str, int]]) -> None:
-        if len(scores) > 2:
+        if len(scores) > 3:
             raise Exception("DanEvo can only save two scores at once!")
 
         # This is identical to usergamedata_send, but the function was getting out of hand.
@@ -486,8 +486,11 @@ class DanceEvolutionClient(BaseClient):
             elif offset == 1:
                 profiledata["DATA03"][15] = _to_hex(sid)
                 profiledata["DATA03"][16] = _to_hex(score["points"])
+            elif offset == 2:
+                profiledata["DATA03"][17] = str(float(sid)).encode("shift-jis")
+                profiledata["DATA03"][18] = str(float(score["points"])).encode("shift-jis")
             else:
-                raise Exception("Logic error, can't save more than two scores!")
+                raise Exception("Logic error, can't save more than three scores!")
 
         # Make binary data blobs.
         blobs: Dict[int, bytes] = {}
@@ -779,7 +782,7 @@ class DanceEvolutionClient(BaseClient):
                         },
                     ]
 
-                scorechunks = [dummyscores[x : (x + 2)] for x in range(0, len(dummyscores), 2)]
+                scorechunks = [dummyscores[x : (x + 3)] for x in range(0, len(dummyscores), 3)]
 
                 for chunk in scorechunks:
                     self.verify_scores_send(ref_id, self.NAME1, chunk)

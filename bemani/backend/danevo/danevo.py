@@ -84,6 +84,8 @@ class DanceEvolution(
     DATA03_FIRST_HIGH_SCORE_OFFSET: Final[int] = 14
     DATA03_SECOND_SONG_OFFSET: Final[int] = 15
     DATA03_SECOND_HIGH_SCORE_OFFSET: Final[int] = 16
+    DATA03_THIRD_SONG_OFFSET: Final[int] = 17
+    DATA03_THIRD_HIGH_SCORE_OFFSET: Final[int] = 18
 
     DATA04_TOTAL_SCORE_EARNED_OFFSET: Final[int] = 9
 
@@ -390,14 +392,22 @@ class DanceEvolution(
             if "DATA03" in usergamedata:
                 strdatalist = usergamedata["DATA03"]["strdata"].split(b",")
 
+                # First two are represented in the hex section.
                 first_song_played = int(strdatalist[self.DATA03_FIRST_SONG_OFFSET].decode("shift-jis"), 16)
                 second_song_played = int(strdatalist[self.DATA03_SECOND_SONG_OFFSET].decode("shift-jis"), 16)
                 first_song_scored = int(strdatalist[self.DATA03_FIRST_HIGH_SCORE_OFFSET].decode("shift-jis"), 16)
                 second_song_scored = int(strdatalist[self.DATA03_SECOND_HIGH_SCORE_OFFSET].decode("shift-jis"), 16)
 
+                # They really just stuck this in as floats. I couldn't make this up.
+                third_song_played = int(strdatalist[self.DATA03_THIRD_SONG_OFFSET].decode("shift-jis").split(".")[0])
+                third_song_scored = int(
+                    strdatalist[self.DATA03_THIRD_HIGH_SCORE_OFFSET].decode("shift-jis").split(".")[0]
+                )
+
                 for played, scored in [
                     (first_song_played, first_song_scored),
                     (second_song_played, second_song_scored),
+                    (third_song_played, third_song_scored),
                 ]:
                     if played not in valid_ids:
                         # Game might be set to 1 song.
