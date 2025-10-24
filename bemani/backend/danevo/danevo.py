@@ -464,6 +464,8 @@ class DanceEvolution(
                         continue
 
                     # Attempt to find the play in our extracted attempts.
+                    if stage >= len(history):
+                        continue
                     if history[stage]["id"] != played:
                         continue
                     if history[stage]["score"] != scored:
