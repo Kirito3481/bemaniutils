@@ -431,6 +431,10 @@ def navigation() -> Dict[str, Any]:
                         "uri": url_for("danevo_pages.viewdancemates", userid=g.userID),
                     },
                     {
+                        "label": "Personal Scores",
+                        "uri": url_for("danevo_pages.viewscores", userid=g.userID),
+                    },
+                    {
                         "label": "Personal Records",
                         "uri": url_for("danevo_pages.viewrecords", userid=g.userID),
                     },
@@ -438,6 +442,10 @@ def navigation() -> Dict[str, Any]:
             )
         danevo_entries.extend(
             [
+                {
+                    "label": "Global Scores",
+                    "uri": url_for("danevo_pages.viewnetworkscores"),
+                },
                 {
                     "label": "Global Records",
                     "uri": url_for("danevo_pages.viewnetworkrecords"),
