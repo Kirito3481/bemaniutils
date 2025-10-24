@@ -282,6 +282,7 @@ def viewplayer(userid: UserID) -> Response:
         {
             "refresh": url_for("danevo_pages.listplayer", userid=userid),
             "records": url_for("danevo_pages.viewrecords", userid=userid),
+            "scores": url_for("danevo_pages.viewscores", userid=userid),
         },
     )
 
