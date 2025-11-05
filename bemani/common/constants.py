@@ -80,6 +80,10 @@ class VersionConstants:
     IIDX_ROOTAGE: Final[int] = 26
     IIDX_HEROIC_VERSE: Final[int] = 27
     IIDX_BISTROVER: Final[int] = 28
+    IIDX_CASTHOUR: Final[int] = 29
+    IIDX_RESIDENT: Final[int] = 30
+    IIDX_EPOLIS: Final[int] = 31
+    IIDX_PINKY_CRUSH: Final[int] = 32
 
     JUBEAT: Final[int] = 1
     JUBEAT_RIPPLES: Final[int] = 2

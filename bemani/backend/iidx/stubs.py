@@ -152,3 +152,27 @@ class IIDXLincle(IIDXBase):
 
     def previous_version(self) -> Optional[IIDXBase]:
         return IIDXResortAnthem(self.data, self.config, self.model)
+
+
+class IIDXCasthour(IIDXBase):
+    name: str = "Beatmania IIDX CastHour"
+    version: int = VersionConstants.IIDX_CASTHOUR
+
+    def previous_version(self) -> Optional[IIDXBase]:
+        return IIDXLincle(self.data, self.config, self.model)
+
+
+class IIDXResident(IIDXBase):
+    name: str = "Beatmania IIDX Resident"
+    version: int = VersionConstants.IIDX_RESIDENT
+
+    def previous_version(self) -> Optional[IIDXBase]:
+        return IIDXCasthour(self.data, self.config, self.model)
+
+
+class IIDXEpolis(IIDXBase):
+    name: str = "Beatmania IIDX EPOLIS"
+    version: int = VersionConstants.IIDX_EPOLIS
+
+    def previous_version(self) -> Optional[IIDXBase]:
+        return IIDXResident(self.data, self.config, self.model)

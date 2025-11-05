@@ -21,6 +21,9 @@ from bemani.backend.iidx.stubs import (
     IIDXSirius,
     IIDXResortAnthem,
     IIDXLincle,
+    IIDXCasthour,
+    IIDXResident,
+    IIDXEpolis,
 )
 from bemani.backend.iidx.tricoro import IIDXTricoro
 from bemani.backend.iidx.spada import IIDXSpada
@@ -31,6 +34,7 @@ from bemani.backend.iidx.cannonballers import IIDXCannonBallers
 from bemani.backend.iidx.rootage import IIDXRootage
 from bemani.backend.iidx.heroicverse import IIDXHeroicVerse
 from bemani.backend.iidx.bistrover import IIDXBistrover
+from bemani.backend.iidx.pinkycrush import IIDXPinkyCrush
 from bemani.common import Model, VersionConstants
 from bemani.data import Config, Data
 
@@ -65,6 +69,8 @@ class IIDXFactory(Factory):
         IIDXRootage,
         IIDXHeroicVerse,
         IIDXBistrover,
+        IIDXEpolis,
+        IIDXPinkyCrush,
     ]
 
     @classmethod
@@ -97,8 +103,16 @@ class IIDXFactory(Factory):
                 return VersionConstants.IIDX_ROOTAGE
             if date >= 2019101600 and date < 2020102800:
                 return VersionConstants.IIDX_HEROIC_VERSE
-            if date >= 2020102800:
+            if date >= 2020102800 and date < 2021101300:
                 return VersionConstants.IIDX_BISTROVER
+            if date >= 2021101300 and date < 2022101900:
+                return VersionConstants.IIDX_CASTHOUR
+            if date >= 2022101900 and date < 2023101800:
+                return VersionConstants.IIDX_RESIDENT
+            if date >= 2023101800 and date < 2024100900:
+                return VersionConstants.IIDX_EPOLIS
+            if date >= 2024100900:
+                return VersionConstants.IIDX_PINKY_CRUSH
             return None
 
         if model.gamecode == "JDJ":
@@ -133,6 +147,14 @@ class IIDXFactory(Factory):
                     return IIDXRootage(data, config, model)
                 if parentversion == VersionConstants.IIDX_BISTROVER:
                     return IIDXHeroicVerse(data, config, model)
+                if parentversion == VersionConstants.IIDX_CASTHOUR:
+                    return IIDXBistrover(data, config, model)
+                if parentversion == VersionConstants.IIDX_RESIDENT:
+                    return IIDXCasthour(data, config, model)
+                if parentversion == VersionConstants.IIDX_EPOLIS:
+                    return IIDXResident(data, config, model)
+                if parentversion == VersionConstants.IIDX_PINKY_CRUSH:
+                    return IIDXEpolis(data, config, model)
 
                 # Unknown older version
                 return None
@@ -156,6 +178,14 @@ class IIDXFactory(Factory):
                 return IIDXHeroicVerse(data, config, model)
             if version == VersionConstants.IIDX_BISTROVER:
                 return IIDXBistrover(data, config, model)
+            if version == VersionConstants.IIDX_CASTHOUR:
+                return IIDXCasthour(data, config, model)
+            if version == VersionConstants.IIDX_RESIDENT:
+                return IIDXResident(data, config, model)
+            if version == VersionConstants.IIDX_EPOLIS:
+                return IIDXEpolis(data, config, model)
+            if version == VersionConstants.IIDX_PINKY_CRUSH:
+                return IIDXPinkyCrush(data, config, model)
 
         # Unknown game version
         return None
