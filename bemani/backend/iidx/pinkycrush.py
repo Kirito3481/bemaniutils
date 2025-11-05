@@ -3,7 +3,7 @@ from typing import Optional
 from typing_extensions import Final
 
 from bemani.backend.iidx.base import IIDXBase
-from bemani.backend.iidx.stubs import IIDXEpolis
+from bemani.backend.iidx.epolis import IIDXEpolis
 
 from bemani.common import Profile, VersionConstants, ID
 from bemani.data import UserID

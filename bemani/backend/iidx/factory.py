@@ -21,9 +21,6 @@ from bemani.backend.iidx.stubs import (
     IIDXSirius,
     IIDXResortAnthem,
     IIDXLincle,
-    IIDXCasthour,
-    IIDXResident,
-    IIDXEpolis,
 )
 from bemani.backend.iidx.tricoro import IIDXTricoro
 from bemani.backend.iidx.spada import IIDXSpada
@@ -34,6 +31,9 @@ from bemani.backend.iidx.cannonballers import IIDXCannonBallers
 from bemani.backend.iidx.rootage import IIDXRootage
 from bemani.backend.iidx.heroicverse import IIDXHeroicVerse
 from bemani.backend.iidx.bistrover import IIDXBistrover
+from bemani.backend.iidx.casthour import IIDXCasthour
+from bemani.backend.iidx.resident import IIDXResident
+from bemani.backend.iidx.epolis import IIDXEpolis
 from bemani.backend.iidx.pinkycrush import IIDXPinkyCrush
 from bemani.common import Model, VersionConstants
 from bemani.data import Config, Data
@@ -69,6 +69,8 @@ class IIDXFactory(Factory):
         IIDXRootage,
         IIDXHeroicVerse,
         IIDXBistrover,
+        IIDXCasthour,
+        IIDXResident,
         IIDXEpolis,
         IIDXPinkyCrush,
     ]
