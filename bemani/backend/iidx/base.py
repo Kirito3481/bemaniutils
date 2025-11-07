@@ -48,6 +48,9 @@ class IIDXBase(CoreHandler, CardManagerHandler, PASELIHandler, Base):
     CHART_TYPE_A14: Final[int] = 5
     # Beginner charts only save status
     CHART_TYPE_B7: Final[int] = 6
+    CHART_TYPE_L7: Final[int] = 7
+    CHART_TYPE_B14: Final[int] = 8
+    CHART_TYPE_L14: Final[int] = 9
 
     DAN_RANK_7_KYU: Final[int] = DBConstants.IIDX_DAN_RANK_7_KYU
     DAN_RANK_6_KYU: Final[int] = DBConstants.IIDX_DAN_RANK_6_KYU
@@ -567,6 +570,74 @@ class IIDXBase(CoreHandler, CardManagerHandler, PASELIHandler, Base):
             scorestruct[musicid][chartindex + 2] = self.db_to_game_status(score.data.get_int("clear_status"))
             scorestruct[musicid][chartindex + 5] = score.points
             scorestruct[musicid][chartindex + 8] = score.data.get_int("miss_count", -1)
+
+        return [scorestruct[s] for s in scorestruct]
+
+    def make_score_struct_new(self, scores: List[Score], cltype: int, index: int) -> List[List[int]]:
+        scorestruct: Dict[int, List[int]] = {}
+
+        for score in scores:
+            musicid = score.id
+            chart = score.chart
+
+            # Filter to only singles/doubles charts
+            if cltype == self.CLEAR_TYPE_SINGLE:
+                if chart not in [
+                    self.CHART_TYPE_B7,
+                    self.CHART_TYPE_N7,
+                    self.CHART_TYPE_H7,
+                    self.CHART_TYPE_A7,
+                    self.CHART_TYPE_L7,
+                ]:
+                    continue
+                chartindex = {
+                    self.CHART_TYPE_B7: 0,
+                    self.CHART_TYPE_N7: 1,
+                    self.CHART_TYPE_H7: 2,
+                    self.CHART_TYPE_A7: 3,
+                    self.CHART_TYPE_L7: 4,
+                }[chart]
+            if cltype == self.CLEAR_TYPE_DOUBLE:
+                if chart not in [
+                    self.CHART_TYPE_B14,
+                    self.CHART_TYPE_N14,
+                    self.CHART_TYPE_H14,
+                    self.CHART_TYPE_A14,
+                    self.CHART_TYPE_L14,
+                ]:
+                    continue
+                chartindex = {
+                    self.CHART_TYPE_B14: 0,
+                    self.CHART_TYPE_N14: 1,
+                    self.CHART_TYPE_H14: 2,
+                    self.CHART_TYPE_A14: 3,
+                    self.CHART_TYPE_L14: 4,
+                }[chart]
+
+            if musicid not in scorestruct:
+                scorestruct[musicid] = [
+                    index,  # -1 is our scores, positive is rival index
+                    musicid,  # Music ID!
+                    0,  # Beginner status,
+                    0,  # Normal status,
+                    0,  # Hyper status,
+                    0,  # Another status,
+                    0,  # Leggendaria status,
+                    0,  # EX score beginner,
+                    0,  # EX score normal,
+                    0,  # EX score hyper,
+                    0,  # EX score another,
+                    0,  # EX score leggendaria,
+                    -1,  # Miss count beginner,
+                    -1,  # Miss count normal,
+                    -1,  # Miss count hyper,
+                    -1,  # Miss count another,
+                    -1,  # Miss count leggendaria,
+                ]
+
+            scorestruct[musicid][chartindex + 2] = self.db_to_game_status(score.data.get_int("clear_status"))
+            scorestruct[musicid][chartindex + 7] = score.points
+            scorestruct[musicid][chartindex + 12] = score.data.get_int("miss_count", -1)
 
         return [scorestruct[s] for s in scorestruct]
 
