@@ -3771,7 +3771,12 @@ class ImportIIDX(ImportBase):
         no_combine: bool,
         update: bool,
     ) -> None:
-        if version in ["20", "21", "22", "23", "24", "25", "26"]:
+        if version in ["27"]:
+            actual_version = {
+                "27": VersionConstants.IIDX_HEROIC_VERSE,
+            }[version]
+            self.charts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        elif version in ["20", "21", "22", "23", "24", "25", "26"]:
             actual_version = {
                 "20": VersionConstants.IIDX_TRICORO,
                 "21": VersionConstants.IIDX_SPADA,
@@ -3813,15 +3818,21 @@ class ImportIIDX(ImportBase):
 
     def __gather_sound_files(self, directory: str) -> Dict[int, str]:
         files = {}
+        excluded_song_ids = [12030]
         for dirpath, dirnames, filenames in os.walk(directory):
             for filename in filenames:
                 songid, extension = os.path.splitext(filename)
                 if extension == ".1" or extension == ".ifs":
-                    try:
-                        files[int(songid)] = os.path.join(directory, os.path.join(dirpath, filename))
-                    except ValueError:
-                        # Invalid file
-                        pass
+                    if f"{filename}-p0.ifs" not in excluded_song_ids:
+                        if "-p0" in songid:
+                            songid = songid.replace("-p0", "")
+                        if f"{songid}-p0{extension}" in filenames:
+                            filename = f"{songid}-p0{extension}"
+                        try:
+                            files[int(songid)] = os.path.join(directory, os.path.join(dirpath, filename))
+                        except ValueError:
+                            # Invalid file
+                            pass
 
             for dirname in dirnames:
                 files.update(self.__gather_sound_files(os.path.join(directory, dirname)))
@@ -3972,7 +3983,7 @@ class ImportIIDX(ImportBase):
             musicdb = IIDXMusicDB(binarydata)
             for song in musicdb.songs:
                 bpm = (0, 0)
-                notecounts = [0, 0, 0, 0, 0, 0]
+                notecounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
                 if song.id in self.BANNED_CHARTS:
                     continue
@@ -4007,32 +4018,71 @@ class ImportIIDX(ImportBase):
                             print(f"Could not find chart information for song {song.id}!")
                     else:
                         print(f"No chart information because chart for song {song.id} is missing!")
-                songs.append(
-                    {
-                        "id": song.id,
-                        "title": song.title,
-                        "artist": song.artist,
-                        "genre": song.genre,
-                        "bpm_min": bpm[0],
-                        "bpm_max": bpm[1],
-                        "difficulty": {
-                            "spn": song.difficulties[0],
-                            "sph": song.difficulties[1],
-                            "spa": song.difficulties[2],
-                            "dpn": song.difficulties[3],
-                            "dph": song.difficulties[4],
-                            "dpa": song.difficulties[5],
-                        },
-                        "notecount": {
-                            "spn": notecounts[0],
-                            "sph": notecounts[1],
-                            "spa": notecounts[2],
-                            "dpn": notecounts[3],
-                            "dph": notecounts[4],
-                            "dpa": notecounts[5],
-                        },
-                    }
-                )
+
+                if self.version < VersionConstants.IIDX_HEROIC_VERSE or (
+                    self.version < (VersionConstants.IIDX_HEROIC_VERSE + DBConstants.OMNIMIX_VERSION_BUMP) and self.version > DBConstants.OMNIMIX_VERSION_BUMP
+                ):
+                    songs.append(
+                        {
+                            "id": song.id,
+                            "title": song.title,
+                            "artist": song.artist,
+                            "genre": song.genre,
+                            "bpm_min": bpm[0],
+                            "bpm_max": bpm[1],
+                            "difficulty": {
+                                "spn": song.difficulties[0],
+                                "sph": song.difficulties[1],
+                                "spa": song.difficulties[2],
+                                "dpn": song.difficulties[3],
+                                "dph": song.difficulties[4],
+                                "dpa": song.difficulties[5],
+                            },
+                            "notecount": {
+                                "spn": notecounts[0],
+                                "sph": notecounts[1],
+                                "spa": notecounts[2],
+                                "dpn": notecounts[3],
+                                "dph": notecounts[4],
+                                "dpa": notecounts[5],
+                            },
+                        }
+                    )
+                else:
+                    songs.append(
+                        {
+                            "id": song.id,
+                            "title": song.title,
+                            "artist": song.artist,
+                            "genre": song.genre,
+                            "bpm_min": bpm[0],
+                            "bpm_max": bpm[1],
+                            "difficulty": {
+                                "spn": song.difficulties[0],
+                                "sph": song.difficulties[1],
+                                "spa": song.difficulties[2],
+                                "dpn": song.difficulties[3],
+                                "dph": song.difficulties[4],
+                                "dpa": song.difficulties[5],
+                                "spb": song.difficulties[6],
+                                "spl": song.difficulties[7],
+                                "dpb": song.difficulties[8],
+                                "dpl": song.difficulties[9],
+                            },
+                            "notecount": {
+                                "spn": notecounts[0],
+                                "sph": notecounts[1],
+                                "spa": notecounts[2],
+                                "dpn": notecounts[3],
+                                "dph": notecounts[4],
+                                "dpa": notecounts[5],
+                                "spb": notecounts[6],
+                                "spl": notecounts[7],
+                                "dpb": notecounts[8],
+                                "dpl": notecounts[9],
+                            },
+                        }
+                    )
 
             # We only import one or the other here, I know its a weird function.
             return songs, []
@@ -4300,6 +4350,10 @@ class ImportIIDX(ImportBase):
             3: "dpn",
             4: "dph",
             5: "dpa",
+            6: "spb",
+            7: "spl",
+            8: "dpb",
+            9: "dpl",
         }
 
         # Format it the way we expect
@@ -4325,6 +4379,10 @@ class ImportIIDX(ImportBase):
                         "dpn": 0,
                         "dph": 0,
                         "dpa": 0,
+                        "spb": 0,
+                        "spl": 0,
+                        "dpb": 0,
+                        "dpl": 0,
                     },
                     "notecount": {
                         "spn": 0,
@@ -4333,6 +4391,10 @@ class ImportIIDX(ImportBase):
                         "dpn": 0,
                         "dph": 0,
                         "dpa": 0,
+                        "spb": 0,
+                        "spl": 0,
+                        "dpb": 0,
+                        "dpl": 0,
                     },
                 }
             if song.chart in chart_map:
@@ -4367,11 +4429,15 @@ class ImportIIDX(ImportBase):
             3: "dpn",
             4: "dph",
             5: "dpa",
+            6: "spb",
+            7: "spl",
+            8: "dpb",
+            9: "dpl",
         }
         for song in songs:
             self.start_batch()
             for chart in self.charts:
-                if chart == 6:
+                if self.version < VersionConstants.IIDX_HEROIC_VERSE and chart == 6:
                     # Beginner chart
                     songdata: Dict[str, Any] = {}
                 else:
