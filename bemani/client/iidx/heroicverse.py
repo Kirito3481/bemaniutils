@@ -278,7 +278,6 @@ class IIDXHeroicVerseClient(BaseClient):
                         another = 8
                         leggendaria = 9
 
-
                     if music_id not in scores:
                         scores[music_id] = {}
 
