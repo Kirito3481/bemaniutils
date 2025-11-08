@@ -1349,8 +1349,24 @@ class IIDXHeroicVerse(IIDXBase):
         # DAN rankings
         grade = Node.void("grade")
         root.add_child(grade)
-        grade.set_attribute("sgid", str(profile.get_int("sgid", -1)))
-        grade.set_attribute("dgid", str(profile.get_int("dgid", -1)))
+        grade.set_attribute(
+            "sgid",
+            str(
+                self.db_to_game_rank(
+                    profile.get_int(self.DAN_RANKING_SINGLE, -1),
+                    self.GAME_CLTYPE_SINGLE,
+                )
+            ),
+        )
+        grade.set_attribute(
+            "dgid",
+            str(
+                self.db_to_game_rank(
+                    profile.get_int(self.DAN_RANKING_DOUBLE, -1),
+                    self.GAME_CLTYPE_DOUBLE,
+                )
+            ),
+        )
         achievements = self.data.local.user.get_achievements(self.game, self.version, userid)
         for rank in achievements:
             if rank.type == self.DAN_RANKING_SINGLE:

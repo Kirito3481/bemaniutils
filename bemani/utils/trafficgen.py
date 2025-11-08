@@ -12,6 +12,7 @@ from bemani.client.iidx import (
     IIDXSinobuzClient,
     IIDXCannonBallersClient,
     IIDXRootageClient,
+    IIDXHeroicVerseClient,
 )
 from bemani.client.jubeat import (
     JubeatSaucerClient,
@@ -150,6 +151,12 @@ def get_client(proto: ClientProtocol, pcbid: str, game: str, config: Dict[str, A
         )
     if game == "jubeat-festo":
         return JubeatFestoClient(
+            proto,
+            pcbid,
+            config,
+        )
+    if game == "iidx-heroicverse":
+        return IIDXHeroicVerseClient(
             proto,
             pcbid,
             config,
@@ -418,6 +425,11 @@ def mainloop(
         "jubeat-festo": {
             "name": "Jubeat Festo",
             "model": "L44:J:B:A:2022052400",
+            "avs": "2.17.3 r8311",
+        },
+        "iidx-heroicverse": {
+            "name": "Beatmania IIDX HEROIC VERSE",
+            "model": "LDJ:J:B:A:2020092900",
             "avs": "2.17.3 r8311",
         },
         "iidx-rootage": {
