@@ -4,7 +4,7 @@ from typing import Optional, Dict, List, Tuple, Any
 from typing_extensions import Final
 
 from bemani.backend.iidx.base import IIDXBase
-from bemani.backend.iidx.stubs import IIDXLincle
+from bemani.backend.iidx.lincle import IIDXLincle
 
 from bemani.common import Profile, ValidatedDict, VersionConstants, Time, ID
 from bemani.data import Data, UserID

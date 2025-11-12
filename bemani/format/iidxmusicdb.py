@@ -89,6 +89,7 @@ class IIDXMusicDB:
 
         # Stride lookup, which appears unfortunately hardcoded in the game DLL.
         leap = {
+            19: 0x33C,
             20: 0x320,
             21: 0x320,
             22: 0x340,
@@ -108,7 +109,30 @@ class IIDXMusicDB:
         # Load songs
         for songid in range(songcount):
             songoffset = offset + (songid * leap)
-            if gameversion < 27:
+            if gameversion < 20:
+                # 19 and below have a different structure for song entries
+                songdata = struct.unpack_from(
+                    "<64s32s64s32s32sB7xBBBBBB182xH",
+                    data,
+                    songoffset,
+                )
+                song = IIDXSong(
+                    songid=songdata[12],
+                    title=self.__parse_string(songdata[0]),
+                    english_title=self.__parse_string(songdata[0]),
+                    genre=self.__parse_string(songdata[3]),
+                    artist=self.__parse_string(songdata[4]),
+                    difficulties=[
+                        songdata[6],
+                        songdata[7],
+                        songdata[8],
+                        songdata[9],
+                        songdata[10],
+                        songdata[11],
+                    ],
+                    folder=songdata[5],
+                )
+            elif gameversion < 27:
                 songdata = struct.unpack_from(
                     "<64s64s64s64s24xB7xBBBBBB162xH",
                     data,

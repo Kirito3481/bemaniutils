@@ -3776,8 +3776,9 @@ class ImportIIDX(ImportBase):
                 "27": VersionConstants.IIDX_HEROIC_VERSE,
             }[version]
             self.charts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        elif version in ["20", "21", "22", "23", "24", "25", "26"]:
+        elif version in ["19", "20", "21", "22", "23", "24", "25", "26"]:
             actual_version = {
+                "19": VersionConstants.IIDX_LINCLE,
                 "20": VersionConstants.IIDX_TRICORO,
                 "21": VersionConstants.IIDX_SPADA,
                 "22": VersionConstants.IIDX_PENDUAL,

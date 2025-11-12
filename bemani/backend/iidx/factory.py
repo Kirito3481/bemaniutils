@@ -20,8 +20,8 @@ from bemani.backend.iidx.stubs import (
     IIDXEmpress,
     IIDXSirius,
     IIDXResortAnthem,
-    IIDXLincle,
 )
+from bemani.backend.iidx.lincle import IIDXLincle
 from bemani.backend.iidx.tricoro import IIDXTricoro
 from bemani.backend.iidx.spada import IIDXSpada
 from bemani.backend.iidx.pendual import IIDXPendual
@@ -138,6 +138,8 @@ class IIDXFactory(Factory):
                 return None
 
             version = version_from_date(model.version)
+            if version == VersionConstants.IIDX_LINCLE:
+                return IIDXLincle(data, config, model)
             if version == VersionConstants.IIDX_TRICORO:
                 return IIDXTricoro(data, config, model)
             if version == VersionConstants.IIDX_SPADA:
