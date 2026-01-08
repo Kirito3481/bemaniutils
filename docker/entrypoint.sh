@@ -27,7 +27,7 @@ case "$MODE" in
     exec uwsgi $UWSGI_OPTS \
       --http-socket 0.0.0.0:${PORT} \
       --processes ${PROCESSES} --threads ${THREADS} \
-      --wsgi-file bemani/wsgi/services.wsgi
+      --wsgi-file /app/bemani/wsgi/services.wsgi
     ;;
 
   frontend)
@@ -38,7 +38,7 @@ case "$MODE" in
       --processes ${PROCESSES} --threads ${THREADS} \
       --static-map /static=/app/bemani/frontend/static \
       --static-map /jsx=/app/bemani/frontend/static/jsx \
-      --wsgi-file bemani/wsgi/frontend.wsgi
+      --wsgi-file /app/bemani/wsgi/frontend.wsgi
     ;;
 
   api)
@@ -46,14 +46,14 @@ case "$MODE" in
     exec uwsgi $UWSGI_OPTS \
       --http-socket 0.0.0.0:${PORT} \
       --processes ${PROCESSES} --threads ${THREADS} \
-      --wsgi-file bemani/wsgi/api.wsgi
+      --wsgi-file /app/bemani/wsgi/api.wsgi
     ;;
 
   scheduler)
     # Run every 5 minutes
     while true; do
       echo "[$(date)] Running scheduler..."
-      ./scheduler --config /app/config/server.yaml || true
+      ./scheduler --config /app/server.yaml || true
       sleep 300
     done
     ;;
