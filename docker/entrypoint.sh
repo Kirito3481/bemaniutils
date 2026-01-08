@@ -27,7 +27,8 @@ case "$MODE" in
     exec uwsgi $UWSGI_OPTS \
       --http-socket 0.0.0.0:${PORT} \
       --processes ${PROCESSES} --threads ${THREADS} \
-      --wsgi-file /app/bemani/wsgi/services.wsgi
+      --wsgi-file /app/bemani/wsgi/services.wsgi \
+      --callable app
     ;;
 
   frontend)
@@ -38,7 +39,8 @@ case "$MODE" in
       --processes ${PROCESSES} --threads ${THREADS} \
       --static-map /static=/app/bemani/frontend/static \
       --static-map /jsx=/app/bemani/frontend/static/jsx \
-      --wsgi-file /app/bemani/wsgi/frontend.wsgi
+      --wsgi-file /app/bemani/wsgi/frontend.wsgi \
+      --callable app
     ;;
 
   api)
@@ -46,7 +48,8 @@ case "$MODE" in
     exec uwsgi $UWSGI_OPTS \
       --http-socket 0.0.0.0:${PORT} \
       --processes ${PROCESSES} --threads ${THREADS} \
-      --wsgi-file /app/bemani/wsgi/api.wsgi
+      --wsgi-file /app/bemani/wsgi/api.wsgi \
+      --callable app
     ;;
 
   scheduler)
