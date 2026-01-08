@@ -38,7 +38,7 @@ services:
       UWSGI_PROCESSES: 4
       UWSGI_THREADS: 2
     volumes:
-      - /volume1/docker/bemaniutils/server.yaml:/app/config/server.yaml:ro
+      - /volume1/docker/bemaniutils/server.yaml:/app/server.yaml:ro
       - cache_data:/cache
       - logs_data:/logs
     depends_on:
@@ -58,7 +58,7 @@ services:
       UWSGI_PROCESSES: 4
       UWSGI_THREADS: 2
     volumes:
-      - /volume1/docker/bemaniutils/server.yaml:/app/config/server.yaml:ro
+      - /volume1/docker/bemaniutils/server.yaml:/app/server.yaml:ro
       - cache_data:/cache
       - logs_data:/logs
     depends_on:
@@ -78,7 +78,7 @@ services:
       UWSGI_PROCESSES: 2
       UWSGI_THREADS: 2
     volumes:
-      - /volume1/docker/bemaniutils/server.yaml:/app/config/server.yaml:ro
+      - /volume1/docker/bemaniutils/server.yaml:/app/server.yaml:ro
       - cache_data:/cache
       - logs_data:/logs
     depends_on:
@@ -93,7 +93,7 @@ services:
     container_name: bemani_scheduler
     command: ["scheduler"]
     volumes:
-      - /volume1/docker/bemaniutils/server.yaml:/app/config/server.yaml:ro
+      - /volume1/docker/bemaniutils/server.yaml:/app/server.yaml:ro
       - cache_data:/cache
       - logs_data:/logs
     depends_on:
