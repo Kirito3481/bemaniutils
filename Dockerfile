@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 # Install dependencies (MySQL, uWSGI, Pillow etc)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc g++ make pkg-config \
+    git gcc g++ make pkg-config \
     default-libmysqlclient-dev \
     libssl-dev zlib1g-dev libjpeg62-turbo-dev \
     nodejs npm \
