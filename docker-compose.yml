@@ -1,0 +1,115 @@
+services:
+  db:
+    image: mysql:5.7
+    container_name: bemani_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-bemani}
+      MYSQL_USER: ${MYSQL_USER:-bemani}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Seoul
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max_connections=500
+      --innodb_buffer_pool_size=256M
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - bemani_net
+
+  memcached:
+    image: memcached:1.6-alpine
+    container_name: bemani_memcached
+    command: memcached -m 128
+    restart: unless-stopped
+    networks:
+      - bemani_net
+
+  services:
+    build: .
+    image: bemani:latest
+    container_name: bemani_services
+    command: ["services"]
+    ports:
+      - "5730:5730"
+    environment:
+      UWSGI_PROCESSES: 4
+      UWSGI_THREADS: 2
+    volumes:
+      - ./config/server.yaml:/app/config/server.yaml:ro
+      - ./data:/app/data
+      - cache_data:/cache
+      - logs_data:/logs
+    depends_on:
+      - db
+      - memcached
+    restart: unless-stopped
+    networks:
+      - bemani_net
+
+  frontend:
+    image: bemani:latest
+    container_name: bemani_frontend
+    command: ["frontend"]
+    ports:
+      - "8573:8573"
+    environment:
+      UWSGI_PROCESSES: 4
+      UWSGI_THREADS: 2
+    volumes:
+      - ./config/server.yaml:/app/config/server.yaml:ro
+      - ./data:/app/data
+      - cache_data:/cache
+      - logs_data:/logs
+    depends_on:
+      - db
+      - memcached
+    restart: unless-stopped
+    networks:
+      - bemani_net
+
+  api:
+    image: bemani:latest
+    container_name: bemani_api
+    command: ["api"]
+    ports:
+      - "18573:18573"
+    environment:
+      UWSGI_PROCESSES: 2
+      UWSGI_THREADS: 2
+    volumes:
+      - ./config/server.yaml:/app/config/server.yaml:ro
+      - cache_data:/cache
+      - logs_data:/logs
+    depends_on:
+      - db
+      - memcached
+    restart: unless-stopped
+    networks:
+      - bemani_net
+
+  scheduler:
+    image: bemani:latest
+    container_name: bemani_scheduler
+    command: ["scheduler"]
+    volumes:
+      - ./config/server.yaml:/app/config/server.yaml:ro
+      - cache_data:/cache
+      - logs_data:/logs
+    depends_on:
+      - db
+      - memcached
+    restart: unless-stopped
+    networks:
+      - bemani_net
+
+volumes:
+  db_data:
+  cache_data:
+  logs_data:
+
+networks:
+  bemani_net:
+    driver: bridge
